@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>Using JSON-RPC</title>
+    <!--<link rel="stylesheet"
+          href="css/styles.css"
+          type="text/css"/>-->
+    <script src="script/jsonrpc.js" type="text/javascript"></script>
+    <script src="script/ajax-utils.js" type="text/javascript"></script>
+    <script src="script/json-rpc-examples.js" type="text/javascript"></script>
+</head>
+<body>
+<div align="center">
+    <p/>
+    <fieldset>
+        <legend>Login</legend>
+
+        <label for="login"></label>
+        <input type="text" id="login"/><br/>
+        <input type="text" id="pass"/><br/>
+        <form action="#">
+            <input type="button" value="Show Random Number"
+                   onclick='sayHello("login", "ran-num-result-1")'/>
+        </form>
+        <div id="ran-num-result-1" class="ajaxResult"></div>
+    </fieldset>
+    <p/>
+</div>
+
+</body>
+</html>
