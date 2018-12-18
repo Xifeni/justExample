@@ -13,6 +13,10 @@ public class MangmentDAO {
 
     }
 
+    public User getTestUser(){
+        return new User("TestName", "TestFamily");
+    }
+
     public void editExistingUser(){
 
     }

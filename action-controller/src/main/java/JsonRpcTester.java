@@ -1,8 +1,15 @@
+import model.User;
+
 public class JsonRpcTester {
+
+  MangmentDAO dao = new MangmentDAO();
 
   public void getSayHello(String range) {
     System.out.println("Hello " + range);
-    MangmentDAO dao = new MangmentDAO();
     dao.deleteUser();
+  }
+
+  public User getTestUser(){
+    return dao.getTestUser();
   }
 }

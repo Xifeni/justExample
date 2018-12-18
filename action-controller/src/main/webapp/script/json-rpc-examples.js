@@ -22,26 +22,11 @@ function sayHello(inputField, resultRegion) {
   rpcClient.rpcTester.getSayHello(range);
 }
 
-function showCity(inputField, resultRegion) {
-  var cityName = getRawValue(inputField); // No escape needed with RPC
-  var callback = function(city, exception) {
-    if(exception) {
-      alert(exception.message);
-    } else {
-      var result;
-      if (city) {
-        result = "<ul>" +
-                 "<li>Name: " + city.name + "</li>" +
-                 "<li>Time: " + city.time + "</li>" +
-                 "<li>Population: " + city.population + "</li>" +
-                 "</ul>";
-      } else {
-        result = "Unknown City";
-      }
-      htmlInsert(resultRegion, result);
-    }
+function showTestUser() {
+  var callback = function(user, exception) {
+      console.log("user " + user.name + " " + user.family);
   };
-  rpcClient.rpcTester.getCity(callback, cityName);
+  rpcClient.rpcTester.getTestUser(callback);
 }
 
 function htmlInsert(id, htmlData) {
