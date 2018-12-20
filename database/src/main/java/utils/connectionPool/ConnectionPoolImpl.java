@@ -1,25 +1,28 @@
+package utils.connectionPool;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionPool {
+public class ConnectionPoolImpl implements ConnectionPool{
 
     private HikariConfig config = new HikariConfig("/hikaricp.properties");
     private HikariDataSource ds = new HikariDataSource(config);
 
-    ConnectionPool(int poolSize) {
+    ConnectionPoolImpl(int poolSize) {
         ds.setMaximumPoolSize(poolSize);
     }
 
-    ConnectionPool() {
-
+    public ConnectionPoolImpl() {
     }
 
-    public Connection getConnectionWithDisabledAutoCommit() throws SQLException {
+    public Connection getConnection() throws SQLException {
         Connection preparedConnection = ds.getConnection();
-        preparedConnection.setAutoCommit(false);
+        //preparedConnection.setAutoCommit(false);
         return preparedConnection;
+
     }
+
 }
