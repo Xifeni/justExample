@@ -6,23 +6,40 @@ import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionPoolImpl implements ConnectionPool{
+public class ConnectionPoolImpl implements ConnectionPool {
 
-    private HikariConfig config = new HikariConfig("/hikaricp.properties");
-    private HikariDataSource ds = new HikariDataSource(config);
+    private static HikariConfig config;
+    private static HikariDataSource ds;
+    private static volatile ConnectionPool pool;
 
-    ConnectionPoolImpl(int poolSize) {
-        ds.setMaximumPoolSize(poolSize);
+
+    private ConnectionPoolImpl() {
+        config = new HikariConfig("/hikaricp.properties");
+        ds = new HikariDataSource(config);
     }
 
-    public ConnectionPoolImpl() {
+    public static ConnectionPool getInstance() {
+        ConnectionPool localPool = pool;
+        if (localPool == null) {
+            synchronized (ConnectionPoolImpl.class) {
+                localPool = pool;
+                if (localPool == null) {
+                    pool = new ConnectionPoolImpl();
+                }
+            }
+        }
+        return pool;
     }
 
-    public Connection getConnection() throws SQLException {
-        Connection preparedConnection = ds.getConnection();
-        //preparedConnection.setAutoCommit(false);
+    public Connection getConnection() {
+        Connection preparedConnection = null;
+        try {
+            preparedConnection = ds.getConnection();
+            preparedConnection.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return preparedConnection;
-
     }
 
 }
