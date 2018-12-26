@@ -7,5 +7,7 @@ public interface AuthenticationDao {
     boolean isValidUser(String password, String login) throws SQLException;
 
     void registerSessionUser(String login, String sessionId) throws SQLException;
+    void clearSessions() throws SQLException;
+
     String getUserPermission(String login) throws SQLException;
 }

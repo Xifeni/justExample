@@ -23,4 +23,8 @@ public class MainController {
     public void registerUserSession(String login, String sessionId) throws SQLException {
         authDao.registerSessionUser(login, sessionId);
     }
+
+    public void clearSessions() throws SQLException {
+        authDao.clearSessions();
+    }
 }

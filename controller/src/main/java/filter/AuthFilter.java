@@ -11,14 +11,18 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebFilter(urlPatterns = "/UserList")
+@WebFilter(urlPatterns = "/main.jsp")
 public class AuthFilter implements Filter {
 
     private static final String SESSION_NAME = "JSESSIONID";
     private MainController controller = new MainController();
 
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        try {
+            controller.clearSessions();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
