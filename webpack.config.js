@@ -5,24 +5,27 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: '.\\controller\\src\\main\\web-app\\app.js',
     output: {
-        path: path.resolve('.\\controller\\src\\main\\web-app', 'script'),
+        path: path.resolve('.\\controller\\src\\main\\web-app', 'dist'),
         filename: 'bundle.js'
     },
     module: {
         rules: [
             {
-                test: /\.js|.jsx?$/,
+                test: /\.jsx?$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader"
+                    loader: "babel-loader",
+                    options: {
+                        presets :["@babel/env", "@babel/react"],
+                    }
                 }
             }
         ]
     },
     plugins: [
-        /*new HtmlWebpackPlugin({
-            template: '.\\controller\\src\\main\\web-app\\WEB-INF\\main.html',
+        new HtmlWebpackPlugin({
+            template: '.\\controller\\src\\main\\web-app\\index.html',
             inject: "body"
-        })*/
+        })
     ]
 };

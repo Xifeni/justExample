@@ -6,12 +6,13 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebFilter(urlPatterns = "/main.jsp")
+//@WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet","main"})
 public class AuthFilter implements Filter {
 
     private static final String SESSION_NAME = "JSESSIONID";
@@ -30,10 +31,10 @@ public class AuthFilter implements Filter {
             String sessionId = getSessionId(Arrays.asList(((HttpServletRequest) request).getCookies()));
             if (!controller.isCorrectRequest(sessionId)) {
                 if (!controller.isCorrectRequest(request.getParameter("login"), request.getParameter("password"))) {
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
                 } else {
                     controller.registerUserSession(request.getParameter("login"), sessionId);
-                    request.getRequestDispatcher("main.jsp").forward(request, response);
+                    //request.getRequestDispatcher("/index.html").forward(request, response);
                 }
             }
             filterChain.doFilter(request,response);
