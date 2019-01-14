@@ -1,12 +1,14 @@
 const path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
     entry: '.\\controller\\src\\main\\web-app\\app.js',
     output: {
         path: path.resolve('.\\controller\\src\\main\\web-app', 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        publicPath: '/'
     },
     module: {
         rules: [
@@ -16,16 +18,18 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets :["@babel/env", "@babel/react"],
+                        presets :["@babel/preset-env", "@babel/preset-react"],
                     }
                 }
             }
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin({
+        /*new HtmlWebpackPlugin({
             template: '.\\controller\\src\\main\\web-app\\index.html',
             inject: "body"
-        })
-    ]
+        })*/
+    ],
+    devtool: NODE_ENV === 'development' ? 'source-map' : false
+
 };
