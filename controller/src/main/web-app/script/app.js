@@ -1,23 +1,22 @@
-var React = require("react");
-var ReactDOM = require("react-dom");
-var redux = require("redux");
-var Provider = require("react-redux").Provider;
-var reducer = require("./reducer.jsx");
-var AppView = require("./appview.jsx");
+import React from "react";
+import ReactDOM from "react-dom";
+import {createStore} from "redux";
+import {Provider} from "react-redux";
+import reducer from "./reducer.jsx";
+import AppView from "./appview.jsx";
+import "./bootstrap.css"
 
-var store = redux.createStore(reducer);
+let store = createStore(reducer);
 
 store.dispatch({
     type: "SET_STATE",
-    state: {
-        phones: [ "iPhone 7 Plus", "Samsung Galaxy A5" ]
-    }
+    buttons: [{text: '1'}, {text: '2'}],
+    users: [{name: 'user1', role: 'role1'}, {name: 'user2', role: 'role2'}, {name: 'user3', role: 'role3'}]
 });
-
 
 ReactDOM.render(
     <Provider store={store}>
-        <AppView />
+        <AppView/>
     </Provider>,
     document.getElementById("container")
 );

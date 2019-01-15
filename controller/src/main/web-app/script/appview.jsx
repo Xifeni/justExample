@@ -1,27 +1,12 @@
-var React = require("react");
-var connect = require("react-redux").connect;
-var actions = require("./actions.jsx");
+import React from "react";
+import {connect} from "react-redux";
+import actions from "./actions.jsx";
+import Nav from "react-bootstrap/lib/Nav";
+import Navbar from "react-bootstrap/lib/NavBar";
+import NavItem from "react-bootstrap/lib/NavItem";
+import PropTypes from 'prop-types'
 
-class PhoneForm extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    onClick() {
-        if (this.refs.phoneInput.value !== "") {
-            var itemText = this.refs.phoneInput.value;
-            this.refs.phoneInput.value ="";
-            return this.props.addPhone(itemText);
-        }
-    }
-    render() {
-        return <div>
-            <input ref="phoneInput" />
-            <button onClick = {this.onClick.bind(this)}>Добавить</button>
-        </div>
-    }
-};
-
-class PhoneItem extends React.Component {
+class Item extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -29,23 +14,44 @@ class PhoneItem extends React.Component {
 
         return <div>
             <p>
-                <b>{this.props.text}</b><br />
-                <button onClick={() => this.props.deletePhone(this.props.text)}>Удалить</button>
+                <button onClick={() => this.props.sayHello(this.props.text)}>{this.props.text}</button>
             </p>
         </div>
     }
-};
+}
 
-class PhonesList extends React.Component {
+class NavigationBar extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return <div>
+            <Navbar>
+                <Nav navbar>
+                    {this.props.buttons.map(item =>
+                        <NavItem>
+                            <Item key={item}
+                                       text={item}
+                                       sayHello={this.props.sayHello}/>
+                        </NavItem>
+                    )}
+                </Nav>
+            </Navbar>
+        </div>
+    }
+}
+
+class UsersList extends React.Component {
     constructor(props) {
         super(props);
     }
     render() {
         return <div>
-            {this.props.phones.map(item =>
-                <PhoneItem key={item}
+            {this.props.users.map(item =>
+                <Item key={item}
                            text={item}
-                           deletePhone={this.props.deletePhone}/>
+                           sayHello={this.props.sayHello}/>
             )}
         </div>
     }
@@ -55,16 +61,16 @@ class AppView extends React.Component {
 
     render() {
         return <div>
-            <PhoneForm addPhone={this.props.addPhone}/>
-            <PhonesList {...this.props} />
+            <NavigationBar {...this.props} />
+            <UsersList {...this.props} />
         </div>
     }
-};
+}
 
 function mapStateToProps(state) {
     return {
-        phones: state.get("phones")
+        buttons: state.get("buttons"),
+        users: state.get("users")
     };
 }
-
-module.exports = connect(mapStateToProps, actions)(AppView);
+export default connect(mapStateToProps, actions)(AppView);

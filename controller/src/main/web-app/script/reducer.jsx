@@ -1,4 +1,4 @@
-var Map = require("immutable").Map;
+import {Map} from "immutable";
 
 let rpcClient;
 
@@ -10,20 +10,19 @@ function sayHello() {
     rpcClient.rpcTester.getSayHello();
 }
 
-var reducer = function(state = Map(), action) {
+let reducer = function (state = Map(), action) {
     switch (action.type) {
         case "SET_STATE":
             return state.merge(action.state);
-        case "ADD_PHONE":
-            return state.update("phones", (phones) => phones.push(action.phone));
-        case "DELETE_PHONE":
+        case "GREETING":
             sayHello();
-            return state.update("phones",
-                (phones) => phones.filterNot(
-                    (item) => item === action.phone
+            return state.update("buttons",
+                (buttons) => buttons.filterNot(
+                    (item) => item === action.button
                 )
             );
     }
     return state;
-}
-module.exports = reducer;
+};
+
+export default reducer;

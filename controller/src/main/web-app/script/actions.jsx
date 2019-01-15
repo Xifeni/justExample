@@ -1,14 +1,8 @@
-let addPhone = function (phone) {
+let sayHello = function (button) {
     return {
-        type: "ADD_PHONE",
-        phone
-    }
-};
-let deletePhone = function (phone) {
-    return {
-        type: "DELETE_PHONE",
-        phone
+        type: "GREETING",
+        button
     }
 };
 
-module.exports = {addPhone, deletePhone};
+export default {sayHello};

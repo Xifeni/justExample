@@ -1,6 +1,6 @@
 const path = require('path');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
@@ -18,9 +18,15 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets :["@babel/preset-env", "@babel/preset-react"],
+                        presets: ["@babel/preset-env", "@babel/preset-react"],
                     }
                 }
+            }, {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract(
+                    {
+                        fallback: 'style-loader', use: ['css-loader']
+                    })
             }
         ]
     },
@@ -28,7 +34,8 @@ module.exports = {
         /*new HtmlWebpackPlugin({
             template: '.\\controller\\src\\main\\web-app\\index.html',
             inject: "body"
-        })*/
+        }),*/
+        new ExtractTextPlugin("styles.css"),
     ],
     devtool: NODE_ENV === 'development' ? 'source-map' : false
 
