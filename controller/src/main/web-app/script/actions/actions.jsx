@@ -5,4 +5,12 @@ let sayHello = function (button) {
     }
 };
 
-export default {sayHello};
+let setActiveArea = function (idArea) {
+    return {
+        type: "SET_ACTIVE_AREA",
+        idArea
+    }
+};
+
+
+export default {sayHello, setActiveArea};

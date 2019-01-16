@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux'
-import buttonReducer from './buttonReducer.jsx'
+import navReducer from './navReducer.jsx'
 
 /*const rootReducer = combineReducers({
-    buttonReducer
+    navReducer
 });*/
 
-const rootReducer = buttonReducer;
+const rootReducer = navReducer;
 
 export default rootReducer;

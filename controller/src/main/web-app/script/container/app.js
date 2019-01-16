@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 
 import "../bootstrap.css"
 
-import AppView from "../component/appview.jsx";
+import AppView from "./rootContainer.jsx";
 import configureStore from "../store/configureStore.js";
 
 let store = configureStore();

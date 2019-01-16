@@ -12,6 +12,13 @@ html {
 body {
   margin: 0;
 }
+
+.customRootBlock1 {
+  background: #ffffff;
+  padding: 5px 20px 5px 5px;
+  float: left;
+}
+
 article,
 aside,
 details,
