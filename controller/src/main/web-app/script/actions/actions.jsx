@@ -1,6 +1,6 @@
 let sayHello = function (button) {
     return {
-        type: "GREETING",
+        type: "GREETING_AND_DELETE",
         button
     }
 };

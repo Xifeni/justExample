@@ -1,15 +1,16 @@
 import React from "react";
 import {connect} from "react-redux";
-import actions from "./actions.jsx";
+import actions from "../actions/actions.jsx";
 import Nav from "react-bootstrap/lib/Nav";
 import Navbar from "react-bootstrap/lib/NavBar";
 import NavItem from "react-bootstrap/lib/NavItem";
-import PropTypes from 'prop-types'
+import {ListGroup, ListGroupItem} from "react-bootstrap";
 
 class Item extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
 
         return <div>
@@ -32,8 +33,8 @@ class NavigationBar extends React.Component {
                     {this.props.buttons.map(item =>
                         <NavItem>
                             <Item key={item}
-                                       text={item}
-                                       sayHello={this.props.sayHello}/>
+                                  text={item.text}
+                                  sayHello={this.props.sayHello}/>
                         </NavItem>
                     )}
                 </Nav>
@@ -46,13 +47,18 @@ class UsersList extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         return <div>
-            {this.props.users.map(item =>
-                <Item key={item}
-                           text={item}
-                           sayHello={this.props.sayHello}/>
-            )}
+            <ListGroup>
+                {this.props.users.map(item =>
+                    <ListGroupItem>
+                        <Item key={item.name}
+                              text={item.role}
+                              sayHello={this.props.sayHello}/>
+                    </ListGroupItem>
+                )}
+            </ListGroup>
         </div>
     }
 };
@@ -69,8 +75,9 @@ class AppView extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        buttons: state.get("buttons"),
-        users: state.get("users")
+        buttons: state.buttons,
+        users: state.users
     };
 }
+
 export default connect(mapStateToProps, actions)(AppView);
