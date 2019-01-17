@@ -1,14 +1,13 @@
-import {Component} from "react";
-import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
+import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
 
-class FormItem extends Component {
+class FormItem extends React.Component {
     constructor(props) {
         super(props);
+        console.log("label" + this.props.name);
 
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            label: '',
             value: '',
             placeholder: '',
             visibleHelpBlock: false,
@@ -22,22 +21,61 @@ class FormItem extends Component {
 
     render() {
         return (
-            <form>
-                <FormGroup
-                    controlId="formBasicText"
-                    validationState={this.props.validateFunc(this.state.value.length)}>
-                    <ControlLabel>{this.state.label}</ControlLabel>
-                    <FormControl
-                        type="text"
-                        value={this.state.value}
-                        placeholder={this.state.placeholder}
-                        onChange={this.handleChange}/>
-                    <FormControl.Feedback/>
-                    {this.state.visibleHelpBlock && <HelpBlock>{this.state.textHelpBlock}</HelpBlock>}
-                </FormGroup>
-            </form>
+            <FormGroup
+                controlId={this.props.key}
+                validationState={this.props.validate(this.state.value.length)}>
+                <ControlLabel>{this.props.name}</ControlLabel>
+                <FormControl
+                    type="text"
+                    value={this.state.value}
+                    placeholder={this.state.placeholder}
+                    onChange={this.handleChange}/>
+                <FormControl.Feedback/>
+                {this.state.visibleHelpBlock && <HelpBlock>{this.state.textHelpBlock}</HelpBlock>}
+            </FormGroup>
         );
     }
 }
 
-export default FormItem
+class FormCheckBox extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <FormGroup>
+                <Checkbox inputRef={ref => this.input = ref}>Manager</Checkbox>
+            </FormGroup>
+        )
+    }
+}
+
+export default class FormList extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <Modal.Dialog>
+                <Modal.Header>
+                    <Modal.Title>Modal title</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form>
+                        {this.props.items.map(item =>
+                            <FormItem key={item.id}
+                                      name={item.label}
+                                      validate={item.validateFunc}/>
+                        )}
+                        <FormCheckBox/>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => this.props.setActiveArea("MAIN")}>Close</Button>
+                    <Button bsStyle="primary">Save changes</Button>
+                </Modal.Footer>
+            </Modal.Dialog>)
+    }
+};

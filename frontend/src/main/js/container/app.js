@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {Provider} from "react-redux";
 
-import "../../styles/bootstrap.css"
+import "../../recources/css/bootstrap.css"
 
 import AppView from "./rootContainer.jsx";
 import configureStore from "../store/configureStore.js";

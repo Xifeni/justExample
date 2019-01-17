@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-//@WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet","main"})
+@WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet","main"})
 public class AuthFilter implements Filter {
 
     private static final String SESSION_NAME = "JSESSIONID";
@@ -34,7 +34,7 @@ public class AuthFilter implements Filter {
                     request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
                 } else {
                     controller.registerUserSession(request.getParameter("login"), sessionId);
-                    //request.getRequestDispatcher("/index.html").forward(request, response);
+                    request.getRequestDispatcher("/index.html").forward(request, response);
                 }
             }
             filterChain.doFilter(request,response);
