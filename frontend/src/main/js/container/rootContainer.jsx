@@ -6,7 +6,7 @@ import React from "react";
 import actions from "../actions/actions.jsx";
 import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
-import FormItem from "../component/newUserForm.jsx";
+import FormList from "../component/newUserForm.jsx";
 
 class AppView extends Component {
 
@@ -24,7 +24,10 @@ class AppView extends Component {
                 <Row>
                     <Col xs={12} md={8}>
                         {this.props.activeArea === ("MAIN") && <UsersList {...this.props}/>}
-                        {this.props.activeArea === ("GOD") && <FormItem validateFunc={simpleValidation}/>}
+                        {this.props.activeArea === ("GOD") && <FormList formItems={[
+                            {id: "userName", validationFunc : {simpleValidation}},
+                            {id: "userSurname", validationFunc : {simpleValidation}}
+                        ]}/>}
                     </Col>
                 </Row>
             </Grid>
@@ -38,7 +41,7 @@ function mapStateToProps(state) {
         users: state.users
     };
 }
-
+/*вынести в utils*/
 let simpleValidation = function getValidationState(length) {
     if (length > 10) return 'success';
     else if (length > 5) return 'warning';

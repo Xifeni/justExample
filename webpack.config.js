@@ -6,7 +6,7 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
     entry: '.\\frontend\\src\\main\\js\\container\\app.js',
     output: {
-        path: path.resolve('.\\controller\\src\\main\\web-app\\'),
+        path: path.resolve('.\\webapp\\src\\main\\web-app\\'),
         filename: 'bundle.js',
         publicPath: '\\public\\'
     },
