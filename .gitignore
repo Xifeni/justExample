@@ -27,3 +27,8 @@ hs_err_pid*
 *.iml
 .idea
 out
+
+bundle.js
+styles.css
+package-lock.json
+*.map

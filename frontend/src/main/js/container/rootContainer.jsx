@@ -6,6 +6,7 @@ import React from "react";
 import actions from "../actions/actions.jsx";
 import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
+import FormItem from "../component/newUserForm.jsx";
 
 class AppView extends Component {
 
@@ -14,13 +15,16 @@ class AppView extends Component {
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
-                        <NavigationBar {...this.props} />
+                        <NavigationBar {...this.props} areas={[
+                            {name: 'MAIN', text: 'Список пользователей'},
+                            {name: 'GOD', text: 'Создать нового пользователя'},
+                            {name: 'LOGOUT', text: 'Выйти'}]}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={8}>
                         {this.props.activeArea === ("MAIN") && <UsersList {...this.props}/>}
-                        {this.props.activeArea === ("GOD") && <a>здесь создают нового пользователя</a>}
+                        {this.props.activeArea === ("GOD") && <FormItem validateFunc={simpleValidation}/>}
                     </Col>
                 </Row>
             </Grid>
@@ -31,9 +35,15 @@ class AppView extends Component {
 function mapStateToProps(state) {
     return {
         activeArea: state.activeArea,
-        areas: state.areas,
         users: state.users
     };
 }
+
+let simpleValidation = function getValidationState(length) {
+    if (length > 10) return 'success';
+    else if (length > 5) return 'warning';
+    else if (length > 0) return 'error';
+    return null;
+};
 
 export default connect(mapStateToProps, actions)(AppView);

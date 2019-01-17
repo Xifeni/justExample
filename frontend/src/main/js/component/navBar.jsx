@@ -10,6 +10,7 @@ class Item extends React.Component {
         super(props);
     }
 
+
     render() {
         return <div>
             <Panel onClick={() => this.props.setActiveArea(this.props.idArea)}>

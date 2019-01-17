@@ -12,7 +12,6 @@ function sayHello() {
 
 let initialState = {
     activeArea: "MAIN",
-    areas: [{name: 'MAIN', text: 'Список пользователей'}, {name: 'GOD', text: 'Создать нового пользователя'}, {name: 'LOGOUT', text: 'Выйти'}],
     users: [{name: 'user1', role: 'admin'}, {name: 'user2', role: 'user'}, {name: 'user3', role: 'user'}]
 };
 
