@@ -1,22 +1,20 @@
 package filter;
 
-import controller.MainController;
+import controller.DataController;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-@WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet","main"})
+@WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet", "main"})
 public class AuthFilter implements Filter {
 
-    private static final String SESSION_NAME = "JSESSIONID";
-    private MainController controller = new MainController();
+    private DataController controller = new DataController();
 
     public void init(FilterConfig filterConfig) throws ServletException {
         try {
@@ -28,7 +26,7 @@ public class AuthFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
-            String sessionId = getSessionId(Arrays.asList(((HttpServletRequest) request).getCookies()));
+            String sessionId = ((HttpServletRequest) request).getSession().getId();
             if (!controller.isCorrectRequest(sessionId)) {
                 if (!controller.isCorrectRequest(request.getParameter("login"), request.getParameter("password"))) {
                     request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
@@ -37,7 +35,7 @@ public class AuthFilter implements Filter {
                     request.getRequestDispatcher("/index.html").forward(request, response);
                 }
             }
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -45,14 +43,5 @@ public class AuthFilter implements Filter {
 
     public void destroy() {
 
-    }
-
-    private String getSessionId(List<Cookie> coolies) {
-        for (Cookie cookie : coolies) {
-            if (cookie.getName().equals(SESSION_NAME)) {
-                return cookie.getValue();
-            }
-        }
-        return "";
     }
 }

@@ -4,7 +4,6 @@ import React from "react";
 class FormItem extends React.Component {
     constructor(props) {
         super(props);
-        console.log("label" + this.props.name);
 
         this.handleChange = this.handleChange.bind(this);
         this.state = {

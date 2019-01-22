@@ -8,7 +8,9 @@ import utils.transactionManager.TransactionManagerImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,7 +42,22 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getUsers() {
-        throw new UnsupportedOperationException();
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> query = creator.getRawUsers(connection);
+
+            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
+
+            ResultSet set = sets.get(0);
+            while (set.next()) {
+                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     @Override

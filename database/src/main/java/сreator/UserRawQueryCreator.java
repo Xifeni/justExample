@@ -11,6 +11,6 @@ public interface UserRawQueryCreator {
 
     List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException;
     List<PreparedStatement> getRawDeleteUser(Connection connection, User user) throws SQLException;
-    List<PreparedStatement> getRawUsers();
+    List<PreparedStatement> getRawUsers(Connection connection) throws SQLException;
     List<PreparedStatement> getRawEditUser(User... users);
 }

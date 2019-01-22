@@ -16,12 +16,14 @@ class UserItem extends Component {
 }
 
 
-class UsersList extends Component {
+export class UsersList extends Component {
     constructor(props) {
         super(props);
     }
 
     render() {
+        if (!this.props.loadingStatus) return "loading";
+
         return <div>
             <Table striped bordered condensed hover>
                 <thead>
@@ -40,4 +42,3 @@ class UsersList extends Component {
     }
 };
 
-export default UsersList

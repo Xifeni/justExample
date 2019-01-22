@@ -1,11 +1,13 @@
 import {Col, Grid, Row} from "react-bootstrap";
+import {bindActionCreators} from 'redux'
 import {connect} from "react-redux";
 import React from "react";
 
-import actions from "../actions/actions.jsx";
-import UsersList from "../component/usersList.jsx";
+import {setActiveArea} from "../actions/actions.jsx";
+import {UsersList} from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
 import FormList from "../component/newUserForm.jsx";
+import {getPermission, getUsers} from "../actions/actions.jsx";
 
 class AppView extends React.Component {
 
@@ -26,20 +28,28 @@ class AppView extends React.Component {
                         {this.props.activeArea === ("GOD") && <FormList {...this.props} items={[
                             {id: 'userName', label: 'name', validateFunc: getValidationState},
                             {id: 'userLastName', label: 'lastname', validateFunc: getValidationState},
-                            {id: 'pass', label: 'password', validateFunc: getValidationState}]}/>}
+                            {id: 'pass', label: 'password', validateFunc: getValidationState}]} setActiveArea={this.props.setActiveArea}/>}
                     </Col>
                 </Row>
             </Grid>
         </div>
+    }
+
+    componentDidMount(){
+        this.props.loadPermissions()
+        this.props.loadUsers()
     }
 }
 
 function mapStateToProps(state) {
     return {
         activeArea: state.activeArea,
-        users: state.users
+        users: state.users,
+        currentUser: {},
+        loadingStatus: true,
     };
 }
+
 /*вынести в utils*/
 function getValidationState(length) {
     if (length > 10) return 'success';
@@ -48,4 +58,10 @@ function getValidationState(length) {
     return null;
 };
 
-export default connect(mapStateToProps, actions)(AppView);
+export default connect(mapStateToProps, (dispatch) => {
+    return {
+        loadPermissions: bindActionCreators(getPermission, dispatch),
+        setActiveArea: bindActionCreators(setActiveArea, dispatch),
+        loadUsers: bindActionCreators(getUsers, dispatch)
+    }
+})(AppView);

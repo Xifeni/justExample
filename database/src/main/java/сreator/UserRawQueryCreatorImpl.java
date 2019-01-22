@@ -14,6 +14,8 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     private static final String SET_USER_PERMISSION = "INSERT INTO PERMISSION (USERNAME, PERMISSION, ROLENAME) VALUES(?,?,?)";
     private static final String SET_USER_VAULT = "INSERT INTO VAULT (USERNAME, PASSWORD) VALUES(?,?)";
     private static final String DELETE_USER = "DELETE INTO USERS WHERE USERNAME = ?";
+    private static final String GET_USERS = "SELECT * FROM USERS";
+
 
     public List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement(CREATE_USER);
@@ -46,8 +48,12 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
         return queries;
     }
 
-    public List<PreparedStatement> getRawUsers() {
-        throw new UnsupportedOperationException();
+    public List<PreparedStatement> getRawUsers(Connection connection) throws SQLException {
+        PreparedStatement query = connection.prepareStatement(GET_USERS);
+
+        List<PreparedStatement> queries = new ArrayList<>();
+        queries.add(query);
+        return queries;
     }
 
     public List<PreparedStatement> getRawEditUser(User... users) {

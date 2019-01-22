@@ -7,11 +7,11 @@ import "../../recources/css/bootstrap.css"
 import AppView from "./rootContainer.jsx";
 import configureStore from "../store/configureStore.js";
 
-let store = configureStore();
+export let store = configureStore();
 
-ReactDOM.render(
-    <Provider store={store}>
-        <AppView/>
-    </Provider>,
-    document.getElementById("container")
-);
+    ReactDOM.render(
+        <Provider store={store}>
+            <AppView/>
+        </Provider>,
+        document.getElementById("container")
+    );

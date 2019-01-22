@@ -12,6 +12,7 @@
     <servlet>
         <servlet-name>org.jabsorb.JSONRPCServlet</servlet-name>
         <servlet-class>org.jabsorb.JSONRPCServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>org.jabsorb.JSONRPCServlet</servlet-name>

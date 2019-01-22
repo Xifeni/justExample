@@ -4,10 +4,12 @@ import dao.AuthenticationDao;
 import dao.AuthenticationDaoImpl;
 import dao.UserDao;
 import dao.UserDaoImpl;
+import model.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
-public class MainController {
+public class DataController {
 
     private AuthenticationDao authDao = new AuthenticationDaoImpl();
     private UserDao userDao = new UserDaoImpl();
@@ -26,5 +28,13 @@ public class MainController {
 
     public void clearSessions() throws SQLException {
         authDao.clearSessions();
+    }
+
+    public String getPermissions(String login) throws SQLException {
+        return authDao.getUserPermission(login);
+    }
+
+    public List<User> getUsersList(){
+        return userDao.getUsers();
     }
 }
