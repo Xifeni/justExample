@@ -1,6 +1,8 @@
+import {userList} from "../container/const";
+
 let initialState = {
-    activeArea: "MAIN",
-    users: [{name: 'user1', role: 'admin'}, {name: 'user2', role: 'user'}, {name: 'user3', role: 'user'}],
+    activeArea: userList,
+    users: [],
     permission: "null"
 };
 
@@ -9,11 +11,11 @@ let navReducer = function (state = initialState, action) {
         case "SET_ACTIVE_AREA" : {
             return Object.assign({}, state, {activeArea: action.payload});
         }
-        case "GET_HELLO" : {
-            return Object.assign({}, state, {permission: action.payload});
+        case "ADD_USERS": {
+            return Object.assign({}, state, {users: action.payload, loadingStatus: true});
         }
-        case "SUCCESS": {
-            return Object.assign({}, state, {loadingStatus: true});
+        case "CHANGE_PERMISSIONS": {
+            return Object.assign({}, state, {permission: action.payload});
         }
     }
     return state;

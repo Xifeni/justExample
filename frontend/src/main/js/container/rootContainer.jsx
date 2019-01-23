@@ -4,11 +4,11 @@ import {connect} from "react-redux";
 import React from "react";
 
 import {setActiveArea} from "../actions/actions.jsx";
-import {UsersList} from "../component/usersList.jsx";
+import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
 import FormList from "../component/newUserForm.jsx";
 import {getPermission, getUsers} from "../actions/actions.jsx";
-
+import {createNewUserForm, logout, userList} from './const.js'
 class AppView extends React.Component {
 
     render() {
@@ -17,15 +17,15 @@ class AppView extends React.Component {
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
                         <NavigationBar {...this.props} areas={[
-                            {name: 'MAIN', text: 'Список пользователей'},
-                            {name: 'GOD', text: 'Создать нового пользователя'},
-                            {name: 'LOGOUT', text: 'Выйти'}]}/>
+                            {name: userList, text: 'Список пользователей'},
+                            {name: createNewUserForm, text: 'Создать нового пользователя'},
+                            {name: logout, text: 'Выйти'}]}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={8}>
-                        {this.props.activeArea === ("MAIN") && <UsersList {...this.props}/>}
-                        {this.props.activeArea === ("GOD") && <FormList {...this.props} items={[
+                        {this.props.activeArea === (userList) && <UsersList {...this.props}/>}
+                        {this.props.activeArea === (createNewUserForm) && <FormList {...this.props} items={[
                             {id: 'userName', label: 'name', validateFunc: getValidationState},
                             {id: 'userLastName', label: 'lastname', validateFunc: getValidationState},
                             {id: 'pass', label: 'password', validateFunc: getValidationState}]} setActiveArea={this.props.setActiveArea}/>}
@@ -41,14 +41,7 @@ class AppView extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-    return {
-        activeArea: state.activeArea,
-        users: state.users,
-        currentUser: {},
-        loadingStatus: true,
-    };
-}
+
 
 /*вынести в utils*/
 function getValidationState(length) {
@@ -57,6 +50,13 @@ function getValidationState(length) {
     else if (length > 0) return 'error';
     return null;
 };
+
+function mapStateToProps(state) {
+    return {
+        activeArea: state.activeArea,
+        currentUser: {},
+    };
+}
 
 export default connect(mapStateToProps, (dispatch) => {
     return {

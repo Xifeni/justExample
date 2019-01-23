@@ -4,12 +4,9 @@ import controller.DataController;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 
 @WebFilter(urlPatterns = "/*", servletNames = {"AuthenticationServlet", "main"})
 public class AuthFilter implements Filter {

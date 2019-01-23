@@ -1,5 +1,6 @@
 import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
+import {userList} from "../container/const.js";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -72,7 +73,7 @@ export default class FormList extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={() => this.props.setActiveArea("MAIN")}>Close</Button>
+                    <Button onClick={() => this.props.setActiveArea(userList)}>Close</Button>
                     <Button bsStyle="primary">Save changes</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
