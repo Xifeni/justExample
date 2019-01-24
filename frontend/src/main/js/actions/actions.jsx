@@ -1,5 +1,12 @@
 import axios from "axios";
-import {SET_USER_FORM_ERROR, SET_ACTIVE_AREA, CHANGE_PERMISSIONS, ADD_USERS, REMOVE_USER_FORM_ERROR} from "../container/const.js";
+import {
+    SET_USER_FORM_ERROR,
+    SET_ACTIVE_AREA,
+    CHANGE_PERMISSIONS,
+    ADD_USERS,
+    REMOVE_USER_FORM_ERROR,
+    UPDATE_NEW_USER
+} from "../container/const.js";
 
 export let setActiveArea = function (idArea) {
     return {
@@ -37,20 +44,25 @@ let setError = function () {
     }
 };
 
-let remoweError = function () {
+let removeError = function () {
     return {
         type: REMOVE_USER_FORM_ERROR
     }
 };
 
+let updateNewUser = function (name, value) {
+    return{
+        type: UPDATE_NEW_USER,
+        payload: {name : name, value: value}
+    }
+};
 export function simpleValidation(text) {
     return function (dispatch) {
-        console.log("simpleValidation");
-        if ((/[^a-zA-Z1-9]/.test(text))) {
+        if ((/[^a-zA-Z1-9]/.test(text)) && (text.length > 4)) {
             dispatch(setError());
             return 'error';
         } else {
-            dispatch(remoweError());
+            dispatch(removeError());
             return 'success';
         }
     }
@@ -65,6 +77,20 @@ export function getUsers() {
         }).catch((error) => {
             console.log("error get users" + error);
         })
+    }
+}
+
+
+export function sendForm(state) {
+    return function (dispatch) {
+
+    }
+}
+
+
+export function sendParam(ref) {
+    return function (dispatch) {
+        dispatch(updateNewUser(ref.id, ref.value));
     }
 }
 

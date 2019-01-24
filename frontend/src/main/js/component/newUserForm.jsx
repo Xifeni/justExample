@@ -2,8 +2,6 @@ import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal
 import React from "react";
 import {USER_LIST} from "../container/const.js";
 import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
-import {simpleValidation} from "../actions/actions.jsx";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -13,12 +11,14 @@ class FormItem extends React.Component {
         this.state = {
             value: '',
             textHelpBlock: this.props.helpText,
-            validationState: null
+            validationState: null,
+            ref: null
         };
     }
 
     handleChange(e) {
         this.setState({value: e.target.value, validationState: this.props.validate(this.state.value)});
+        this.props.sendParam(this.state.ref);
     }
 
     render() {
@@ -28,51 +28,16 @@ class FormItem extends React.Component {
                 validationState={this.state.validationState}>
                 <ControlLabel>{this.props.name}</ControlLabel>
                 <FormControl
+                    id={this.props.name}
                     type={(this.props.type === null && "text") || this.props.type}
                     value={this.state.value}
-                    onChange={this.handleChange}/>
+                    onChange={this.handleChange}
+                    inputRef={ref => this.state.ref = ref}/>
                 <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
             </FormGroup>
         );
     }
 }
-
-/*class FormPasswordItem extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            value: '',
-            textHelpBlock: this.props.helpText,
-            validationState: null
-        };
-    }
-
-    handleChange(e) {
-        this.setState({value: e.target.value, validationState: this.props.validate(this.state.value)});
-    }
-
-    render() {
-        return (
-            <FormGroup
-                controlId={this.props.key}
-                validationState={this.state.validationState}>
-                <ControlLabel>{this.props.name}</ControlLabel>
-                <FormControl
-                    type="password"
-                    value={this.state.value}
-                    onChange={this.handleChange}/>
-                <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
-                <FormControl
-                    type="password"
-                    value={this.state.value}
-                    onChange={this.handleChange}/>
-                <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
-            </FormGroup>
-        );
-    }
-}*/
 
 class FormCheckBox extends React.Component {
     constructor(props) {
@@ -105,7 +70,8 @@ class FormList extends React.Component {
                             <FormItem key={item.id}
                                       name={item.label}
                                       validate={item.validateFunc}
-                                      helpText={item.helpText}/>
+                                      helpText={item.helpText}
+                                      sendParam={item.sendParam}/>
                         )}
                         <FormCheckBox/>
                     </form>
@@ -120,12 +86,14 @@ class FormList extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        hasError: state.hasError
+        hasError: state.hasError,
+        user: state.user,
+        username: state.username,
+        firstname: state.firstname,
+        lastname: state.lastname,
+        password: state.password
+
     };
 }
 
-export default connect(mapStateToProps, (dispatch) => {
-    return {
-        setError: bindActionCreators(simpleValidation, dispatch)
-    }
-})(FormList);
+export default connect(mapStateToProps)(FormList);

@@ -7,8 +7,9 @@ import {setActiveArea} from "../actions/actions.jsx";
 import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
 import FormList from "../component/newUserForm.jsx";
-import {getPermission, getUsers, simpleValidation} from "../actions/actions.jsx";
+import {getPermission, getUsers, simpleValidation, sendParam, sendForm} from "../actions/actions.jsx";
 import {CREATE_USER, LOGOUT, USER_LIST, LANG_WARN} from './const.js'
+
 class AppView extends React.Component {
 
     render() {
@@ -26,19 +27,50 @@ class AppView extends React.Component {
                     <Col xs={12} md={8}>
                         {this.props.activeArea === (USER_LIST) && <UsersList {...this.props}/>}
                         {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
-                            {id: 'userName', label: 'Username', validateFunc: this.props.validation, helpText : LANG_WARN},
-                            {id: 'password1', label: 'Password', type:"password", validateFunc: this.props.validation},
-                            {id: 'password2', label: 'Retype password', type:"password", validateFunc: this.props.validation},
-                            {id: 'userFirstName', label: 'First name', validateFunc: this.props.validation, helpText : LANG_WARN},
-                            {id: 'userLastName', label: 'Last name', validateFunc: this.props.validation, helpText : LANG_WARN}
-                            ]} setActiveArea={this.props.setActiveArea}/>}
+                            {
+                                id: 'userName',
+                                label: 'Username',
+                                validateFunc: this.props.validation,
+                                helpText: LANG_WARN,
+                                sendParam: this.props.sendParams
+                            },
+                            {
+                                id: 'password1',
+                                label: 'Password',
+                                type: "password",
+                                validateFunc: this.props.validation,
+                                sendParam: this.props.sendParams
+                            },
+                            {
+                                id: 'password2',
+                                label: 'Retype password',
+                                type: "password",
+                                validateFunc: this.props.validation,
+                                sendParam: this.props.sendParams
+                            },
+                            {
+                                id: 'userFirstName',
+                                label: 'First name',
+                                validateFunc: this.props.validation,
+                                helpText: LANG_WARN,
+                                sendParam: this.props.sendParams
+                            },
+                            {
+                                id: 'userLastName',
+                                label: 'Last name',
+                                validateFunc: this.props.validation,
+                                helpText: LANG_WARN,
+                                sendParam: this.props.sendParams
+                            }
+                        ]} setActiveArea={this.props.setActiveArea}
+                            sendForm={this.props.sendForm}/>}
                     </Col>
                 </Row>
             </Grid>
         </div>
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.loadPermissions();
         this.props.loadUsers()
     }
@@ -56,5 +88,8 @@ export default connect(mapStateToProps, (dispatch) => {
         loadPermissions: bindActionCreators(getPermission, dispatch),
         setActiveArea: bindActionCreators(setActiveArea, dispatch),
         loadUsers: bindActionCreators(getUsers, dispatch),
-        validation: bindActionCreators(simpleValidation, dispatch)}
+        validation: bindActionCreators(simpleValidation, dispatch),
+        sendParams: bindActionCreators(sendParam, dispatch),
+        sendForm: bindActionCreators(sendForm, dispatch),
+    }
 })(AppView);

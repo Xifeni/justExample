@@ -15,7 +15,7 @@ class UserItem extends Component {
         return <tr>
             <td>{this.props.item.name}</td>
             <td>{this.props.item.role}</td>
-            <td>{this.props.permission === "000" && <Button onClick={console.log(this.props.item.name + " delete")}>"delete"</Button>}</td>
+            <td>{this.props.permission === "000" && <Button>"delete"</Button>}</td>
         </tr>
     }
 }
