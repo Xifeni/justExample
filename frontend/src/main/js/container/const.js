@@ -1,3 +1,9 @@
-export const userList = "USER_LIST";
-export const createNewUserForm = "CREATE_USER";
-export const logout = "LOGOUT";
+export const USER_LIST = "USER_LIST";
+export const CREATE_USER = "CREATE_USER";
+export const LOGOUT = "LOGOUT";
+export const LANG_WARN = "Only numbers and latin letters";
+export const SET_USER_FORM_ERROR = "SET_USER_FORM_ERROR";
+export const SET_ACTIVE_AREA = "SET_ACTIVE_AREA";
+export const CHANGE_PERMISSIONS = "CHANGE_PERMISSIONS";
+export const ADD_USERS = "ADD_USERS";
+export const REMOVE_USER_FORM_ERROR = "REMOVE_USER_FORM_ERROR";
