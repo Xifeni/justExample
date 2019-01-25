@@ -1,6 +1,6 @@
 import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
-import {USER_LIST} from "../container/const.js";
+import {USER_LIST, HAS_ERROR} from "../container/const.js";
 import {connect} from "react-redux";
 
 class FormItem extends React.Component {
@@ -8,17 +8,24 @@ class FormItem extends React.Component {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
+        this.blur = this.blur.bind(this);
+
         this.state = {
-            value: '',
             textHelpBlock: this.props.helpText,
             validationState: null,
-            ref: null
+            value: ''
         };
     }
 
     handleChange(e) {
-        this.setState({value: e.target.value, validationState: this.props.validate(this.state.value)});
-        this.props.sendParam(this.state.ref);
+        this.setState({
+            value: e.target.value,
+            validationState: this.props.validate({id: this.props.name, value: this.state.value})
+        });
+    }
+
+    blur(e) {
+        this.props.sendParam({id: this.props.name, value: this.state.value});
     }
 
     render() {
@@ -29,11 +36,10 @@ class FormItem extends React.Component {
                 <ControlLabel>{this.props.name}</ControlLabel>
                 <FormControl
                     id={this.props.name}
-                    type={(this.props.type === null && "text") || this.props.type}
+                    type={(this.props.type)}
                     value={this.state.value}
                     onChange={this.handleChange}
-                    inputRef={ref => this.state.ref = ref}/>
-                <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
+                    onBlur={this.blur}/>
             </FormGroup>
         );
     }
@@ -47,7 +53,7 @@ class FormCheckBox extends React.Component {
     render() {
         return (
             <FormGroup>
-                <Checkbox inputRef={ref => this.input = ref}>Manager</Checkbox>
+                <Checkbox>Manager</Checkbox>
             </FormGroup>
         )
     }
@@ -70,6 +76,7 @@ class FormList extends React.Component {
                             <FormItem key={item.id}
                                       name={item.label}
                                       validate={item.validateFunc}
+                                      type={item.type}
                                       helpText={item.helpText}
                                       sendParam={item.sendParam}/>
                         )}
@@ -77,8 +84,10 @@ class FormList extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
+                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' && "Password and retype password is not equals")}</HelpBlock>
                     <Button onClick={() => this.props.setActiveArea(USER_LIST)}>Close</Button>
-                    <Button bsStyle="primary" disabled={this.props.hasError === true}>Save changes</Button>
+                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR] === true}>Save
+                        changes</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
@@ -86,13 +95,8 @@ class FormList extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        hasError: state.hasError,
-        user: state.user,
-        username: state.username,
-        firstname: state.firstname,
-        lastname: state.lastname,
-        password: state.password
-
+        errorStatus: state.errorStatus,
+        newUser: state.newUser,
     };
 }
 

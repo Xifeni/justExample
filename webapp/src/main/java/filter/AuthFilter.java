@@ -24,6 +24,7 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         try {
             String sessionId = ((HttpServletRequest) request).getSession().getId();
+
             if (!controller.isCorrectRequest(sessionId)) {
                 if (!controller.isCorrectRequest(request.getParameter("login"), request.getParameter("password"))) {
                     request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
@@ -32,6 +33,7 @@ public class AuthFilter implements Filter {
                     request.getRequestDispatcher("/index.html").forward(request, response);
                 }
             }
+
             filterChain.doFilter(request, response);
         } catch (SQLException e) {
             e.printStackTrace();

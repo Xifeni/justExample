@@ -7,7 +7,7 @@ import {setActiveArea} from "../actions/actions.jsx";
 import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
 import FormList from "../component/newUserForm.jsx";
-import {getPermission, getUsers, simpleValidation, sendParam, sendForm} from "../actions/actions.jsx";
+import {getPermission, getUsers, simpleValidation, sendParam, sendForm, passwordValidation} from "../actions/actions.jsx";
 import {CREATE_USER, LOGOUT, USER_LIST, LANG_WARN} from './const.js'
 
 class AppView extends React.Component {
@@ -30,6 +30,7 @@ class AppView extends React.Component {
                             {
                                 id: 'userName',
                                 label: 'Username',
+                                type: 'text',
                                 validateFunc: this.props.validation,
                                 helpText: LANG_WARN,
                                 sendParam: this.props.sendParams
@@ -51,6 +52,7 @@ class AppView extends React.Component {
                             {
                                 id: 'userFirstName',
                                 label: 'First name',
+                                type: 'text',
                                 validateFunc: this.props.validation,
                                 helpText: LANG_WARN,
                                 sendParam: this.props.sendParams
@@ -58,11 +60,12 @@ class AppView extends React.Component {
                             {
                                 id: 'userLastName',
                                 label: 'Last name',
+                                type: 'text',
                                 validateFunc: this.props.validation,
                                 helpText: LANG_WARN,
                                 sendParam: this.props.sendParams
                             }
-                        ]} setActiveArea={this.props.setActiveArea}
+                        ]} setActiveArea={this.props.setActiveArea} checkPassword={this.props.checkPassword}
                             sendForm={this.props.sendForm}/>}
                     </Col>
                 </Row>
@@ -91,5 +94,6 @@ export default connect(mapStateToProps, (dispatch) => {
         validation: bindActionCreators(simpleValidation, dispatch),
         sendParams: bindActionCreators(sendParam, dispatch),
         sendForm: bindActionCreators(sendForm, dispatch),
+        checkPassword: bindActionCreators(passwordValidation, dispatch)
     }
 })(AppView);

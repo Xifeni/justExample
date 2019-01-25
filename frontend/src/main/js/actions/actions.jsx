@@ -5,7 +5,9 @@ import {
     CHANGE_PERMISSIONS,
     ADD_USERS,
     REMOVE_USER_FORM_ERROR,
-    UPDATE_NEW_USER
+    UPDATE_NEW_USER,
+    PASSWORD,
+    RETRY_PASSWORD
 } from "../container/const.js";
 
 export let setActiveArea = function (idArea) {
@@ -38,32 +40,48 @@ let addUsers = function (users) {
     }
 };
 
-let setError = function () {
+let setError = function (ref) {
     return {
-        type: SET_USER_FORM_ERROR
+        type: SET_USER_FORM_ERROR,
+        payload: {name: ref.id, message: ref.value}
     }
 };
 
-let removeError = function () {
+let removeError = function (ref) {
     return {
-        type: REMOVE_USER_FORM_ERROR
+        type: REMOVE_USER_FORM_ERROR,
+        payload: {name: ref.id, message: ref.value}
     }
 };
 
 let updateNewUser = function (name, value) {
-    return{
+    return {
         type: UPDATE_NEW_USER,
-        payload: {name : name, value: value}
+        payload: {name: name, value: value}
     }
 };
-export function simpleValidation(text) {
+
+export function simpleValidation(ref) {
     return function (dispatch) {
-        if ((/[^a-zA-Z1-9]/.test(text)) && (text.length > 4)) {
-            dispatch(setError());
+        if ((/[^a-zA-Z1-9]/.test(ref.value))) {
+            dispatch(setError(ref));
             return 'error';
         } else {
-            dispatch(removeError());
+            dispatch(removeError(ref));
             return 'success';
+        }
+    }
+}
+
+export function passwordValidation(user) {
+    return function (dispatch) {
+        let pass1 = user[PASSWORD];
+        let pass2 = user[RETRY_PASSWORD];
+        console.log("pass1=" + pass1 + " pass2=" + pass2);
+        if (pass1 === pass2) {
+            return 'success';
+        } else {
+            return 'error';
         }
     }
 }
