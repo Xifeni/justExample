@@ -7,8 +7,25 @@ import {setActiveArea} from "../actions/actions.jsx";
 import UsersList from "../component/usersList.jsx";
 import NavigationBar from "../component/navBar.jsx";
 import FormList from "../component/newUserForm.jsx";
-import {getPermission, getUsers, simpleValidation, sendParam, sendForm, passwordValidation} from "../actions/actions.jsx";
-import {CREATE_USER, LOGOUT, USER_LIST, LANG_WARN} from './const.js'
+import {
+    getPermission,
+    getUsers,
+    simpleValidation,
+    sendParam,
+    sendForm,
+    passwordValidation
+} from "../actions/actions.jsx";
+import {
+    CREATE_USER,
+    LOGOUT,
+    USER_LIST,
+    LANG_WARN,
+    USERNAME,
+    LAST_NAME,
+    FIRST_NAME,
+    RETRY_PASSWORD,
+    PASSWORD
+} from './const.js'
 
 class AppView extends React.Component {
 
@@ -28,7 +45,7 @@ class AppView extends React.Component {
                         {this.props.activeArea === (USER_LIST) && <UsersList {...this.props}/>}
                         {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
                             {
-                                id: 'userName',
+                                id: [USERNAME],
                                 label: 'Username',
                                 type: 'text',
                                 validateFunc: this.props.validation,
@@ -36,21 +53,21 @@ class AppView extends React.Component {
                                 sendParam: this.props.sendParams
                             },
                             {
-                                id: 'password1',
+                                id: [PASSWORD],
                                 label: 'Password',
                                 type: "password",
                                 validateFunc: this.props.validation,
                                 sendParam: this.props.sendParams
                             },
                             {
-                                id: 'password2',
+                                id: [RETRY_PASSWORD],
                                 label: 'Retype password',
                                 type: "password",
                                 validateFunc: this.props.validation,
                                 sendParam: this.props.sendParams
                             },
                             {
-                                id: 'userFirstName',
+                                id: [FIRST_NAME],
                                 label: 'First name',
                                 type: 'text',
                                 validateFunc: this.props.validation,
@@ -58,15 +75,18 @@ class AppView extends React.Component {
                                 sendParam: this.props.sendParams
                             },
                             {
-                                id: 'userLastName',
+                                id: [LAST_NAME],
                                 label: 'Last name',
                                 type: 'text',
                                 validateFunc: this.props.validation,
                                 helpText: LANG_WARN,
                                 sendParam: this.props.sendParams
                             }
-                        ]} setActiveArea={this.props.setActiveArea} checkPassword={this.props.checkPassword}
-                            sendForm={this.props.sendForm}/>}
+                        ]}
+                                                                              setActiveArea={this.props.setActiveArea}
+                                                                              checkPassword={this.props.checkPassword}
+                                                                              sendForm={this.props.sendForm}
+                                                                              presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>
@@ -75,7 +95,6 @@ class AppView extends React.Component {
 
     componentDidMount() {
         this.props.loadPermissions();
-        this.props.loadUsers()
     }
 }
 
@@ -83,6 +102,7 @@ function mapStateToProps(state) {
     return {
         activeArea: state.activeArea,
         currentUser: {},
+        presetUser: state.presetUser
     };
 }
 

@@ -13,7 +13,7 @@ class FormItem extends React.Component {
         this.state = {
             textHelpBlock: this.props.helpText,
             validationState: null,
-            value: ''
+            value: this.props.value
         };
     }
 
@@ -78,7 +78,8 @@ class FormList extends React.Component {
                                       validate={item.validateFunc}
                                       type={item.type}
                                       helpText={item.helpText}
-                                      sendParam={item.sendParam}/>
+                                      sendParam={item.sendParam}
+                                      value={this.props.presetUser[item.id]}/>
                         )}
                         <FormCheckBox/>
                     </form>
@@ -86,8 +87,7 @@ class FormList extends React.Component {
                 <Modal.Footer>
                     <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' && "Password and retype password is not equals")}</HelpBlock>
                     <Button onClick={() => this.props.setActiveArea(USER_LIST)}>Close</Button>
-                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR] === true}>Save
-                        changes</Button>
+                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR] === true}>Save user</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
@@ -97,6 +97,7 @@ function mapStateToProps(state) {
     return {
         errorStatus: state.errorStatus,
         newUser: state.newUser,
+        presetUser: state.presetUser
     };
 }
 

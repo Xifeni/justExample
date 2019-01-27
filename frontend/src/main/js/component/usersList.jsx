@@ -3,7 +3,7 @@ import {Component} from "react";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getUsers} from "../actions/actions.jsx";
+import {getUsers, goToEditUser} from "../actions/actions.jsx";
 import Button from "react-bootstrap/es/Button";
 
 class UserItem extends Component {
@@ -13,7 +13,7 @@ class UserItem extends Component {
 
     render() {
         return <tr>
-            <td>{this.props.item.name}</td>
+            <td><a onClick={() => this.props.goToEditUser(this.props.item.name)}>{this.props.item.name}</a></td>
             <td>{this.props.item.role}</td>
             <td>{this.props.permission === "000" && <Button>"delete"</Button>}</td>
         </tr>
@@ -44,14 +44,12 @@ class UsersList extends Component {
                 </thead>
                 <tbody>
                 {this.props.users.map(user =>
-                    <UserItem key={user.name} item={user} permission={this.props.permission}/>
+                    <UserItem key={user.name} item={user} permission={this.props.permission} goToEditUser={this.props.goToEditUser}/>
                 )}
                 </tbody>
             </Table>
         </div>
     }
-
-
 };
 
 function mapStateToProps(state) {
@@ -64,7 +62,8 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps, (dispatch) => {
     return {
-        loadUsers: bindActionCreators(getUsers, dispatch)
+        loadUsers: bindActionCreators(getUsers, dispatch),
+        goToEditUser: bindActionCreators(goToEditUser, dispatch)
     }
 })(UsersList);
 

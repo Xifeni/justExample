@@ -2,13 +2,21 @@ import axios from "axios";
 import {
     SET_USER_FORM_ERROR,
     SET_ACTIVE_AREA,
+    SET_ACTIVE_AREA_EDIT,
     CHANGE_PERMISSIONS,
     ADD_USERS,
     REMOVE_USER_FORM_ERROR,
     UPDATE_NEW_USER,
     PASSWORD,
-    RETRY_PASSWORD
+    RETRY_PASSWORD,
+    CREATE_USER,
+    USERNAME,
+    FIRST_NAME,
+    LAST_NAME,
+    ADMIN
 } from "../container/const.js";
+
+//todo: класс Actions разрося, надо бы разбить
 
 export let setActiveArea = function (idArea) {
     return {
@@ -17,19 +25,17 @@ export let setActiveArea = function (idArea) {
     }
 };
 
+let createPresetUser = function (savedUser) {
+    return {
+        type: SET_ACTIVE_AREA_EDIT,
+        payload: savedUser
+    }
+};
 
 let changePermissions = function (permission) {
     return {
         type: CHANGE_PERMISSIONS,
         payload: permission
-    }
-};
-
-export function getPermission() {
-    return function (dispatch) {
-        axiosWrapper('rpcTester.getPermission', 'test').then((result) => {
-            dispatch(changePermissions(result));
-        })
     }
 };
 
@@ -61,6 +67,7 @@ let updateNewUser = function (name, value) {
     }
 };
 
+//todo: валидация начинает работать только со второго символа. Те если символ один и неправильный - валидация вернет true
 export function simpleValidation(ref) {
     return function (dispatch) {
         if ((/[^a-zA-Z1-9]/.test(ref.value))) {
@@ -77,7 +84,6 @@ export function passwordValidation(user) {
     return function (dispatch) {
         let pass1 = user[PASSWORD];
         let pass2 = user[RETRY_PASSWORD];
-        console.log("pass1=" + pass1 + " pass2=" + pass2);
         if (pass1 === pass2) {
             return 'success';
         } else {
@@ -98,13 +104,41 @@ export function getUsers() {
     }
 }
 
+export function goToEditUser(userName) {
+    /*return function (dispatch) {
+        axiosWrapper('rpcTester.getUser', userName).then((result) => {
+            let users = [];
+            result.map(user => users.push({name: user.userName, role: user.firstName}));
+            dispatch(addUsers(users));
+        }).catch((error) => {
+        })
+    }*/
+    return function (dispatch) {
+        //здесь будет запрос в бд
+        console.log("goToEditUser");
+        dispatch(createPresetUser({
+            [USERNAME]: "testEditUser",
+            [ADMIN]: "000",
+            [FIRST_NAME]: "first",
+            [LAST_NAME]: "last"
+        }));
+    }
+}
+
+
+export function getPermission() {
+    return function (dispatch) {
+        axiosWrapper('rpcTester.getPermission', 'test').then((result) => {
+            dispatch(changePermissions(result));
+        })
+    }
+};
 
 export function sendForm(state) {
     return function (dispatch) {
 
     }
 }
-
 
 export function sendParam(ref) {
     return function (dispatch) {
