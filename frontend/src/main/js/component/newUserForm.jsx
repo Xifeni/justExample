@@ -2,6 +2,8 @@ import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal
 import React from "react";
 import {USER_LIST, HAS_ERROR} from "../container/const.js";
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {sendForm} from "../actions/actions.jsx";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -24,7 +26,7 @@ class FormItem extends React.Component {
         });
     }
 
-    blur(e) {
+    blur() {
         this.props.sendParam({id: this.props.name, value: this.state.value});
     }
 
@@ -42,6 +44,11 @@ class FormItem extends React.Component {
                     onBlur={this.blur}/>
             </FormGroup>
         );
+    }
+
+    componentDidMount() {
+        console.log("call blur");
+        this.blur();
     }
 }
 
@@ -87,7 +94,8 @@ class FormList extends React.Component {
                 <Modal.Footer>
                     <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' && "Password and retype password is not equals")}</HelpBlock>
                     <Button onClick={() => this.props.setActiveArea(USER_LIST)}>Close</Button>
-                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR] === true}>Save user</Button>
+                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR]} onClick={sendForm(this.props.newUser)}>Save
+                        user</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
@@ -101,4 +109,9 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(FormList);
+export default connect(mapStateToProps, (dispatch) => {
+        return {
+            sendForm: bindActionCreators(sendForm, dispatch)
+        }
+    }
+)(FormList);

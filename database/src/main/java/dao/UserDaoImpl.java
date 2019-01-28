@@ -64,4 +64,21 @@ public class UserDaoImpl implements UserDao {
     public void editUser(User user) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public User getUser(String name) throws SQLException {
+        List<User> users = new ArrayList<>();
+
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> query = creator.getRawUser(connection, name);
+
+            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
+
+            ResultSet set = sets.get(0);
+            while (set.next()) {
+                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
+            }
+            return users.get(0);
+        }
+    }
 }

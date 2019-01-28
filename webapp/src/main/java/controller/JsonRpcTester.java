@@ -21,4 +21,12 @@ public class JsonRpcTester {
     public void logout() throws SQLException {
         dataController.clearSessions();
     }
+
+    public User getUser(String name) throws SQLException {
+        return dataController.getUser(name);
+    }
+
+    public void saveEditedUser(User user){
+        System.out.println(user);
+    }
 }

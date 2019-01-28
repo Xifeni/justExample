@@ -37,4 +37,8 @@ public class DataController {
     public List<User> getUsersList(){
         return userDao.getUsers();
     }
+
+    public User getUser(String name) throws SQLException {
+        return userDao.getUser(name);
+    }
 }

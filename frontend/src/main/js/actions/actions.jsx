@@ -12,7 +12,8 @@ import {
     USERNAME,
     FIRST_NAME,
     LAST_NAME,
-    ADMIN
+    ADMIN,
+    RPC_TESTER
 } from "../container/const.js";
 
 //todo: класс Actions разрося, надо бы разбить
@@ -103,7 +104,7 @@ export function passwordValidation(user) {
 
 export function getUsers() {
     return function (dispatch) {
-        axiosWrapper('rpcTester.getUsers').then((result) => {
+        axiosWrapper(RPC_TESTER + '.getUsers').then((result) => {
             let users = [];
             result.map(user => users.push({name: user.userName, role: user.firstName}));
             dispatch(addUsers(users));
@@ -114,15 +115,15 @@ export function getUsers() {
 
 export function goToEditUser(userName) {
     return function (dispatch) {
-        let presetUser = {
-            [USERNAME]: "testEditUser",
-            [ADMIN]: "000",
-            [FIRST_NAME]: "first",
-            [LAST_NAME]: "last"
-        };
-        //здесь будет запрос в бд
-        console.log("goToEditUser");
-        dispatch(createPresetUser(presetUser));
+        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((result) => {
+            let presetUser = {
+                [USERNAME]: result.userName,
+                [ADMIN]: "",
+                [FIRST_NAME]: result.firstName,
+                [LAST_NAME]: result.lastName
+            };
+            dispatch(createPresetUser(presetUser));
+        }).catch();
     }
 }
 
@@ -131,7 +132,7 @@ export function getPermission() {
     return function (dispatch) {
         let isAdmin = false;
         let name = document.getElementById('container').getAttribute("data-username");
-        axiosWrapper('rpcTester.getPermission', 'test').then((result) => {
+        axiosWrapper([RPC_TESTER] + '.getPermission', name).then((result) => {
             if (result === "111") {
                 isAdmin = true;
             }
@@ -143,9 +144,9 @@ export function getPermission() {
     }
 };
 
-export function sendForm(state) {
+export function sendForm(user) {
     return function (dispatch) {
-
+        axiosWrapper([RPC_TESTER] + '.saveEditedUser', user).then().catch();
     }
 }
 

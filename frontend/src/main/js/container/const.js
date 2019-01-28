@@ -16,3 +16,4 @@ export const FIRST_NAME = "First name";
 export const LAST_NAME = "Last name";
 export const ADMIN = "Admin";
 export const HAS_ERROR = "hasError";
+export const RPC_TESTER = "rpcTester";
