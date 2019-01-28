@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {getUsers, goToEditUser} from "../actions/actions.jsx";
 import Button from "react-bootstrap/es/Button";
+import {ADMIN} from "../container/const.js";
 
 class UserItem extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ class UserItem extends Component {
         return <tr>
             <td><a onClick={() => this.props.goToEditUser(this.props.item.name)}>{this.props.item.name}</a></td>
             <td>{this.props.item.role}</td>
-            <td>{this.props.permission === "000" && <Button>"delete"</Button>}</td>
+            <td>{this.props.currentUser[ADMIN] && <Button>"delete"</Button>}</td>
         </tr>
     }
 }
@@ -44,7 +45,7 @@ class UsersList extends Component {
                 </thead>
                 <tbody>
                 {this.props.users.map(user =>
-                    <UserItem key={user.name} item={user} permission={this.props.permission} goToEditUser={this.props.goToEditUser}/>
+                    <UserItem key={user.name} item={user} currentUser={this.props.currentUser} goToEditUser={this.props.goToEditUser}/>
                 )}
                 </tbody>
             </Table>
@@ -56,7 +57,7 @@ function mapStateToProps(state) {
     return {
         users: state.users,
         loadingStatus: state.loadingStatus,
-        permission: state.permission
+        currentUser: state.currentUser
     };
 }
 

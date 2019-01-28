@@ -17,4 +17,8 @@ public class JsonRpcTester {
     public User[] getUsers() {
         return dataController.getUsersList().toArray(new User[0]);
     }
+
+    public void logout() throws SQLException {
+        dataController.clearSessions();
+    }
 }

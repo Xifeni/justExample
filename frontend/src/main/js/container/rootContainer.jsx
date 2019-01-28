@@ -13,7 +13,8 @@ import {
     simpleValidation,
     sendParam,
     sendForm,
-    passwordValidation
+    passwordValidation,
+    logout
 } from "../actions/actions.jsx";
 import {
     CREATE_USER,
@@ -43,6 +44,7 @@ class AppView extends React.Component {
                 <Row>
                     <Col xs={12} md={8}>
                         {this.props.activeArea === (USER_LIST) && <UsersList {...this.props}/>}
+                        {this.props.activeArea === (LOGOUT) && this.props.logout()}
                         {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
                             {
                                 id: [USERNAME],
@@ -101,7 +103,7 @@ class AppView extends React.Component {
 function mapStateToProps(state) {
     return {
         activeArea: state.activeArea,
-        currentUser: {},
+        currentUser: state.currentUser,
         presetUser: state.presetUser
     };
 }
@@ -114,6 +116,7 @@ export default connect(mapStateToProps, (dispatch) => {
         validation: bindActionCreators(simpleValidation, dispatch),
         sendParams: bindActionCreators(sendParam, dispatch),
         sendForm: bindActionCreators(sendForm, dispatch),
-        checkPassword: bindActionCreators(passwordValidation, dispatch)
+        checkPassword: bindActionCreators(passwordValidation, dispatch),
+        logout: bindActionCreators(logout, dispatch)
     }
 })(AppView);

@@ -1,7 +1,7 @@
 import {
     SET_USER_FORM_ERROR,
     USER_LIST,
-    CHANGE_PERMISSIONS,
+    SET_CURRENT_USER,
     ADD_USERS,
     SET_ACTIVE_AREA,
     SET_ACTIVE_AREA_EDIT,
@@ -20,7 +20,6 @@ import {
 let initialState = {
     activeArea: USER_LIST,
     users: [],
-    permission: "null",
     textError: "",
     newUser: {
         [USERNAME]: "",
@@ -43,8 +42,11 @@ let initialState = {
         [ADMIN]: "",
         [FIRST_NAME]: "",
         [LAST_NAME]: ""
+    },
+    currentUser: {
+        [USERNAME]: "",
+        [ADMIN]: ""
     }
-
 };
 
 //todo: слишком много всего, нужно разбить
@@ -52,10 +54,16 @@ let initialState = {
 let generalReducer = function (state = initialState, action) {
     switch (action.type) {
         case SET_ACTIVE_AREA : {
+            //todo: это грязно?
+            state.presetUser = {
+                [USERNAME]: "",
+                [ADMIN]: "",
+                [FIRST_NAME]: "",
+                [LAST_NAME]: ""
+            };
             return Object.assign({}, state, {activeArea: action.payload});
         }
         case SET_ACTIVE_AREA_EDIT : {
-            console.log(action.payload);
             let params = [USERNAME, LAST_NAME, FIRST_NAME, ADMIN];
             for (let param of params) {
                 state.presetUser[param] = action.payload[param];
@@ -65,8 +73,14 @@ let generalReducer = function (state = initialState, action) {
         case ADD_USERS: {
             return Object.assign({}, state, {users: action.payload, loadingStatus: true});
         }
-        case CHANGE_PERMISSIONS: {
-            return Object.assign({}, state, {permission: action.payload});
+        case SET_CURRENT_USER: {
+            console.log("current user:"+ action.payload[USERNAME]+'/'+action.payload[ADMIN]);
+            return Object.assign({}, state, {
+                currentUser: {
+                    [USERNAME]: action.payload[USERNAME],
+                    [ADMIN]: action.payload[ADMIN]
+                }
+            })
         }
         case SET_USER_FORM_ERROR : {
             state.errorStatus[action.payload.name] = action.payload.message;
@@ -74,13 +88,8 @@ let generalReducer = function (state = initialState, action) {
             return Object.assign({}, state);
         }
         case REMOVE_USER_FORM_ERROR : {
-            let flag = true;
             state.errorStatus[action.payload.name] = "";
-            for (let key in state.errorStatus) {
-                (state.errorStatus[key] === "" || state.errorStatus[key] === false || state.errorStatus[key] === true) ? flag = flag && false : flag = true;
-                //todo: это трешняк. надо переделать на что то более удобное.
-            }
-            state.errorStatus[HAS_ERROR] = flag;
+            state.errorStatus[HAS_ERROR] = checkErrorStatus(state.errorStatus);
             return Object.assign({}, state);
         }
         case UPDATE_NEW_USER : {
@@ -90,5 +99,15 @@ let generalReducer = function (state = initialState, action) {
     }
     return state;
 };
+
+function checkErrorStatus(errorStatus) {
+    let keys = [USERNAME, LAST_NAME, FIRST_NAME, RETRY_PASSWORD, PASSWORD];
+    for (let key of keys) {
+        if (errorStatus[key] !== "") {
+            return true;
+        }
+    }
+    return false;
+}
 
 export default generalReducer;

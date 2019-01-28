@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Страница авторизации</h2>
-<form action="main" method="post">
+<form action="login" method="post">
     <p><b>Логин:</b><br>
         <input type="text" name="login" size="30"></p>
     <p><b>Пароль:</b><br>

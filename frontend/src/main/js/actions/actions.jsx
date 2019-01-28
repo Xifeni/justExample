@@ -3,13 +3,12 @@ import {
     SET_USER_FORM_ERROR,
     SET_ACTIVE_AREA,
     SET_ACTIVE_AREA_EDIT,
-    CHANGE_PERMISSIONS,
+    SET_CURRENT_USER,
     ADD_USERS,
     REMOVE_USER_FORM_ERROR,
     UPDATE_NEW_USER,
     PASSWORD,
     RETRY_PASSWORD,
-    CREATE_USER,
     USERNAME,
     FIRST_NAME,
     LAST_NAME,
@@ -32,10 +31,10 @@ let createPresetUser = function (savedUser) {
     }
 };
 
-let changePermissions = function (permission) {
+let setCurrentUser = function (currentUser) {
     return {
-        type: CHANGE_PERMISSIONS,
-        payload: permission
+        type: SET_CURRENT_USER,
+        payload: currentUser
     }
 };
 
@@ -80,6 +79,16 @@ export function simpleValidation(ref) {
     }
 }
 
+export function logout() {
+    return function (dispatch) {
+        axiosWrapper('rpcTester.logout').then((result) => {
+            window.location.reload();
+        }).catch((onrejected) => {
+            window.location.reload();
+        })
+    }
+}
+
 export function passwordValidation(user) {
     return function (dispatch) {
         let pass1 = user[PASSWORD];
@@ -98,39 +107,39 @@ export function getUsers() {
             let users = [];
             result.map(user => users.push({name: user.userName, role: user.firstName}));
             dispatch(addUsers(users));
-        }).catch((error) => {
-            console.log("error get users" + error);
+        }).catch((onrejected) => {
         })
     }
 }
 
 export function goToEditUser(userName) {
-    /*return function (dispatch) {
-        axiosWrapper('rpcTester.getUser', userName).then((result) => {
-            let users = [];
-            result.map(user => users.push({name: user.userName, role: user.firstName}));
-            dispatch(addUsers(users));
-        }).catch((error) => {
-        })
-    }*/
     return function (dispatch) {
-        //здесь будет запрос в бд
-        console.log("goToEditUser");
-        dispatch(createPresetUser({
+        let presetUser = {
             [USERNAME]: "testEditUser",
             [ADMIN]: "000",
             [FIRST_NAME]: "first",
             [LAST_NAME]: "last"
-        }));
+        };
+        //здесь будет запрос в бд
+        console.log("goToEditUser");
+        dispatch(createPresetUser(presetUser));
     }
 }
 
 
 export function getPermission() {
     return function (dispatch) {
+        let isAdmin = false;
+        let name = document.getElementById('container').getAttribute("data-username");
         axiosWrapper('rpcTester.getPermission', 'test').then((result) => {
-            dispatch(changePermissions(result));
-        })
+            if (result === "111") {
+                isAdmin = true;
+            }
+            dispatch(setCurrentUser({
+                [USERNAME]: name,
+                [ADMIN]: isAdmin
+            }));
+        });
     }
 };
 

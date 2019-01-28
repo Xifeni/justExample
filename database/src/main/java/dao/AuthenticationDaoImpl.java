@@ -1,6 +1,5 @@
 package dao;
 
-import com.mysql.cj.jdbc.exceptions.OperationNotSupportedException;
 import сreator.AuthenticationRawQueryCreator;
 import сreator.AuthenticationRawQueryCreatorImpl;
 import utils.connectionPool.ConnectionPool;
