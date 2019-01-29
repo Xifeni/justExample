@@ -1,9 +1,17 @@
 import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
-import {USER_LIST, HAS_ERROR} from "../container/const.js";
+import {USER_LIST, HAS_ERROR, ERROR, PASSWORD_ERROR_MESSAGE} from "../container/const.js";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {sendForm, clearErrorStatus} from "../actions/actions.jsx";
+import {
+    sendForm,
+    clearErrorStatus,
+    setActiveArea,
+    passwordValidation,
+    simpleValidation,
+    sendParam
+} from "../actions/actions.jsx";
+import {ADMIN, LANG_WARN} from "../container/const";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -13,7 +21,6 @@ class FormItem extends React.Component {
         this.blur = this.blur.bind(this);
 
         this.state = {
-            textHelpBlock: this.props.helpText,
             validationState: null,
             value: this.props.value
         };
@@ -46,7 +53,7 @@ class FormItem extends React.Component {
                     value={this.state.value}
                     onChange={this.handleChange}
                     onBlur={this.blur}/>
-                <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
+                <HelpBlock>{(this.state.validationState === ERROR && this.props.helpText)}</HelpBlock>
             </FormGroup>
         );
     }
@@ -59,12 +66,19 @@ class FormItem extends React.Component {
 class FormCheckBox extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {checkboxChecked: false};
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(evt) {
+        this.setState({ checkboxChecked: evt.target.checked });
+        this.props.sendParam({id: ADMIN, value: this.state.checkboxChecked});
     }
 
     render() {
         return (
             <FormGroup>
-                <Checkbox>Manager</Checkbox>
+                <Checkbox onChange={this.handleChange}>Manager</Checkbox>
             </FormGroup>
         )
     }
@@ -86,18 +100,18 @@ class FormList extends React.Component {
                         {this.props.items.map(item =>
                             <FormItem key={item.id}
                                       name={item.label}
-                                      validate={item.validateFunc}
+                                      validate={this.props.validateFunc}
                                       type={item.type}
-                                      helpText={item.helpText}
-                                      sendParam={item.sendParam}
+                                      helpText={[LANG_WARN]}
+                                      sendParam={this.props.sendParam}
                                       value={this.props.presetUser[item.id]}/>
                         )}
-                        <FormCheckBox/>
+                        <FormCheckBox sendParam={this.props.sendParam}/>
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' &&
-                        "Password and retype password is not equals")}</HelpBlock>
+                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === ERROR &&
+                        PASSWORD_ERROR_MESSAGE)}</HelpBlock>
                     <Button onClick={() => {
                         this.props.setActiveArea(USER_LIST);
                         this.props.clearErrorStatus();
@@ -122,7 +136,11 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, (dispatch) => {
         return {
             clearErrorStatus: bindActionCreators(clearErrorStatus, dispatch),
-            sendForm: bindActionCreators(sendForm, dispatch)
+            sendForm: bindActionCreators(sendForm, dispatch),
+            setActiveArea: bindActionCreators(setActiveArea, dispatch),
+            checkPassword: bindActionCreators(passwordValidation, dispatch),
+            validateFunc: bindActionCreators(simpleValidation, dispatch),
+            sendParam: bindActionCreators(sendParam, dispatch)
         }
     }
 )(FormList);

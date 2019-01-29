@@ -10,17 +10,12 @@ import FormList from "../component/newUserForm.jsx";
 import {
     getPermission,
     getUsers,
-    simpleValidation,
-    sendParam,
-    sendForm,
-    passwordValidation,
     logout
 } from "../actions/actions.jsx";
 import {
     CREATE_USER,
     LOGOUT,
     USER_LIST,
-    LANG_WARN,
     USERNAME,
     LAST_NAME,
     FIRST_NAME,
@@ -50,44 +45,28 @@ class AppView extends React.Component {
                                 id: [USERNAME],
                                 label: 'Username',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [PASSWORD],
                                 label: 'Password',
                                 type: "password",
-                                validateFunc: this.props.validation,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [RETRY_PASSWORD],
                                 label: 'Retype password',
                                 type: "password",
-                                validateFunc: this.props.validation,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [FIRST_NAME],
                                 label: 'First name',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [LAST_NAME],
                                 label: 'Last name',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
                             }
-                        ]}
-                                                                              setActiveArea={this.props.setActiveArea}
-                                                                              checkPassword={this.props.checkPassword}
-                                                                              presetUser={this.props.presetUser}/>}
+                        ]} presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>
@@ -112,9 +91,6 @@ export default connect(mapStateToProps, (dispatch) => {
         loadPermissions: bindActionCreators(getPermission, dispatch),
         setActiveArea: bindActionCreators(setActiveArea, dispatch),
         loadUsers: bindActionCreators(getUsers, dispatch),
-        validation: bindActionCreators(simpleValidation, dispatch),
-        sendParams: bindActionCreators(sendParam, dispatch),
-        checkPassword: bindActionCreators(passwordValidation, dispatch),
         logout: bindActionCreators(logout, dispatch)
     }
 })(AppView);

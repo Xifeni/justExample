@@ -20,3 +20,5 @@ export const RPC_TESTER = "rpcTester";
 export const WIPE_DATA = "WIPE_DATA";
 export const MESSAGE = "MESSAGE";
 export const DELETE_USER = "DELETE_USER";
+export const ERROR = "ERROR";
+export const PASSWORD_ERROR_MESSAGE = "Password and retype password is not equals";

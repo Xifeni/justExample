@@ -75,7 +75,7 @@ let deleteUserInState = function (username) {
         type: DELETE_USER,
         payload: username
     }
-}
+};
 
 export function simpleValidation(ref) {
     return function (dispatch) {
@@ -163,7 +163,6 @@ export function getPermission() {
 export function sendForm(user) {
     return function (dispatch) {
         axiosWrapper([RPC_TESTER] + '.saveEditedUser', user).then((result) => {
-                console.log("result:" + result);
                 dispatch(setActiveArea(USER_LIST));
             }
         ).catch((onrejected) => {
@@ -186,7 +185,6 @@ export function clearErrorStatus() {
 }
 
 export function deleteUser(username) {
-    console.log("try deleting");
     return function (dispatch) {
         axiosWrapper([RPC_TESTER] + '.deleteUser', username).then((result) => {
                 dispatch(deleteUserInState(username));

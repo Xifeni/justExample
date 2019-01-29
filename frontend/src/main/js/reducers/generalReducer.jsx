@@ -43,7 +43,9 @@ let initialState = {
         [USERNAME]: "",
         [ADMIN]: "",
         [FIRST_NAME]: "",
-        [LAST_NAME]: ""
+        [LAST_NAME]: "",
+        [PASSWORD]: "",
+        [RETRY_PASSWORD]: ""
     },
     currentUser: {
         [USERNAME]: "",
@@ -65,7 +67,9 @@ let generalReducer = function (state = initialState, action) {
                 [USERNAME]: "",
                 [ADMIN]: "",
                 [FIRST_NAME]: "",
-                [LAST_NAME]: ""
+                [LAST_NAME]: "",
+                [PASSWORD]: "",
+                [RETRY_PASSWORD]: ""
             };
             return Object.assign({}, state, {activeArea: action.payload});
         }
@@ -77,11 +81,9 @@ let generalReducer = function (state = initialState, action) {
             return Object.assign({}, state, {activeArea: CREATE_USER});
         }
         case ADD_USERS: {
-            console.log("users:"+action.payload);
             return Object.assign({}, state, {users: action.payload, loadingStatus: true});
         }
         case SET_CURRENT_USER: {
-            console.log("current user:" + action.payload[USERNAME] + '/' + action.payload[ADMIN]);
             return Object.assign({}, state, {
                 currentUser: {
                     [USERNAME]: action.payload[USERNAME],
