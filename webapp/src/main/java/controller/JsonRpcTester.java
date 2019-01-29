@@ -39,4 +39,8 @@ public class JsonRpcTester {
         dataController.saveUser(user);
         return "";
     }
+
+    public void deleteUser(String username) {
+        dataController.deleteUser(username);
+    }
 }

@@ -3,7 +3,7 @@ import {Component} from "react";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getUsers, goToEditUser} from "../actions/actions.jsx";
+import {getUsers, goToEditUser, deleteUser} from "../actions/actions.jsx";
 import Button from "react-bootstrap/es/Button";
 import {ADMIN} from "../container/const.js";
 
@@ -14,9 +14,9 @@ class UserItem extends Component {
 
     render() {
         return <tr>
-            <td><a onClick={() => this.props.goToEditUser(this.props.item.name)}>{this.props.item.name}</a></td>
-            <td>{this.props.item.role}</td>
-            <td>{this.props.currentUser[ADMIN] && <Button>"delete"</Button>}</td>
+            <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>
+            <td>{this.props.currentUser[ADMIN] &&
+            <Button onClick={() => {confirm("Нарушение шестой заповеди. Вы уверены?") && this.props.deleteUser(this.props.item)}}>Delete user</Button>}</td>
         </tr>
     }
 }
@@ -40,12 +40,14 @@ class UsersList extends Component {
                 <thead>
                 <tr>
                     <th>User</th>
-                    <th>Role</th>
                 </tr>
                 </thead>
                 <tbody>
                 {this.props.users.map(user =>
-                    <UserItem key={user.name} item={user} currentUser={this.props.currentUser} goToEditUser={this.props.goToEditUser}/>
+                    <UserItem key={user} item={user}
+                              currentUser={this.props.currentUser}
+                              goToEditUser={this.props.goToEditUser}
+                              deleteUser={this.props.deleteUser}/>
                 )}
                 </tbody>
             </Table>
@@ -64,7 +66,8 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, (dispatch) => {
     return {
         loadUsers: bindActionCreators(getUsers, dispatch),
-        goToEditUser: bindActionCreators(goToEditUser, dispatch)
+        goToEditUser: bindActionCreators(goToEditUser, dispatch),
+        deleteUser: bindActionCreators(deleteUser, dispatch)
     }
 })(UsersList);
 

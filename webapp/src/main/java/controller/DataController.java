@@ -49,4 +49,8 @@ public class DataController {
     public void saveUser(User user) {
         userDao.createUser(user);
     }
+
+    public void deleteUser(String username) {
+        userDao.deleteUser(username);
+    }
 }

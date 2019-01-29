@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class UserDaoImpl implements UserDao {
@@ -31,7 +30,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteUser(User user) {
+    public void deleteUser(String user) {
         try (Connection connection = pool.getConnection()) {
             List<PreparedStatement> queries = creator.getRawDeleteUser(connection, user);
             transactionManagerImpl.executeTransaction(queries, connection);
@@ -98,7 +97,5 @@ public class UserDaoImpl implements UserDao {
             }
             return users.get(0);
         }
-
-
     }
 }

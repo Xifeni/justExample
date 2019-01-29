@@ -16,7 +16,7 @@ import {
     HAS_ERROR,
     CREATE_USER,
     WIPE_DATA,
-    MESSAGE
+    DELETE_USER
 } from "../container/const.js";
 
 let initialState = {
@@ -77,6 +77,7 @@ let generalReducer = function (state = initialState, action) {
             return Object.assign({}, state, {activeArea: CREATE_USER});
         }
         case ADD_USERS: {
+            console.log("users:"+action.payload);
             return Object.assign({}, state, {users: action.payload, loadingStatus: true});
         }
         case SET_CURRENT_USER: {
@@ -119,6 +120,11 @@ let generalReducer = function (state = initialState, action) {
                 [LAST_NAME]: "",
                 [ADMIN]: false
             };
+            return Object.assign({}, state);
+        }
+        case DELETE_USER:{
+            let index = state.users.indexOf(action.payload);
+            state.users.splice(index, 1);
             return Object.assign({}, state);
         }
     }

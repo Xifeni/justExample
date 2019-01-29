@@ -14,7 +14,8 @@ import {
     LAST_NAME,
     ADMIN,
     RPC_TESTER,
-    WIPE_DATA
+    WIPE_DATA,
+    DELETE_USER
 } from "../container/const.js";
 import {USER_LIST} from "../container/const";
 
@@ -69,6 +70,13 @@ let updateNewUser = function (name, value) {
     }
 };
 
+let deleteUserInState = function (username) {
+    return {
+        type: DELETE_USER,
+        payload: username
+    }
+}
+
 export function simpleValidation(ref) {
     return function (dispatch) {
         if ((/[^a-zA-Z1-9]/.test(ref.value))) {
@@ -109,7 +117,7 @@ export function getUsers() {
     return function (dispatch) {
         axiosWrapper(RPC_TESTER + '.getUsers').then((result) => {
             let users = [];
-            result.map(user => users.push({name: user.userName, role: user.firstName}));
+            result.map(user => users.push(user.userName));
             dispatch(addUsers(users));
         }).catch((onrejected) => {
             alert("has error" + onrejected);
@@ -174,6 +182,20 @@ export function sendParam(ref) {
 export function clearErrorStatus() {
     return {
         type: WIPE_DATA
+    }
+}
+
+export function deleteUser(username) {
+    console.log("try deleting");
+    return function (dispatch) {
+        axiosWrapper([RPC_TESTER] + '.deleteUser', username).then((result) => {
+                dispatch(deleteUserInState(username));
+                dispatch(setActiveArea(USER_LIST));
+            }
+        ).catch((onrejected) => {
+                alert("Has error:" + onrejected);
+            }
+        );
     }
 }
 

@@ -19,3 +19,4 @@ export const HAS_ERROR = "hasError";
 export const RPC_TESTER = "rpcTester";
 export const WIPE_DATA = "WIPE_DATA";
 export const MESSAGE = "MESSAGE";
+export const DELETE_USER = "DELETE_USER";
