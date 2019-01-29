@@ -15,7 +15,7 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     private static final String SET_USER_VAULT = "INSERT INTO VAULT (USERNAME, PASSWORD) VALUES(?,?)";
     private static final String DELETE_USER = "DELETE INTO USERS WHERE USERNAME = ?";
     private static final String GET_USERS = "SELECT * FROM USERS";
-
+    private static final String GET_USER = "SELECT * FROM USERS WHERE username=?";
 
     public List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement(CREATE_USER);
@@ -50,6 +50,15 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
 
     public List<PreparedStatement> getRawUsers(Connection connection) throws SQLException {
         PreparedStatement query = connection.prepareStatement(GET_USERS);
+
+        List<PreparedStatement> queries = new ArrayList<>();
+        queries.add(query);
+        return queries;
+    }
+
+    public List<PreparedStatement> getRawUser(Connection connection, String name) throws SQLException {
+        PreparedStatement query = connection.prepareStatement(GET_USER);
+        query.setString(1, name);
 
         List<PreparedStatement> queries = new ArrayList<>();
         queries.add(query);

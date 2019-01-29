@@ -14,7 +14,9 @@ import {
     LAST_NAME,
     ADMIN,
     HAS_ERROR,
-    CREATE_USER
+    CREATE_USER,
+    WIPE_DATA,
+    MESSAGE
 } from "../container/const.js";
 
 let initialState = {
@@ -46,7 +48,11 @@ let initialState = {
     currentUser: {
         [USERNAME]: "",
         [ADMIN]: ""
-    }
+    },
+    /*passwordErrorStatus:{
+        [HAS_ERROR]: false,
+        [MESSAGE]: "Password and retype password is not equals"
+    }*/
 };
 
 //todo: слишком много всего, нужно разбить
@@ -74,7 +80,7 @@ let generalReducer = function (state = initialState, action) {
             return Object.assign({}, state, {users: action.payload, loadingStatus: true});
         }
         case SET_CURRENT_USER: {
-            console.log("current user:"+ action.payload[USERNAME]+'/'+action.payload[ADMIN]);
+            console.log("current user:" + action.payload[USERNAME] + '/' + action.payload[ADMIN]);
             return Object.assign({}, state, {
                 currentUser: {
                     [USERNAME]: action.payload[USERNAME],
@@ -94,6 +100,25 @@ let generalReducer = function (state = initialState, action) {
         }
         case UPDATE_NEW_USER : {
             state.newUser[action.payload.name] = action.payload.value;
+            return Object.assign({}, state);
+        }
+        case WIPE_DATA: {
+            state.errorStatus = {
+                [USERNAME]: "",
+                [PASSWORD]: "",
+                [RETRY_PASSWORD]: "",
+                [FIRST_NAME]: "",
+                [LAST_NAME]: "",
+                [HAS_ERROR]: false
+            };
+            state.newUser = {
+                [USERNAME]: "",
+                [PASSWORD]: "",
+                [RETRY_PASSWORD]: "",
+                [FIRST_NAME]: "",
+                [LAST_NAME]: "",
+                [ADMIN]: false
+            };
             return Object.assign({}, state);
         }
     }

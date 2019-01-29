@@ -87,7 +87,6 @@ class AppView extends React.Component {
                         ]}
                                                                               setActiveArea={this.props.setActiveArea}
                                                                               checkPassword={this.props.checkPassword}
-                                                                              sendForm={this.props.sendForm}
                                                                               presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
@@ -115,7 +114,6 @@ export default connect(mapStateToProps, (dispatch) => {
         loadUsers: bindActionCreators(getUsers, dispatch),
         validation: bindActionCreators(simpleValidation, dispatch),
         sendParams: bindActionCreators(sendParam, dispatch),
-        sendForm: bindActionCreators(sendForm, dispatch),
         checkPassword: bindActionCreators(passwordValidation, dispatch),
         logout: bindActionCreators(logout, dispatch)
     }

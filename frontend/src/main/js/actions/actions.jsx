@@ -12,8 +12,11 @@ import {
     USERNAME,
     FIRST_NAME,
     LAST_NAME,
-    ADMIN
+    ADMIN,
+    RPC_TESTER,
+    WIPE_DATA
 } from "../container/const.js";
+import {USER_LIST} from "../container/const";
 
 //todo: класс Actions разрося, надо бы разбить
 
@@ -66,7 +69,6 @@ let updateNewUser = function (name, value) {
     }
 };
 
-//todo: валидация начинает работать только со второго символа. Те если символ один и неправильный - валидация вернет true
 export function simpleValidation(ref) {
     return function (dispatch) {
         if ((/[^a-zA-Z1-9]/.test(ref.value))) {
@@ -93,36 +95,43 @@ export function passwordValidation(user) {
     return function (dispatch) {
         let pass1 = user[PASSWORD];
         let pass2 = user[RETRY_PASSWORD];
+        let flag = 'error';
         if (pass1 === pass2) {
-            return 'success';
-        } else {
-            return 'error';
+            if (pass1.length !== 0) {
+                flag = 'success';
+            }
         }
+        return flag;
     }
 }
 
 export function getUsers() {
     return function (dispatch) {
-        axiosWrapper('rpcTester.getUsers').then((result) => {
+        axiosWrapper(RPC_TESTER + '.getUsers').then((result) => {
             let users = [];
             result.map(user => users.push({name: user.userName, role: user.firstName}));
             dispatch(addUsers(users));
         }).catch((onrejected) => {
+            alert("has error" + onrejected);
         })
     }
 }
 
 export function goToEditUser(userName) {
     return function (dispatch) {
-        let presetUser = {
-            [USERNAME]: "testEditUser",
-            [ADMIN]: "000",
-            [FIRST_NAME]: "first",
-            [LAST_NAME]: "last"
-        };
-        //здесь будет запрос в бд
-        console.log("goToEditUser");
-        dispatch(createPresetUser(presetUser));
+        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((result) => {
+            let presetUser = {
+                [USERNAME]: result.userName,
+                [ADMIN]: "",
+                [FIRST_NAME]: result.firstName,
+                [LAST_NAME]: result.lastName
+            };
+            dispatch(createPresetUser(presetUser));
+        }).catch(
+            (onrejected) => {
+                alert("has error" + onrejected);
+            }
+        );
     }
 }
 
@@ -131,7 +140,7 @@ export function getPermission() {
     return function (dispatch) {
         let isAdmin = false;
         let name = document.getElementById('container').getAttribute("data-username");
-        axiosWrapper('rpcTester.getPermission', 'test').then((result) => {
+        axiosWrapper([RPC_TESTER] + '.getPermission', name).then((result) => {
             if (result === "111") {
                 isAdmin = true;
             }
@@ -143,15 +152,28 @@ export function getPermission() {
     }
 };
 
-export function sendForm(state) {
+export function sendForm(user) {
     return function (dispatch) {
-
+        axiosWrapper([RPC_TESTER] + '.saveEditedUser', user).then((result) => {
+                console.log("result:" + result);
+                dispatch(setActiveArea(USER_LIST));
+            }
+        ).catch((onrejected) => {
+                alert("Has error:" + onrejected);
+            }
+        );
     }
 }
 
 export function sendParam(ref) {
     return function (dispatch) {
         dispatch(updateNewUser(ref.id, ref.value));
+    }
+}
+
+export function clearErrorStatus() {
+    return {
+        type: WIPE_DATA
     }
 }
 

@@ -14,12 +14,10 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("username", "test");
         request.getRequestDispatcher("/index.jsp").forward(request, response);
-        //response.sendRedirect("/index.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //super.doPost(req, resp);
         doGet(req, resp);
     }
 }

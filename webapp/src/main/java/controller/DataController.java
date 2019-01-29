@@ -37,4 +37,16 @@ public class DataController {
     public List<User> getUsersList(){
         return userDao.getUsers();
     }
+
+    public User getUser(String name) throws SQLException {
+        return userDao.getUser(name);
+    }
+
+    public boolean isUserExist(String name) throws SQLException {
+        return userDao.isUserExist(name);
+    }
+
+    public void saveUser(User user) {
+        userDao.createUser(user);
+    }
 }

@@ -2,6 +2,8 @@ import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal
 import React from "react";
 import {USER_LIST, HAS_ERROR} from "../container/const.js";
 import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {sendForm, clearErrorStatus} from "../actions/actions.jsx";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -17,14 +19,18 @@ class FormItem extends React.Component {
         };
     }
 
+    //todo:Две валидации! Подумать как оставить одну.
     handleChange(e) {
         this.setState({
             value: e.target.value,
-            validationState: this.props.validate({id: this.props.name, value: this.state.value})
+            validationState: this.props.validate({id: this.props.name, value: e.target.value})
         });
     }
 
-    blur(e) {
+    blur() {
+        this.setState({
+            validationState: this.props.validate({id: this.props.name, value: this.state.value})
+        });
         this.props.sendParam({id: this.props.name, value: this.state.value});
     }
 
@@ -40,8 +46,13 @@ class FormItem extends React.Component {
                     value={this.state.value}
                     onChange={this.handleChange}
                     onBlur={this.blur}/>
+                <HelpBlock>{(this.state.validationState === 'error' && this.state.textHelpBlock)}</HelpBlock>
             </FormGroup>
         );
+    }
+
+    componentDidMount() {
+        this.blur();
     }
 }
 
@@ -85,9 +96,16 @@ class FormList extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' && "Password and retype password is not equals")}</HelpBlock>
-                    <Button onClick={() => this.props.setActiveArea(USER_LIST)}>Close</Button>
-                    <Button bsStyle="primary" disabled={this.props.errorStatus[HAS_ERROR] === true}>Save user</Button>
+                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === 'error' &&
+                        "Password and retype password is not equals")}</HelpBlock>
+                    <Button onClick={() => {
+                        this.props.setActiveArea(USER_LIST);
+                        this.props.clearErrorStatus();
+                    }}>Close</Button>
+                    <Button bsStyle="primary" disabled={this.props.errorStatus}
+                            onClick={
+                                () => this.props.sendForm(this.props.newUser)
+                            }>Save</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
@@ -95,10 +113,16 @@ class FormList extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        errorStatus: state.errorStatus,
+        errorStatus: state.errorStatus[HAS_ERROR],
         newUser: state.newUser,
         presetUser: state.presetUser
     };
 }
 
-export default connect(mapStateToProps)(FormList);
+export default connect(mapStateToProps, (dispatch) => {
+        return {
+            clearErrorStatus: bindActionCreators(clearErrorStatus, dispatch),
+            sendForm: bindActionCreators(sendForm, dispatch)
+        }
+    }
+)(FormList);
