@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {getUsers, goToEditUser, deleteUser} from "../actions/actions.jsx";
 import Button from "react-bootstrap/es/Button";
-import {ADMIN} from "../container/const.js";
+import {ADMIN, USERNAME, DELETE_MESSAGE} from "../container/const.js";
 
 class UserItem extends Component {
     constructor(props) {
@@ -14,9 +14,14 @@ class UserItem extends Component {
 
     render() {
         return <tr>
-            <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>
-            <td>{this.props.currentUser[ADMIN] &&
-            <Button onClick={() => {confirm("Нарушение шестой заповеди. Вы уверены?") && this.props.deleteUser(this.props.item)}}>Delete user</Button>}</td>
+            {this.props.item !== this.props.currentUser[USERNAME] && this.props.currentUser[ADMIN] === ADMIN &&
+            <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>}
+            {(this.props.item === this.props.currentUser[USERNAME] || this.props.currentUser[ADMIN] !== ADMIN)
+            && <td>{this.props.item}</td>}
+            {this.props.currentUser[ADMIN] === ADMIN && this.props.item !== this.props.currentUser[USERNAME] &&
+            <td><Button onClick={() => {
+                confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item)
+            }}>Delete user</Button></td>}
         </tr>
     }
 }

@@ -24,3 +24,4 @@ export const ERROR = "ERROR";
 export const PASSWORD_ERROR_MESSAGE = "Password and retype password is not equals";
 export const CHANGE_PASSWORD_STATUS = "CHANGE_PASSWORD_STATUS";
 export const NOT_ADMIN = "NOT_ADMIN";
+export const DELETE_MESSAGE = "Нарушение шестой заповеди. Вы уверены?";

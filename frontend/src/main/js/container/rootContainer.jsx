@@ -20,20 +20,37 @@ import {
     LAST_NAME,
     FIRST_NAME,
     RETRY_PASSWORD,
-    PASSWORD
+    PASSWORD,
+    ADMIN
 } from './const.js'
 
 class AppView extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.getNavItems = this.getNavItems.bind(this);
+    }
+
+    getNavItems() {
+        if (this.props.currentUser[ADMIN] === ADMIN) {
+            return [
+                {name: USER_LIST, text: 'Список пользователей'},
+                {name: CREATE_USER, text: 'Создать нового пользователя'},
+                {name: LOGOUT, text: 'Выйти'}]
+        } else {
+            return [
+                {name: USER_LIST, text: 'Список пользователей'},
+                {name: LOGOUT, text: 'Выйти'}]
+        }
+    }
 
     render() {
         return <div className="customRootBlock1">
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
-                        <NavigationBar {...this.props} areas={[
-                            {name: USER_LIST, text: 'Список пользователей'},
-                            {name: CREATE_USER, text: 'Создать нового пользователя'},
-                            {name: LOGOUT, text: 'Выйти'}]}/>
+                        <NavigationBar {...this.props} areas={this.getNavItems()}/>
                     </Col>
                 </Row>
                 <Row>
@@ -73,7 +90,7 @@ class AppView extends React.Component {
         </div>
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.loadPermissions();
     }
 }

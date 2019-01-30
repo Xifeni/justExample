@@ -53,4 +53,8 @@ public class DataController {
     public void deleteUser(String username) {
         userDao.deleteUser(username);
     }
+
+    public String getUsername(String id) throws SQLException {
+        return authDao.getUsername(id);
+    }
 }

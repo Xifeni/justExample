@@ -13,6 +13,8 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
     private static final String IS_REGISTERED_USER = "SELECT EXISTS (SELECT * FROM VAULT WHERE CURRENT_SESSION = ?)";
     private static final String GET_PERMISSION_USER = "SELECT PERMISSION FROM PERMISSION WHERE USERNAME = ?";
     private static final String CLEAR_SESSIONS = "UPDATE VAULT SET CURRENT_SESSION = NULL WHERE CURRENT_SESSION IS NOT NULL";
+    private static final String GET_USERNAME = "SELECT USERNAME FROM VAULT WHERE CURRENT_SESSION = ?";
+
 
     @Override
     public List<PreparedStatement> getAuthenticatedUserRawQuery(Connection connection, String login, String password) throws SQLException {
@@ -47,6 +49,13 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
     @Override
     public List<PreparedStatement> getClearSessionsRawQuery(Connection connection) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(CLEAR_SESSIONS);
+        return Collections.singletonList(statement);
+    }
+
+    @Override
+    public List<PreparedStatement> getRawUsername(Connection connection, String id) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(GET_USERNAME);
+        statement.setString(1, id);
         return Collections.singletonList(statement);
     }
 }

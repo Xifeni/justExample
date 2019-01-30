@@ -12,4 +12,6 @@ public interface AuthenticationRawQueryCreator {
     List<PreparedStatement> getRegisteredUserRawQuery(Connection connection, String sessionId) throws SQLException;
     List<PreparedStatement> getLegitRequestRawQuery(Connection connection, String sessionId) throws SQLException;
     List<PreparedStatement> getClearSessionsRawQuery(Connection connection) throws SQLException;
+
+    List<PreparedStatement> getRawUsername(Connection connection, String id) throws SQLException;
 }
