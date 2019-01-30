@@ -82,8 +82,7 @@ class AppView extends React.Component {
                                 id: [LAST_NAME],
                                 label: 'Last name',
                                 type: 'text',
-                            }
-                        ]} presetUser={this.props.presetUser}/>}
+                            }]} validate={} presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>

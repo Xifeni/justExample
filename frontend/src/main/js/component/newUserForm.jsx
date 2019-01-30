@@ -95,7 +95,6 @@ class FormList extends React.Component {
         super(props);
     }
 
-    //todo: не тратить больше время, спросить про валидацию.
     render() {
         return (
             <Modal.Dialog>

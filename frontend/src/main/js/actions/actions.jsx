@@ -18,7 +18,9 @@ import {
     DELETE_USER,
     CHANGE_PASSWORD_STATUS,
     NOT_ADMIN,
-    USER_LIST
+    USER_LIST,
+    ERROR,
+    SUCCESS
 } from "../container/const.js";
 
 //todo: класс Actions разрося, надо бы разбить
@@ -88,19 +90,22 @@ let deleteUserInState = function (username) {
 
 export function simpleValidation(ref) {
     return function (dispatch) {
+        if (ref.value.length === 0) {
+            return null
+        }
         if ((/[^a-zA-Z1-9]/.test(ref.value))) {
             dispatch(setError(ref));
-            return 'error';
+            return ERROR;
         } else {
             dispatch(removeError(ref));
-            return 'success';
+            return SUCCESS;
         }
     }
 }
 
 export function logout() {
     return function (dispatch) {
-        axiosWrapper('rpcTester.logout').then(() => {
+        axiosWrapper([RPC_TESTER]+'.logout').then(() => {
             window.location.reload();
         }).catch(() => {
             window.location.reload();
