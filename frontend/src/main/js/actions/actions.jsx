@@ -15,9 +15,11 @@ import {
     ADMIN,
     RPC_TESTER,
     WIPE_DATA,
-    DELETE_USER
+    DELETE_USER,
+    CHANGE_PASSWORD_STATUS,
+    NOT_ADMIN,
+    USER_LIST
 } from "../container/const.js";
-import {USER_LIST} from "../container/const";
 
 //todo: класс Actions разрося, надо бы разбить
 
@@ -25,6 +27,13 @@ export let setActiveArea = function (idArea) {
     return {
         type: SET_ACTIVE_AREA,
         payload: idArea
+    }
+};
+
+let setPasswordCheckStatus = function (flag) {
+    return {
+        type: CHANGE_PASSWORD_STATUS,
+        payload: flag
     }
 };
 
@@ -91,9 +100,9 @@ export function simpleValidation(ref) {
 
 export function logout() {
     return function (dispatch) {
-        axiosWrapper('rpcTester.logout').then((result) => {
+        axiosWrapper('rpcTester.logout').then(() => {
             window.location.reload();
-        }).catch((onrejected) => {
+        }).catch(() => {
             window.location.reload();
         })
     }
@@ -103,20 +112,20 @@ export function passwordValidation(user) {
     return function (dispatch) {
         let pass1 = user[PASSWORD];
         let pass2 = user[RETRY_PASSWORD];
-        let flag = 'error';
-        if (pass1 === pass2) {
-            if (pass1.length !== 0) {
-                flag = 'success';
-            }
+        let flag = true;
+        console.log("try validate password:" + pass1 + ":" + pass2);
+        if (pass1 === pass2 && pass1.length !== 0) {
+            flag = false;
         }
-        return flag;
+        return dispatch(setPasswordCheckStatus(flag));
     }
 }
 
 export function getUsers() {
     return function (dispatch) {
-        axiosWrapper(RPC_TESTER + '.getUsers').then((result) => {
+        axiosWrapper(RPC_TESTER + '.getUsers').then((data) => {
             let users = [];
+            let result = data.result;
             result.map(user => users.push(user.userName));
             dispatch(addUsers(users));
         }).catch((onrejected) => {
@@ -127,7 +136,8 @@ export function getUsers() {
 
 export function goToEditUser(userName) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((result) => {
+        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((data) => {
+            let result = data.result;
             let presetUser = {
                 [USERNAME]: result.userName,
                 [ADMIN]: "",
@@ -146,11 +156,12 @@ export function goToEditUser(userName) {
 
 export function getPermission() {
     return function (dispatch) {
-        let isAdmin = false;
+        let isAdmin = NOT_ADMIN;
         let name = document.getElementById('container').getAttribute("data-username");
-        axiosWrapper([RPC_TESTER] + '.getPermission', name).then((result) => {
+        axiosWrapper([RPC_TESTER] + '.getPermission', name).then((data) => {
+            let result = data.result;
             if (result === "111") {
-                isAdmin = true;
+                isAdmin = ADMIN;
             }
             dispatch(setCurrentUser({
                 [USERNAME]: name,
@@ -158,12 +169,16 @@ export function getPermission() {
             }));
         });
     }
-};
+}
 
-export function sendForm(user) {
+export function sendForm(user, signatureUser) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.saveEditedUser', user).then((result) => {
-                dispatch(setActiveArea(USER_LIST));
+        axiosWrapper([RPC_TESTER] + '.saveEditedUser', user, signatureUser).then((data) => {
+                if (data.error.msg === undefined) {
+                    dispatch(setActiveArea(USER_LIST));
+                } else {
+                    alert("Has error " + data.error.msg);
+                }
             }
         ).catch((onrejected) => {
                 alert("Has error:" + onrejected);
@@ -186,7 +201,7 @@ export function clearErrorStatus() {
 
 export function deleteUser(username) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.deleteUser', username).then((result) => {
+        axiosWrapper([RPC_TESTER] + '.deleteUser', username).then(() => {
                 dispatch(deleteUserInState(username));
                 dispatch(setActiveArea(USER_LIST));
             }
@@ -201,5 +216,5 @@ function axiosWrapper(className, ...methodParams) {
     return axios.post("/JSON-RPC", JSON.stringify({
         method: className,
         params: methodParams
-    })).then(({data}) => data.result);
+    })).then(({data}) => (data));
 }

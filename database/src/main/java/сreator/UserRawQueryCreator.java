@@ -14,4 +14,5 @@ public interface UserRawQueryCreator {
     List<PreparedStatement> getRawUsers(Connection connection) throws SQLException;
     List<PreparedStatement> getRawEditUser(User... users);
     List<PreparedStatement> getRawUser(Connection connection, String name) throws SQLException;
+    List<PreparedStatement> getRawUpdateUser(Connection connection, User user, String signatureUser) throws SQLException;
 }

@@ -16,7 +16,9 @@ import {
     HAS_ERROR,
     CREATE_USER,
     WIPE_DATA,
-    DELETE_USER
+    DELETE_USER,
+    MESSAGE,
+    CHANGE_PASSWORD_STATUS
 } from "../container/const.js";
 
 let initialState = {
@@ -51,10 +53,10 @@ let initialState = {
         [USERNAME]: "",
         [ADMIN]: ""
     },
-    /*passwordErrorStatus:{
+    passwordErrorStatus: {
         [HAS_ERROR]: false,
         [MESSAGE]: "Password and retype password is not equals"
-    }*/
+    }
 };
 
 //todo: слишком много всего, нужно разбить
@@ -71,14 +73,14 @@ let generalReducer = function (state = initialState, action) {
                 [PASSWORD]: "",
                 [RETRY_PASSWORD]: ""
             };
-            return Object.assign({}, state, {activeArea: action.payload});
+            return Object.assign({}, state, {activeArea: action.payload, signatureUser: ""});
         }
         case SET_ACTIVE_AREA_EDIT : {
             let params = [USERNAME, LAST_NAME, FIRST_NAME, ADMIN];
             for (let param of params) {
                 state.presetUser[param] = action.payload[param];
             }
-            return Object.assign({}, state, {activeArea: CREATE_USER});
+            return Object.assign({}, state, {activeArea: CREATE_USER, signatureUser: state.presetUser[USERNAME]});
         }
         case ADD_USERS: {
             return Object.assign({}, state, {users: action.payload, loadingStatus: true});
@@ -124,9 +126,13 @@ let generalReducer = function (state = initialState, action) {
             };
             return Object.assign({}, state);
         }
-        case DELETE_USER:{
+        case DELETE_USER: {
             let index = state.users.indexOf(action.payload);
             state.users.splice(index, 1);
+            return Object.assign({}, state);
+        }
+        case CHANGE_PASSWORD_STATUS: {
+            state.passwordErrorStatus[HAS_ERROR] = action.payload;
             return Object.assign({}, state);
         }
     }

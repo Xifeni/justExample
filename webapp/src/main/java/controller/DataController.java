@@ -46,8 +46,8 @@ public class DataController {
         return userDao.isUserExist(name);
     }
 
-    public void saveUser(User user) {
-        userDao.createUser(user);
+    public void saveUser(User user, String isCreateNewUser) throws SQLException {
+        userDao.saveUser(user, isCreateNewUser);
     }
 
     public void deleteUser(String username) {

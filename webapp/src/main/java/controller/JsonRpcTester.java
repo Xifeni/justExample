@@ -30,14 +30,13 @@ public class JsonRpcTester {
         return dataController.getUser(name);
     }
 
-    public String saveEditedUser(JSONObject jsonUser) throws JSONException, SQLException {
+    public void saveEditedUser(JSONObject jsonUser, String signatureUser) throws JSONException, SQLException {
         User user = new User(jsonUser.getString("Username"),
                 jsonUser.getString("First name"),
                 jsonUser.getString("Last name"),
                 jsonUser.getString("Admin"),
                 jsonUser.getString("Password"));
-        dataController.saveUser(user);
-        return "";
+        dataController.saveUser(user, signatureUser);
     }
 
     public void deleteUser(String username) {

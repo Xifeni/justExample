@@ -1,6 +1,14 @@
 import {Button, Checkbox, ControlLabel, FormControl, FormGroup, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
-import {USER_LIST, HAS_ERROR, ERROR, PASSWORD_ERROR_MESSAGE} from "../container/const.js";
+import {
+    USER_LIST,
+    HAS_ERROR,
+    ERROR,
+    NOT_ADMIN,
+    ADMIN,
+    LANG_WARN,
+    MESSAGE,
+} from "../container/const.js";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {
@@ -11,7 +19,6 @@ import {
     simpleValidation,
     sendParam
 } from "../actions/actions.jsx";
-import {ADMIN, LANG_WARN} from "../container/const";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -66,13 +73,12 @@ class FormItem extends React.Component {
 class FormCheckBox extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {checkboxChecked: false};
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(evt) {
-        this.setState({ checkboxChecked: evt.target.checked });
-        this.props.sendParam({id: ADMIN, value: this.state.checkboxChecked});
+    handleChange(e) {
+        let role = e.target.checked ? ADMIN : NOT_ADMIN;
+        this.props.sendParam({id: ADMIN, value: role});
     }
 
     render() {
@@ -89,6 +95,7 @@ class FormList extends React.Component {
         super(props);
     }
 
+    //todo: не тратить больше время, спросить про валидацию.
     render() {
         return (
             <Modal.Dialog>
@@ -110,16 +117,18 @@ class FormList extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <HelpBlock>{(this.props.checkPassword(this.props.newUser) === ERROR &&
-                        PASSWORD_ERROR_MESSAGE)}</HelpBlock>
+                    <HelpBlock>{this.props.passwordError && MESSAGE}</HelpBlock>
                     <Button onClick={() => {
                         this.props.setActiveArea(USER_LIST);
                         this.props.clearErrorStatus();
                     }}>Close</Button>
                     <Button bsStyle="primary" disabled={this.props.errorStatus}
-                            onClick={
-                                () => this.props.sendForm(this.props.newUser)
-                            }>Save</Button>
+                            onClick={() => {
+                                this.props.checkPassword(this.props.newUser);
+                                if (!(this.props.errorStatus)) {
+                                    this.props.sendForm(this.props.newUser, this.props.signatureUser)
+                                }
+                            }}>Save</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
@@ -129,7 +138,9 @@ function mapStateToProps(state) {
     return {
         errorStatus: state.errorStatus[HAS_ERROR],
         newUser: state.newUser,
-        presetUser: state.presetUser
+        presetUser: state.presetUser,
+        passwordError: state.passwordErrorStatus[HAS_ERROR],
+        signatureUser: state.signatureUser
     };
 }
 
