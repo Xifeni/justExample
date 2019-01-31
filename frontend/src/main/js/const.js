@@ -24,5 +24,12 @@ export const ERROR = "error";
 export const SUCCESS = "success";
 export const PASSWORD_ERROR_MESSAGE = "Password and retype password is not equals";
 export const CHANGE_PASSWORD_STATUS = "CHANGE_PASSWORD_STATUS";
-export const NOT_ADMIN = "NOT_ADMIN";
+export const NOT_ADMIN = "notAdmin";
 export const DELETE_MESSAGE = "Нарушение шестой заповеди. Вы уверены?";
+export const TEXT_TYPE = "text";
+export const PASSWORD_TYPE = "password";
+export const PASSWORD_STATUS = "PASSWORD_STATUS";
+export const VALIDATION_STATUS = "VALIDATION_STATUS";
+export const SET_PRESET_USER = "SET_PRESET_USER";
+export const VALIDATION_ARRAY = "VALIDATION_ARRAY";
+

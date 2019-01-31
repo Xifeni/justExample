@@ -19,7 +19,7 @@ import {
     DELETE_USER,
     MESSAGE,
     CHANGE_PASSWORD_STATUS
-} from "../container/const.js";
+} from "../const.js";
 
 let initialState = {
     activeArea: USER_LIST,
@@ -103,10 +103,10 @@ let generalReducer = function (state = initialState, action) {
             state.errorStatus[HAS_ERROR] = checkErrorStatus(state.errorStatus);
             return Object.assign({}, state);
         }
-        case UPDATE_NEW_USER : {
+        /*case UPDATE_NEW_USER : {
             state.newUser[action.payload.name] = action.payload.value;
             return Object.assign({}, state);
-        }
+        }*/
         case WIPE_DATA: {
             state.errorStatus = {
                 [USERNAME]: "",

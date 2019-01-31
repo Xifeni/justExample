@@ -4,9 +4,9 @@ import {connect} from "react-redux";
 import React from "react";
 
 import {setActiveArea} from "../actions/actions.jsx";
-import UsersList from "../component/usersList.jsx";
-import NavigationBar from "../component/navBar.jsx";
-import FormList from "../component/newUserForm.jsx";
+import UsersList from "../usersList/usersList.jsx";
+import NavigationBar from "../navBar/navBar.jsx";
+import FormList from "../userForm/container/createUserForm";
 import {
     getPermission,
     getUsers,
@@ -22,7 +22,7 @@ import {
     RETRY_PASSWORD,
     PASSWORD,
     ADMIN
-} from './const.js'
+} from '../const.js'
 
 class AppView extends React.Component {
 
@@ -82,7 +82,7 @@ class AppView extends React.Component {
                                 id: [LAST_NAME],
                                 label: 'Last name',
                                 type: 'text',
-                            }]} validate={} presetUser={this.props.presetUser}/>}
+                            }]} presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>
@@ -96,9 +96,9 @@ class AppView extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        activeArea: state.activeArea,
-        currentUser: state.currentUser,
-        presetUser: state.presetUser
+        activeArea: state.generalReducer.activeArea,
+        currentUser: state.generalReducer.currentUser,
+        presetUser: state.generalReducer.presetUser
     };
 }
 

@@ -3,9 +3,10 @@ import {Component} from "react";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getUsers, goToEditUser, deleteUser} from "../actions/actions.jsx";
+import {getUsers, deleteUser} from "../actions/actions.jsx";
 import Button from "react-bootstrap/es/Button";
-import {ADMIN, USERNAME, DELETE_MESSAGE} from "../container/const.js";
+import {ADMIN, USERNAME, DELETE_MESSAGE} from "../const.js";
+import {goToEditUser} from "../userForm/createNewUserActions";
 
 class UserItem extends Component {
     constructor(props) {
@@ -13,16 +14,16 @@ class UserItem extends Component {
     }
 
     render() {
-        return <tr>
-            {this.props.item !== this.props.currentUser[USERNAME] && this.props.currentUser[ADMIN] === ADMIN &&
-            <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>}
-            {(this.props.item === this.props.currentUser[USERNAME] || this.props.currentUser[ADMIN] !== ADMIN)
-            && <td>{this.props.item}</td>}
-            {this.props.currentUser[ADMIN] === ADMIN && this.props.item !== this.props.currentUser[USERNAME] &&
-            <td><Button onClick={() => {
-                confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item)
-            }}>Delete user</Button></td>}
-        </tr>
+        return ((this.props.currentUser[ADMIN] === ADMIN && this.props.currentUser[USERNAME] !== this.props.item) &&
+            <tr>
+                <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>
+                <td><Button onClick={() => {
+                    confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item)
+                }}>Delete user</Button></td>
+            </tr>) ||
+            <tr>
+                <td>{this.props.item}</td>
+            </tr>
     }
 }
 
@@ -62,9 +63,9 @@ class UsersList extends Component {
 
 function mapStateToProps(state) {
     return {
-        users: state.users,
-        loadingStatus: state.loadingStatus,
-        currentUser: state.currentUser
+        users: state.generalReducer.users,
+        loadingStatus: state.generalReducer.loadingStatus,
+        currentUser: state.generalReducer.currentUser
     };
 }
 
