@@ -19,7 +19,8 @@ class FormCheckBox extends React.Component {
     render() {
         return (
             <FormGroup>
-                <Checkbox onChange={this.handleChange}>Manager</Checkbox>
+                <Checkbox defaultChecked={this.props.newUser[ADMIN].value === ADMIN}
+                          onChange={this.handleChange}>Manager</Checkbox>
             </FormGroup>
         )
     }

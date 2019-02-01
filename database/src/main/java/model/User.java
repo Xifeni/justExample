@@ -12,7 +12,14 @@ public class User {
     private String role;
     private String password;
 
-    public User(String userName, String firstName, String lastName){
+    public User(String userName, String firstName, String lastName, String role){
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
+
+    public User(String userName, String firstName, String lastName) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;

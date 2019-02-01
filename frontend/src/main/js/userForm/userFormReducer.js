@@ -44,6 +44,8 @@ export let createUserReducer = function (state = initState, action) {
         case SET_PRESET_USER:
         case WIPE_DATA: {
             state.newUser = action.payload;
+            state[VALIDATION_STATUS] = true;
+            state[PASSWORD_STATUS] = true;
             return Object.assign({}, state);
         }
     }
@@ -72,7 +74,6 @@ function validatePassword(newUser) {
 
 function simpleValidation(value) {
     if (value.length === 0) {
-        console.log("null");
         return null
     }
     return (!/[^a-zA-Z1-9]/.test(value));

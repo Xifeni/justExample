@@ -1,17 +1,11 @@
 import axios from "axios";
 import {
     SET_ACTIVE_AREA,
-    SET_ACTIVE_AREA_EDIT,
     SET_CURRENT_USER,
     ADD_USERS,
-    UPDATE_NEW_USER,
     USERNAME,
-    FIRST_NAME,
-    LAST_NAME,
     ADMIN,
     RPC_TESTER,
-    WIPE_DATA,
-    DELETE_USER,
     NOT_ADMIN,
     USER_LIST,
 } from "../const.js";
@@ -36,20 +30,6 @@ let addUsers = function (users) {
     return {
         type: ADD_USERS,
         payload: users
-    }
-};
-
-let updateNewUser = function (name, value) {
-    return {
-        type: UPDATE_NEW_USER,
-        payload: {name: name, value: value}
-    }
-};
-
-let deleteUserInState = function (username) {
-    return {
-        type: DELETE_USER,
-        payload: username
     }
 };
 
@@ -98,8 +78,8 @@ export function getPermission() {
 export function deleteUser(username) {
     return function (dispatch) {
         axiosWrapper([RPC_TESTER] + '.deleteUser', username).then(() => {
-                dispatch(deleteUserInState(username));
                 dispatch(setActiveArea(USER_LIST));
+                dispatch(getUsers())
             }
         ).catch((onrejected) => {
                 alert("Has error:" + onrejected);

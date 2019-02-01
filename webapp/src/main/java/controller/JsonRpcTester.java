@@ -4,11 +4,7 @@ import model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.servlet.http.HttpSession;
-import java.sql.Array;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JsonRpcTester {
 

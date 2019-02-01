@@ -15,7 +15,7 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     private static final String SET_USER_VAULT = "INSERT INTO VAULT (USERNAME, PASSWORD) VALUES(?,?)";
     private static final String DELETE_USER = "DELETE FROM USERS WHERE USERNAME = ?";
     private static final String GET_USERS = "SELECT * FROM USERS";
-    private static final String GET_USER = "SELECT * FROM USERS WHERE username=?";
+    private static final String GET_USER = "SELECT * FROM USERS inner JOIN permission on users.username=permission.username where users.username = ?";
     private static final String UPDATE_USER = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, USERNAME = ? WHERE USERNAME = ?";
 
     public List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException {

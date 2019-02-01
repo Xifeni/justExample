@@ -29,9 +29,10 @@ export function goToEditUser(userName) {
     return function (dispatch) {
         axiosWrapper([RPC_TESTER] + '.getUser', userName).then((data) => {
             let result = data.result;
+            console.log(result.role);
             let presetUser = {
                 [USERNAME]: result.userName,
-                [ADMIN]: "",
+                [ADMIN]: result.role === '111' ? ADMIN : NOT_ADMIN,
                 [FIRST_NAME]: result.firstName,
                 [LAST_NAME]: result.lastName
             };
@@ -52,7 +53,7 @@ function setPresetUser(presetUser) {
         [RETRY_PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
         [FIRST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[FIRST_NAME]},
         [LAST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[LAST_NAME]},
-        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: NOT_ADMIN}
+        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: presetUser[ADMIN]}
     };
     return {
         type: SET_PRESET_USER,
@@ -77,9 +78,17 @@ export function clearErrorStatus() {
 }
 
 export function sendForm(user, signatureUser) {
+    let result = {
+        [USERNAME]: user[USERNAME].value,
+        [PASSWORD]: user[PASSWORD].value,
+        [RETRY_PASSWORD]: user[RETRY_PASSWORD].value,
+        [FIRST_NAME]: user[FIRST_NAME].value,
+        [LAST_NAME]: user[LAST_NAME].value,
+        [ADMIN]: user[ADMIN].value,
+    };
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.saveEditedUser', user, signatureUser).then((data) => {
-                if (data.error.msg === undefined) {
+        axiosWrapper([RPC_TESTER] + '.saveEditedUser', result, signatureUser).then((data) => {
+                if (data.error === undefined) {
                     dispatch(setActiveArea(USER_LIST));
                 } else {
                     alert("Has error " + data.error.msg);

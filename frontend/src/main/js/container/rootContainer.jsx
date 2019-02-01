@@ -28,7 +28,7 @@ class AppView extends React.Component {
 
     constructor(props) {
         super(props);
-
+        this.props.loadPermissions();
         this.getNavItems = this.getNavItems.bind(this);
     }
 
@@ -87,10 +87,6 @@ class AppView extends React.Component {
                 </Row>
             </Grid>
         </div>
-    }
-
-    componentWillMount() {
-        this.props.loadPermissions();
     }
 }
 

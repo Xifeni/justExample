@@ -35,6 +35,7 @@ class UsersList extends Component {
 
     componentDidMount() {
         this.props.loadUsers();
+        console.log(this.props.users);
     }
 
 

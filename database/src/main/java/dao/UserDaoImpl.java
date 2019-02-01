@@ -88,7 +88,7 @@ public class UserDaoImpl implements UserDao {
             List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
             ResultSet set = sets.get(0);
             while (set.next()) {
-                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
+                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname"), set.getString("permission")));
             }
             return users.get(0);
         }
