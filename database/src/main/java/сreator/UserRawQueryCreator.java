@@ -10,8 +10,9 @@ import java.util.List;
 public interface UserRawQueryCreator {
 
     List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException;
-    List<PreparedStatement> getRawDeleteUser(Connection connection, User user) throws SQLException;
+    List<PreparedStatement> getRawDeleteUser(Connection connection, String user) throws SQLException;
     List<PreparedStatement> getRawUsers(Connection connection) throws SQLException;
     List<PreparedStatement> getRawEditUser(User... users);
     List<PreparedStatement> getRawUser(Connection connection, String name) throws SQLException;
+    List<PreparedStatement> getRawUpdateUser(Connection connection, User user, String signatureUser) throws SQLException;
 }

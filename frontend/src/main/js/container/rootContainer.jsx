@@ -4,41 +4,53 @@ import {connect} from "react-redux";
 import React from "react";
 
 import {setActiveArea} from "../actions/actions.jsx";
-import UsersList from "../component/usersList.jsx";
-import NavigationBar from "../component/navBar.jsx";
-import FormList from "../component/newUserForm.jsx";
+import UsersList from "../usersList/usersList.jsx";
+import NavigationBar from "../navBar/navBar.jsx";
+import FormList from "../userForm/container/createUserForm";
 import {
     getPermission,
     getUsers,
-    simpleValidation,
-    sendParam,
-    sendForm,
-    passwordValidation,
     logout
 } from "../actions/actions.jsx";
 import {
     CREATE_USER,
     LOGOUT,
     USER_LIST,
-    LANG_WARN,
     USERNAME,
     LAST_NAME,
     FIRST_NAME,
     RETRY_PASSWORD,
-    PASSWORD
-} from './const.js'
+    PASSWORD,
+    ADMIN
+} from '../const.js'
 
 class AppView extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.getNavItems = this.getNavItems.bind(this);
+    }
+
+    getNavItems() {
+        if (this.props.currentUser[ADMIN] === ADMIN) {
+            return [
+                {name: USER_LIST, text: 'Список пользователей'},
+                {name: CREATE_USER, text: 'Создать нового пользователя'},
+                {name: LOGOUT, text: 'Выйти'}]
+        } else {
+            return [
+                {name: USER_LIST, text: 'Список пользователей'},
+                {name: LOGOUT, text: 'Выйти'}]
+        }
+    }
 
     render() {
         return <div className="customRootBlock1">
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
-                        <NavigationBar {...this.props} areas={[
-                            {name: USER_LIST, text: 'Список пользователей'},
-                            {name: CREATE_USER, text: 'Создать нового пользователя'},
-                            {name: LOGOUT, text: 'Выйти'}]}/>
+                        <NavigationBar {...this.props} areas={this.getNavItems()}/>
                     </Col>
                 </Row>
                 <Row>
@@ -50,61 +62,43 @@ class AppView extends React.Component {
                                 id: [USERNAME],
                                 label: 'Username',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [PASSWORD],
                                 label: 'Password',
                                 type: "password",
-                                validateFunc: this.props.validation,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [RETRY_PASSWORD],
                                 label: 'Retype password',
                                 type: "password",
-                                validateFunc: this.props.validation,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [FIRST_NAME],
                                 label: 'First name',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
                             },
                             {
                                 id: [LAST_NAME],
                                 label: 'Last name',
                                 type: 'text',
-                                validateFunc: this.props.validation,
-                                helpText: LANG_WARN,
-                                sendParam: this.props.sendParams
-                            }
-                        ]}
-                                                                              setActiveArea={this.props.setActiveArea}
-                                                                              checkPassword={this.props.checkPassword}
-                                                                              sendForm={this.props.sendForm}
-                                                                              presetUser={this.props.presetUser}/>}
+                            }]} presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>
         </div>
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.loadPermissions();
     }
 }
 
 function mapStateToProps(state) {
     return {
-        activeArea: state.activeArea,
-        currentUser: state.currentUser,
-        presetUser: state.presetUser
+        activeArea: state.generalReducer.activeArea,
+        currentUser: state.generalReducer.currentUser,
+        presetUser: state.generalReducer.presetUser
     };
 }
 
@@ -113,10 +107,6 @@ export default connect(mapStateToProps, (dispatch) => {
         loadPermissions: bindActionCreators(getPermission, dispatch),
         setActiveArea: bindActionCreators(setActiveArea, dispatch),
         loadUsers: bindActionCreators(getUsers, dispatch),
-        validation: bindActionCreators(simpleValidation, dispatch),
-        sendParams: bindActionCreators(sendParam, dispatch),
-        sendForm: bindActionCreators(sendForm, dispatch),
-        checkPassword: bindActionCreators(passwordValidation, dispatch),
         logout: bindActionCreators(logout, dispatch)
     }
 })(AppView);

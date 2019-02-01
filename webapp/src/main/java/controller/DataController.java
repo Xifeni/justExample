@@ -41,4 +41,20 @@ public class DataController {
     public User getUser(String name) throws SQLException {
         return userDao.getUser(name);
     }
+
+    public boolean isUserExist(String name) throws SQLException {
+        return userDao.isUserExist(name);
+    }
+
+    public void saveUser(User user, String isCreateNewUser) throws SQLException {
+        userDao.saveUser(user, isCreateNewUser);
+    }
+
+    public void deleteUser(String username) {
+        userDao.deleteUser(username);
+    }
+
+    public String getUsername(String id) throws SQLException {
+        return authDao.getUsername(id);
+    }
 }

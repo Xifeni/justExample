@@ -1,9 +1,13 @@
 package controller;
 
 import model.User;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonRpcTester {
@@ -26,7 +30,16 @@ public class JsonRpcTester {
         return dataController.getUser(name);
     }
 
-    public void saveEditedUser(User user){
-        System.out.println(user);
+    public void saveEditedUser(JSONObject jsonUser, String signatureUser) throws JSONException, SQLException {
+        User user = new User(jsonUser.getString("Username"),
+                jsonUser.getString("First name"),
+                jsonUser.getString("Last name"),
+                jsonUser.getString("Admin"),
+                jsonUser.getString("Password"));
+        dataController.saveUser(user, signatureUser);
+    }
+
+    public void deleteUser(String username) {
+        dataController.deleteUser(username);
     }
 }
