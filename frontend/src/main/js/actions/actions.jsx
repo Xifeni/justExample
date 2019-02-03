@@ -2,15 +2,11 @@ import axios from "axios";
 import {
     SET_ACTIVE_AREA,
     SET_CURRENT_USER,
-    ADD_USERS,
     USERNAME,
     ADMIN,
     RPC_TESTER,
     NOT_ADMIN,
-    USER_LIST,
 } from "../const.js";
-
-//todo: класс Actions разрося, надо бы разбить
 
 export let setActiveArea = function (idArea) {
     return {
@@ -26,32 +22,12 @@ let setCurrentUser = function (currentUser) {
     }
 };
 
-let addUsers = function (users) {
-    return {
-        type: ADD_USERS,
-        payload: users
-    }
-};
-
-export function logout() {
+export function logout(currentUser) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER]+'.logout').then(() => {
+        axiosWrapper([RPC_TESTER]+'.logout', currentUser).then(() => {
             window.location.reload();
         }).catch(() => {
             window.location.reload();
-        })
-    }
-}
-
-export function getUsers() {
-    return function (dispatch) {
-        axiosWrapper(RPC_TESTER + '.getUsers').then((data) => {
-            let users = [];
-            let result = data.result;
-            result.map(user => users.push(user.userName));
-            dispatch(addUsers(users));
-        }).catch((onrejected) => {
-            alert("has error" + onrejected);
         })
     }
 }
@@ -70,21 +46,6 @@ export function getPermission() {
                 [ADMIN]: isAdmin
             }));
         });
-    }
-}
-
-
-
-export function deleteUser(username) {
-    return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.deleteUser', username).then(() => {
-                dispatch(setActiveArea(USER_LIST));
-                dispatch(getUsers())
-            }
-        ).catch((onrejected) => {
-                alert("Has error:" + onrejected);
-            }
-        );
     }
 }
 

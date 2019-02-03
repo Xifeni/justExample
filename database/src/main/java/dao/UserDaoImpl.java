@@ -25,10 +25,30 @@ public class UserDaoImpl implements UserDao {
         if (isExistUser && signatureUser.isEmpty()) {
             throw new SQLException("Username is exist");
         }
+        String password = "";
+        if (isExistUser) {
+            if (user.getPassword().isEmpty()) {
+                password = getPassword(signatureUser);
+            } else {
+                password = user.getPassword();
+            }
+        }
         try (Connection connection = pool.getConnection()) {
             List<PreparedStatement> queries;
-            queries = isExistUser ? creator.getRawUpdateUser(connection, user, signatureUser) : creator.getRawCreateUser(connection, user);
+            queries = isExistUser ? creator.getRawUpdateUser(connection, user, signatureUser, password) : creator.getRawCreateUser(connection, user);
             transactionManagerImpl.executeTransaction(queries, connection);
+        }
+    }
+
+    private String getPassword(String signatureUser) throws SQLException {
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> queries;
+            queries = creator.getPassword(connection, signatureUser);
+
+            List<ResultSet> sets = transactionManagerImpl.executeTransaction(queries, connection);
+            ResultSet set = sets.get(0);
+            set.next();
+            return set.getString(1);
         }
     }
 
@@ -62,13 +82,7 @@ public class UserDaoImpl implements UserDao {
         return users;
     }
 
-    @Override
-    public void editUser(User user) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean isUserExist(String name) throws SQLException {
+    private boolean isUserExist(String name) throws SQLException {
         try (Connection connection = pool.getConnection()) {
             List<PreparedStatement> query = creator.getRawUser(connection, name);
 

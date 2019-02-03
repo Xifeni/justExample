@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
@@ -16,7 +17,8 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     private static final String DELETE_USER = "DELETE FROM USERS WHERE USERNAME = ?";
     private static final String GET_USERS = "SELECT * FROM USERS";
     private static final String GET_USER = "SELECT * FROM USERS inner JOIN permission on users.username=permission.username where users.username = ?";
-    private static final String UPDATE_USER = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, USERNAME = ? WHERE USERNAME = ?";
+    private static final String UPDATE_USER = "UPDATE USERS INNER JOIN VAULT ON USERS.username = VAULT.USERNAME SET USERS.FIRSTNAME = ?, USERS.LASTNAME = ?, USERS.USERNAME = ?, VAULT.PASSWORD = ? WHERE USERS.USERNAME = ?";
+    private static final String GET_PASSWORD = "SELECT PASSWORD FROM VAULT WHERE USERNAME = ?";
 
     public List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement(CREATE_USER);
@@ -59,28 +61,34 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     }
 
     @Override
-    public List<PreparedStatement> getRawUpdateUser(Connection connection, User user, String signatureUser) throws SQLException {
+    public List<PreparedStatement> getRawUpdateUser(Connection connection, User user, String signatureUser, String password) throws SQLException {
         PreparedStatement query = connection.prepareStatement(UPDATE_USER);
         query.setString(1, user.getFirstName());
         query.setString(2, user.getLastName());
         query.setString(3, user.getUserName());
-        query.setString(4, signatureUser);
+        query.setString(5, signatureUser);
+        String pass = user.getPassword().isEmpty() ? password : user.getPassword();
+        query.setString(4, pass);
 
         List<PreparedStatement> queries = new ArrayList<>();
         queries.add(query);
         return queries;
+    }
+
+    @Override
+    public List<PreparedStatement> getPassword(Connection connection, String signatureUser) throws SQLException {
+        PreparedStatement query = connection.prepareStatement(GET_PASSWORD);
+        query.setString(1, signatureUser);
+        return Collections.singletonList(query);
     }
 
     public List<PreparedStatement> getRawUser(Connection connection, String name) throws SQLException {
+        List<PreparedStatement> queries = new ArrayList<>();
+
         PreparedStatement query = connection.prepareStatement(GET_USER);
         query.setString(1, name);
 
-        List<PreparedStatement> queries = new ArrayList<>();
         queries.add(query);
         return queries;
-    }
-
-    public List<PreparedStatement> getRawEditUser(User... users) {
-        throw new UnsupportedOperationException();
     }
 }

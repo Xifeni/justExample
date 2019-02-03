@@ -5,12 +5,14 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class JsonRpcInitializer implements ServletContextListener {
+    @Override
     public void contextInitialized(ServletContextEvent event) {
-        JsonRpcTester rpcTester = new JsonRpcTester();
+        JsonRpcController rpcTester = new JsonRpcController();
         JSONRPCBridge globalBridge = JSONRPCBridge.getGlobalBridge();
         globalBridge.registerObject("rpcTester", rpcTester);
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent event) {
     }
 }

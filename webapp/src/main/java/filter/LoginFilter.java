@@ -1,6 +1,6 @@
 package filter;
 
-import controller.DataController;
+import controller.AuthenticationDataController;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -11,10 +11,10 @@ import java.sql.SQLException;
 @WebFilter(servletNames = "LoginFilter", urlPatterns = "/*")
 public class LoginFilter implements Filter {
 
-    private DataController controller = new DataController();
+    private AuthenticationDataController controller = new AuthenticationDataController();
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 

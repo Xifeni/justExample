@@ -6,8 +6,9 @@ import {setActiveArea} from "../../actions/actions.jsx";
 
 import FormItem from "../component/label.js";
 import FormCheckBox from "../component/checkBox";
-import {clearErrorStatus, sendForm} from "../createNewUserActions";
+import {wipeData, sendForm} from "../createNewUserActions";
 import {PASSWORD_ERROR_MESSAGE, VALIDATION_STATUS, PASSWORD_STATUS, USER_LIST} from "../../const.js";
+import {USER_SIGNATURE, USERNAME} from "../../const";
 
 class FormList extends React.Component {
     constructor(props) {
@@ -37,26 +38,40 @@ class FormList extends React.Component {
                         this.props.setActiveArea(USER_LIST);
                         this.props.clearErrorStatus();
                     }}>Close</Button>
-                    <Button bsStyle="primary" disabled={!(this.props.passStatus && this.props.validStatus)}
+                    <Button bsStyle="primary"
+                            disabled={checkValidationState(this.props.signature, this.props.passStatus, this.props.validStatus)}
                             onClick={() => {
-                                this.props.sendForm(this.props.newUser)
+                                this.props.sendForm(this.props.newUser, this.props.signature, this.props.currentUser);
                             }}>Save</Button>
                 </Modal.Footer>
             </Modal.Dialog>)
     }
-};
+}
+
+
+function checkValidationState(signature, passStatus, validStatus) {
+    if (signature.length !== 0 && passStatus !== false && validStatus === null) {
+        return false;
+     }
+    if (signature.length === 0 && passStatus === null && validStatus === null) {
+        return true;
+    }
+    return !(passStatus && validStatus);
+}
 
 function mapStateToProps(state) {
     return {
         newUser: state.createUserReducer.newUser,
         passStatus: state.createUserReducer[PASSWORD_STATUS],
         validStatus: state.createUserReducer[VALIDATION_STATUS],
+        signature: state.createUserReducer[USER_SIGNATURE],
+        currentUser:state.generalReducer.currentUser[USERNAME]
     };
 }
 
 export default connect(mapStateToProps, (dispatch) => {
         return {
-            clearErrorStatus: bindActionCreators(clearErrorStatus, dispatch),
+            clearErrorStatus: bindActionCreators(wipeData, dispatch),
             sendForm: bindActionCreators(sendForm, dispatch),
             setActiveArea: bindActionCreators(setActiveArea, dispatch)
         }

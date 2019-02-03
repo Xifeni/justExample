@@ -1,10 +1,9 @@
 import {
-    ADMIN, CREATE_USER,
+    ADMIN,
     FIRST_NAME,
     LAST_NAME, NOT_ADMIN, PASSWORD,
     PASSWORD_TYPE, RETRY_PASSWORD,
-    RPC_TESTER, SET_PRESET_USER,
-    TEXT_TYPE,
+    RPC_TESTER, TEXT_TYPE,
     UPDATE_NEW_USER,
     USERNAME, WIPE_DATA
 } from "../const";
@@ -25,43 +24,7 @@ let updateNewUser = function (name, value) {
     }
 };
 
-export function goToEditUser(userName) {
-    return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((data) => {
-            let result = data.result;
-            console.log(result.role);
-            let presetUser = {
-                [USERNAME]: result.userName,
-                [ADMIN]: result.role === '111' ? ADMIN : NOT_ADMIN,
-                [FIRST_NAME]: result.firstName,
-                [LAST_NAME]: result.lastName
-            };
-            dispatch(setPresetUser(presetUser));
-            dispatch(setActiveArea(CREATE_USER));
-        }).catch(
-            (onrejected) => {
-                alert("has error" + onrejected);
-            }
-        );
-    }
-}
-
-function setPresetUser(presetUser) {
-    let result = {
-        [USERNAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[USERNAME]},
-        [PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[FIRST_NAME]},
-        [LAST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[LAST_NAME]},
-        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: presetUser[ADMIN]}
-    };
-    return {
-        type: SET_PRESET_USER,
-        payload: result
-    }
-}
-
-export function clearErrorStatus() {
+export function wipeData() {
     let result = {
         [USERNAME]: {type: TEXT_TYPE, validationState: null, value: ""},
         [PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
@@ -77,7 +40,7 @@ export function clearErrorStatus() {
     }
 }
 
-export function sendForm(user, signatureUser) {
+export function sendForm(user, signatureUser, currentUser) {
     let result = {
         [USERNAME]: user[USERNAME].value,
         [PASSWORD]: user[PASSWORD].value,
@@ -85,10 +48,12 @@ export function sendForm(user, signatureUser) {
         [FIRST_NAME]: user[FIRST_NAME].value,
         [LAST_NAME]: user[LAST_NAME].value,
         [ADMIN]: user[ADMIN].value,
+        signatureUser: signatureUser
     };
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.saveEditedUser', result, signatureUser).then((data) => {
+        axiosWrapper([RPC_TESTER] + '.saveUser', result, currentUser).then((data) => {
                 if (data.error === undefined) {
+                    dispatch(wipeData());
                     dispatch(setActiveArea(USER_LIST));
                 } else {
                     alert("Has error " + data.error.msg);

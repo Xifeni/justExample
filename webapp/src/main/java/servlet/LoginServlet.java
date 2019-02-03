@@ -1,6 +1,6 @@
 package servlet;
 
-import controller.DataController;
+import controller.AuthenticationDataController;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/login", name = "login")
 public class LoginServlet extends HttpServlet {
 
-    private DataController controller = new DataController();
+    private AuthenticationDataController controller = new AuthenticationDataController();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

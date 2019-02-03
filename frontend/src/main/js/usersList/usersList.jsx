@@ -3,10 +3,9 @@ import {Component} from "react";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getUsers, deleteUser} from "../actions/actions.jsx";
+import {getUsers, deleteUser, goToEditUser} from "./userListActions";
 import Button from "react-bootstrap/es/Button";
 import {ADMIN, USERNAME, DELETE_MESSAGE} from "../const.js";
-import {goToEditUser} from "../userForm/createNewUserActions";
 
 class UserItem extends Component {
     constructor(props) {
@@ -16,9 +15,9 @@ class UserItem extends Component {
     render() {
         return ((this.props.currentUser[ADMIN] === ADMIN && this.props.currentUser[USERNAME] !== this.props.item) &&
             <tr>
-                <td><a onClick={() => this.props.goToEditUser(this.props.item)}>{this.props.item}</a></td>
+                <td><a onClick={() => this.props.goToEditUser(this.props.item, this.props.currentUser[USERNAME])}>{this.props.item}</a></td>
                 <td><Button onClick={() => {
-                    confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item)
+                    confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item, this.props.currentUser[USERNAME]);
                 }}>Delete user</Button></td>
             </tr>) ||
             <tr>
@@ -60,7 +59,7 @@ class UsersList extends Component {
             </Table>
         </div>
     }
-};
+}
 
 function mapStateToProps(state) {
     return {

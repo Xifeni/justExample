@@ -7,7 +7,8 @@ import {
     RETRY_PASSWORD, PASSWORD_STATUS, TEXT_TYPE,
     VALIDATION_STATUS,
     UPDATE_NEW_USER,
-    USERNAME, SET_PRESET_USER, WIPE_DATA, VALIDATION_ARRAY
+    USERNAME, SET_PRESET_USER, WIPE_DATA, VALIDATION_ARRAY, SET_USER_SIGNATURE,
+    USER_SIGNATURE
 } from "../const";
 
 let initState = {
@@ -27,8 +28,9 @@ let initState = {
         {name: [FIRST_NAME], value: null},
         {name: [LAST_NAME], value: null}
     ],
-    [PASSWORD_STATUS]: false,
-    [VALIDATION_STATUS]: false
+    [PASSWORD_STATUS]: null,
+    [VALIDATION_STATUS]: null,
+    [USER_SIGNATURE]: ""
 };
 
 export let createUserReducer = function (state = initState, action) {
@@ -42,11 +44,19 @@ export let createUserReducer = function (state = initState, action) {
             return Object.assign({}, state);
         }
         case SET_PRESET_USER:
+            state.newUser = action.payload;
+            state[VALIDATION_STATUS] = null;
+            state[PASSWORD_STATUS] = null;
+            return Object.assign({}, state);
         case WIPE_DATA: {
             state.newUser = action.payload;
-            state[VALIDATION_STATUS] = true;
-            state[PASSWORD_STATUS] = true;
+            state[USER_SIGNATURE] = "";
+            state[VALIDATION_STATUS] = null;
+            state[PASSWORD_STATUS] = null;
             return Object.assign({}, state);
+        }
+        case SET_USER_SIGNATURE: {
+            return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
         }
     }
     return state;

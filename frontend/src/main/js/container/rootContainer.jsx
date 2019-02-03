@@ -56,7 +56,7 @@ class AppView extends React.Component {
                 <Row>
                     <Col xs={12} md={8}>
                         {this.props.activeArea === (USER_LIST) && <UsersList {...this.props}/>}
-                        {this.props.activeArea === (LOGOUT) && this.props.logout()}
+                        {this.props.activeArea === (LOGOUT) && this.props.logout(this.props.currentUser[USERNAME])}
                         {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
                             {
                                 id: [USERNAME],
@@ -102,7 +102,6 @@ export default connect(mapStateToProps, (dispatch) => {
     return {
         loadPermissions: bindActionCreators(getPermission, dispatch),
         setActiveArea: bindActionCreators(setActiveArea, dispatch),
-        loadUsers: bindActionCreators(getUsers, dispatch),
         logout: bindActionCreators(logout, dispatch)
     }
 })(AppView);
