@@ -34,7 +34,6 @@ class UsersList extends Component {
 
     componentDidMount() {
         this.props.loadUsers();
-        console.log(this.props.users);
     }
 
 
@@ -63,8 +62,8 @@ class UsersList extends Component {
 
 function mapStateToProps(state) {
     return {
-        users: state.generalReducer.users,
-        loadingStatus: state.generalReducer.loadingStatus,
+        users: state.userListReducer.users,
+        loadingStatus: state.userListReducer.loadingStatus,
         currentUser: state.generalReducer.currentUser
     };
 }

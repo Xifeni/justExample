@@ -15,7 +15,7 @@ import {
     USER_LIST,
     USERNAME
 } from "../../const.js";
-import {setActiveArea} from "../../actions.jsx";
+import {setActiveArea} from "../root/actions.jsx";
 import axios from "axios";
 
 export function goToEditUser(userName, signature) {
@@ -42,12 +42,12 @@ export function goToEditUser(userName, signature) {
 
 function setPresetUser(presetUser) {
     let result = {
-        [USERNAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[USERNAME]},
-        [PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[FIRST_NAME]},
-        [LAST_NAME]: {type: TEXT_TYPE, validationState: true, value: presetUser[LAST_NAME]},
-        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: presetUser[ADMIN]}
+        [USERNAME]: {type: TEXT_TYPE, value: presetUser[USERNAME]},
+        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [FIRST_NAME]: {type: TEXT_TYPE, value: presetUser[FIRST_NAME]},
+        [LAST_NAME]: {type: TEXT_TYPE, value: presetUser[LAST_NAME]},
+        [ADMIN]: {type: TEXT_TYPE, value: presetUser[ADMIN]}
     };
     return {
         type: SET_PRESET_USER,

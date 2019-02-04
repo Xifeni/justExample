@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -40,9 +39,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin("styles.css"),
-],
-    devtool: NODE_ENV,
-    //new webpack.SourceMapDevToolPlugin({})
-
+        new ExtractTextPlugin("styles.css")],
+    devtool: NODE_ENV === 'development' ? 'source-map' : false
 };

@@ -38,7 +38,6 @@ export default class NavigationBar extends React.Component {
                     )}
                 </Nav>
             </Navbar>
-
         </div>
     }
 }
