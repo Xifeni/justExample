@@ -3,15 +3,15 @@ import {bindActionCreators} from 'redux'
 import {connect} from "react-redux";
 import React from "react";
 
-import {setActiveArea} from "../actions.jsx";
-import UsersList from "./usersList/usersList.jsx";
-import NavigationBar from "./navBar/navBar.jsx";
-import FormList from "./userForm/createUserForm";
+import {setActiveArea} from "./actions.jsx";
+import UsersList from "../usersList/usersList.jsx";
+import NavigationBar from "../navBar/navBar.jsx";
+import FormList from "../userForm/createUserForm";
 import {
     getPermission,
     getUsers,
     logout
-} from "../actions.jsx";
+} from "./actions.jsx";
 import {
     CREATE_USER,
     LOGOUT,
@@ -22,7 +22,7 @@ import {
     RETRY_PASSWORD,
     PASSWORD,
     ADMIN
-} from '../const.js'
+} from '../../const.js'
 
 class AppView extends React.Component {
 

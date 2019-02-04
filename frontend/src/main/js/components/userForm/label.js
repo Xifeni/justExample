@@ -3,7 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {sendParam} from "./createNewUserActions";
-import {ERROR, LANG_WARN, SUCCESS} from "../../const";
+import {ERROR, LANG_WARN, SUCCESS, VALIDATION_ARRAY} from "../../const";
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -28,14 +28,15 @@ class FormItem extends React.Component {
         return (
             <FormGroup
                 key={this.props.key}
-                validationState={transformToStyle(this.props.newUser[this.props.name].validationState)}>
+                validationState={transformToStyle(this.props.validStatus[this.props.name].isValid)}>
                 <ControlLabel>{this.props.name}</ControlLabel>
                 <FormControl
                     id={this.props.name}
                     type={this.props.type}
                     value={this.state.value}
                     onChange={this.handleChange}/>
-                <HelpBlock>{(this.props.newUser[this.props.name].validationState === false && LANG_WARN)}</HelpBlock>
+                <HelpBlock>{(this.props.validStatus[this.props.name].isValid === false
+                    && this.props.validStatus[this.props.name].error.join())}</HelpBlock>
             </FormGroup>
         );
     }
@@ -50,7 +51,7 @@ function transformToStyle(status) {
 
 function mapStateToProps(state) {
     return {
-        newUser: state.createUserReducer.newUser,
+        validStatus: state.createUserReducer[VALIDATION_ARRAY],
     };
 }
 

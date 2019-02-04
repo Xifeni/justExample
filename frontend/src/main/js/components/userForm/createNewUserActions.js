@@ -14,7 +14,7 @@ import {
     USER_LIST
 } from "../../const.js";
 import axios from "axios";
-import {setActiveArea} from "../../actions.jsx";
+import {setActiveArea} from "../root/actions.jsx";
 
 export function sendParam(param) {
     return function (dispatch) {

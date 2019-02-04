@@ -2,13 +2,13 @@ import {Button, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {setActiveArea} from "../../actions.jsx";
+import {setActiveArea} from "../root/actions.jsx";
 
 import FormItem from "./label.js";
 import FormCheckBox from "./checkBox";
 import {wipeData, sendForm} from "./createNewUserActions";
 import {PASSWORD_ERROR_MESSAGE, VALIDATION_STATUS, PASSWORD_STATUS, USER_LIST} from "../../const.js";
-import {USER_SIGNATURE, USERNAME} from "../../const";
+import {USER_SIGNATURE, USERNAME, VALIDATION_ARRAY} from "../../const";
 
 class FormList extends React.Component {
     constructor(props) {
@@ -39,7 +39,10 @@ class FormList extends React.Component {
                         this.props.clearErrorStatus();
                     }}>Close</Button>
                     <Button bsStyle="primary"
-                            disabled={checkValidationState(this.props.signature, this.props.passStatus, this.props.validStatus)}
+                            disabled={checkValidationState(this.props.signature,
+                                this.props.passStatus,
+                                this.props.validStatus)
+                            }
                             onClick={() => {
                                 this.props.sendForm(this.props.newUser, this.props.signature, this.props.currentUser);
                             }}>Save</Button>
@@ -52,7 +55,7 @@ class FormList extends React.Component {
 function checkValidationState(signature, passStatus, validStatus) {
     if (signature.length !== 0 && passStatus !== false && validStatus === null) {
         return false;
-     }
+    }
     if (signature.length === 0 && passStatus === null && validStatus === null) {
         return true;
     }
@@ -62,10 +65,10 @@ function checkValidationState(signature, passStatus, validStatus) {
 function mapStateToProps(state) {
     return {
         newUser: state.createUserReducer.newUser,
-        passStatus: state.createUserReducer[PASSWORD_STATUS],
-        validStatus: state.createUserReducer[VALIDATION_STATUS],
+        passStatus: state.createUserReducer[VALIDATION_ARRAY][PASSWORD_STATUS].isValid,
+        validStatus: state.createUserReducer[VALIDATION_ARRAY][VALIDATION_STATUS].isValid,
         signature: state.createUserReducer[USER_SIGNATURE],
-        currentUser:state.generalReducer.currentUser[USERNAME]
+        currentUser: state.generalReducer.currentUser[USERNAME]
     };
 }
 

@@ -17,26 +17,27 @@ import {
     SET_USER_SIGNATURE,
     USER_SIGNATURE
 } from "../../const.js";
+import {LANG_WARN, PASSWORD_ERROR_MESSAGE} from "../../const";
 
 let initState = {
     newUser: {
-        [USERNAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [LAST_NAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: NOT_ADMIN},
+        [USERNAME]: {type: TEXT_TYPE, value: ""},
+        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [FIRST_NAME]: {type: TEXT_TYPE, value: ""},
+        [LAST_NAME]: {type: TEXT_TYPE, value: ""},
+        [ADMIN]: {type: TEXT_TYPE, value: NOT_ADMIN},
     },
-    [VALIDATION_ARRAY]: [
-        {name: [USERNAME], value: null},
-        {name: [PASSWORD], value: null},
-        {name: [RETRY_PASSWORD], value: null},
-        {name: [FIRST_NAME], value: null},
-        {name: [FIRST_NAME], value: null},
-        {name: [LAST_NAME], value: null}
-    ],
-    [PASSWORD_STATUS]: null,
-    [VALIDATION_STATUS]: null,
+    [VALIDATION_ARRAY]: {
+        [PASSWORD_STATUS]: {isValid: null, error: [PASSWORD_ERROR_MESSAGE]},
+        [VALIDATION_STATUS]: {isValid: null, error: [""]},
+        [USERNAME]: {isValid: null, error: [LANG_WARN]},
+        [PASSWORD]: {isValid: null, error: [LANG_WARN]},
+        [RETRY_PASSWORD]: {isValid: null, error: [LANG_WARN]},
+        [FIRST_NAME]: {isValid: null, error: [LANG_WARN]},
+        [LAST_NAME]: {isValid: null, error: [LANG_WARN]},
+        [ADMIN]: {isValid: true, error: [LANG_WARN]},
+    },
     [USER_SIGNATURE]: ""
 };
 
@@ -44,23 +45,21 @@ export let createUserReducer = function (state = initState, action) {
     switch (action.type) {
         case UPDATE_NEW_USER : {
             state.newUser[action.payload.name].value = action.payload.value;
-
-            state[PASSWORD_STATUS] = validatePassword(state.newUser);
-            state[VALIDATION_STATUS] = validateForm(state.newUser);
-
+            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = validatePassword(state.newUser);
+            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = validateForm(state.newUser, state.VALIDATION_ARRAY);
             return Object.assign({}, state);
         }
         case SET_PRESET_USER:
-            state.newUser = action.payload;
-            state[VALIDATION_STATUS] = null;
-            state[PASSWORD_STATUS] = null;
-            return Object.assign({}, state);
+            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = null;
+            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = null;
+            return Object.assign({}, state, {newUser: action.payload});
         case WIPE_DATA: {
-            state.newUser = action.payload;
-            state[USER_SIGNATURE] = "";
-            state[VALIDATION_STATUS] = null;
-            state[PASSWORD_STATUS] = null;
-            return Object.assign({}, state);
+            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = null;
+            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = null;
+            return Object.assign({}, state, {
+                newUser: action.payload,
+                [USER_SIGNATURE]: "",
+            });
         }
         case SET_USER_SIGNATURE: {
             return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
@@ -69,11 +68,11 @@ export let createUserReducer = function (state = initState, action) {
     return state;
 };
 
-function validateForm(newUser) {
+function validateForm(newUser, VALIDATION_ARRAY) {
     let flag = true;
     for (let param in newUser) {
-        newUser[param].validationState = simpleValidation(newUser[param].value);
-        flag = flag && newUser[param].validationState;
+        VALIDATION_ARRAY[param].isValid = simpleValidation(newUser[param].value);
+        flag = flag && VALIDATION_ARRAY[param].isValid;
     }
     return flag;
 }

@@ -6,7 +6,7 @@ import {
     ADMIN,
     RPC_TESTER,
     NOT_ADMIN,
-} from "./const.js";
+} from "../../const.js";
 
 export let setActiveArea = function (idArea) {
     return {
