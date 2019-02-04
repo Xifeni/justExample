@@ -2,7 +2,7 @@ import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {sendParam} from "../createNewUserActions";
+import {sendParam} from "./createNewUserActions";
 import {ERROR, LANG_WARN, SUCCESS} from "../../const";
 
 class FormItem extends React.Component {

@@ -35,7 +35,11 @@ public class UserDaoImpl implements UserDao {
         }
         try (Connection connection = pool.getConnection()) {
             List<PreparedStatement> queries;
-            queries = isExistUser ? creator.getRawUpdateUser(connection, user, signatureUser, password) : creator.getRawCreateUser(connection, user);
+            if (!signatureUser.isEmpty()) {
+                queries = creator.getRawUpdateUser(connection, user, signatureUser, password);
+            } else {
+                queries = creator.getRawCreateUser(connection, user);
+            }
             transactionManagerImpl.executeTransaction(queries, connection);
         }
     }

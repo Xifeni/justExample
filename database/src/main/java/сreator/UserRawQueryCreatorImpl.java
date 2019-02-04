@@ -17,7 +17,9 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     private static final String DELETE_USER = "DELETE FROM USERS WHERE USERNAME = ?";
     private static final String GET_USERS = "SELECT * FROM USERS";
     private static final String GET_USER = "SELECT * FROM USERS inner JOIN permission on users.username=permission.username where users.username = ?";
-    private static final String UPDATE_USER = "UPDATE USERS INNER JOIN VAULT ON USERS.username = VAULT.USERNAME SET USERS.FIRSTNAME = ?, USERS.LASTNAME = ?, USERS.USERNAME = ?, VAULT.PASSWORD = ? WHERE USERS.USERNAME = ?";
+    private static final String UPDATE_USER = "UPDATE USERS SET USERS.FIRSTNAME = ?, USERS.LASTNAME = ?, USERS.USERNAME = ? WHERE USERNAME = ?";
+    private static final String UPDATE_PASSWORD = "UPDATE VAULT SET VAULT.PASSWORD = ? WHERE USERNAME = ?";
+    private static final String UPDATE_PERMISSIONS = "UPDATE PERMISSION set permission = ? where username = ?";
     private static final String GET_PASSWORD = "SELECT PASSWORD FROM VAULT WHERE USERNAME = ?";
 
     public List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException {
@@ -66,12 +68,23 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
         query.setString(1, user.getFirstName());
         query.setString(2, user.getLastName());
         query.setString(3, user.getUserName());
-        query.setString(5, signatureUser);
+        query.setString(4, signatureUser);
+
+
+        PreparedStatement query1 = connection.prepareStatement(UPDATE_PASSWORD);
         String pass = user.getPassword().isEmpty() ? password : user.getPassword();
-        query.setString(4, pass);
+        query1.setString(1, pass);
+        query1.setString(2, user.getUserName());
+
+        PreparedStatement query2 = connection.prepareStatement(UPDATE_PERMISSIONS);
+        String permissions = user.getRole().equalsIgnoreCase("admin") ? "111" : "100";
+        query2.setString(1, permissions);
+        query2.setString(2, user.getUserName());
 
         List<PreparedStatement> queries = new ArrayList<>();
         queries.add(query);
+        queries.add(query1);
+        queries.add(query2);
         return queries;
     }
 

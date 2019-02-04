@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {getUsers, deleteUser, goToEditUser} from "./userListActions";
 import Button from "react-bootstrap/es/Button";
-import {ADMIN, USERNAME, DELETE_MESSAGE} from "../const.js";
+import {ADMIN, USERNAME, DELETE_MESSAGE} from "../../const.js";
 
 class UserItem extends Component {
     constructor(props) {

@@ -5,12 +5,17 @@ import {
     FIRST_NAME,
     LAST_NAME,
     NOT_ADMIN,
-    PASSWORD, PASSWORD_TYPE, RETRY_PASSWORD,
-    RPC_TESTER, SET_PRESET_USER, SET_USER_SIGNATURE,
-    TEXT_TYPE, USER_LIST,
+    PASSWORD,
+    PASSWORD_TYPE,
+    RETRY_PASSWORD,
+    RPC_TESTER,
+    SET_PRESET_USER,
+    SET_USER_SIGNATURE,
+    TEXT_TYPE,
+    USER_LIST,
     USERNAME
-} from "../const";
-import {setActiveArea} from "../actions/actions.jsx";
+} from "../../const.js";
+import {setActiveArea} from "../../actions.jsx";
 import axios from "axios";
 
 export function goToEditUser(userName, signature) {

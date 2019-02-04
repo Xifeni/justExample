@@ -1,15 +1,20 @@
 import {
     ADMIN,
     FIRST_NAME,
-    LAST_NAME, NOT_ADMIN, PASSWORD,
-    PASSWORD_TYPE, RETRY_PASSWORD,
-    RPC_TESTER, TEXT_TYPE,
+    LAST_NAME,
+    NOT_ADMIN,
+    PASSWORD,
+    PASSWORD_TYPE,
+    RETRY_PASSWORD,
+    RPC_TESTER,
+    TEXT_TYPE,
     UPDATE_NEW_USER,
-    USERNAME, WIPE_DATA
-} from "../const";
+    USERNAME,
+    WIPE_DATA,
+    USER_LIST
+} from "../../const.js";
 import axios from "axios";
-import {setActiveArea} from "../actions/actions.jsx";
-import {USER_LIST} from "../const";
+import {setActiveArea} from "../../actions.jsx";
 
 export function sendParam(param) {
     return function (dispatch) {

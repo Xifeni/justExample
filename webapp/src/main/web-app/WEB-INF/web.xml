@@ -6,7 +6,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <listener>
-        <listener-class>controller.JsonRpcInitializer</listener-class>
+        <listener-class>servlet.JsonRpcInitializer</listener-class>
     </listener>
 
     <servlet>

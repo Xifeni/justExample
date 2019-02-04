@@ -2,11 +2,11 @@ import {Button, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {setActiveArea} from "../../actions/actions.jsx";
+import {setActiveArea} from "../../actions.jsx";
 
-import FormItem from "../component/label.js";
-import FormCheckBox from "../component/checkBox";
-import {wipeData, sendForm} from "../createNewUserActions";
+import FormItem from "./label.js";
+import FormCheckBox from "./checkBox";
+import {wipeData, sendForm} from "./createNewUserActions";
 import {PASSWORD_ERROR_MESSAGE, VALIDATION_STATUS, PASSWORD_STATUS, USER_LIST} from "../../const.js";
 import {USER_SIGNATURE, USERNAME} from "../../const";
 

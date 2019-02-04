@@ -1,4 +1,5 @@
-package controller;
+package servlet;
+import controller.JsonRpcController;
 import org.jabsorb.JSONRPCBridge;
 
 import javax.servlet.ServletContextEvent;
