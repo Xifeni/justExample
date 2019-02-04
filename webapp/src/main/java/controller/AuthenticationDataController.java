@@ -2,15 +2,12 @@ package controller;
 
 import dao.AuthenticationDao;
 import dao.AuthenticationDaoImpl;
-import dao.UserDao;
-import dao.UserDaoImpl;
 
 import java.sql.SQLException;
 
-public class MainController {
+public class AuthenticationDataController {
 
     private AuthenticationDao authDao = new AuthenticationDaoImpl();
-    private UserDao userDao = new UserDaoImpl();
 
     public boolean isCorrectRequest(String login, String password) throws SQLException {
         return authDao.isValidUser(login, password);
@@ -22,5 +19,18 @@ public class MainController {
 
     public void registerUserSession(String login, String sessionId) throws SQLException {
         authDao.registerSessionUser(login, sessionId);
+    }
+
+
+    public String getPermissions(String login) throws SQLException {
+        return authDao.getUserPermission(login);
+    }
+
+    public String getUsername(String id) throws SQLException {
+        return authDao.getUsername(id);
+    }
+
+    public void logout(String username) throws SQLException {
+        authDao.clearSession(username);
     }
 }

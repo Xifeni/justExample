@@ -1,6 +1,5 @@
 package dao;
 
-import com.mysql.cj.jdbc.exceptions.OperationNotSupportedException;
 import сreator.AuthenticationRawQueryCreator;
 import сreator.AuthenticationRawQueryCreatorImpl;
 import utils.connectionPool.ConnectionPool;
@@ -49,7 +48,34 @@ public class AuthenticationDaoImpl implements AuthenticationDao {
     }
 
     @Override
+    public void clearSession(String username) throws SQLException {
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> query = creator.getClearSessionRawQuery(connection, username);
+            transactionManagerImpl.executeTransaction(query, connection);
+        }
+    }
+
+    @Override
+    public String getUsername(String id) throws SQLException{
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> query = creator.getRawUsername(connection, id);
+            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
+
+            ResultSet set = sets.get(0);
+            set.next();
+            return set.getString(1);
+        }
+    }
+
+    @Override
     public String getUserPermission(String login) throws SQLException {
-        throw new OperationNotSupportedException();
+        try (Connection connection = pool.getConnection()) {
+            List<PreparedStatement> query = creator.getLegitRequestRawQuery(connection, login);
+            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
+
+            ResultSet set = sets.get(0);
+            set.next();
+            return set.getString(1);
+        }
     }
 }
