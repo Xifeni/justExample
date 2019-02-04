@@ -45,22 +45,24 @@ export let createUserReducer = function (state = initState, action) {
         case UPDATE_NEW_USER : {
             state.newUser[action.payload.name].value = action.payload.value;
 
-            state[PASSWORD_STATUS] = validatePassword(state.newUser);
-            state[VALIDATION_STATUS] = validateForm(state.newUser);
-
-            return Object.assign({}, state);
+            return Object.assign({}, state, {
+                [PASSWORD_STATUS]: validatePassword(state.newUser),
+                [VALIDATION_STATUS]: validateForm(state.newUser)
+            });
         }
         case SET_PRESET_USER:
-            state.newUser = action.payload;
-            state[VALIDATION_STATUS] = null;
-            state[PASSWORD_STATUS] = null;
-            return Object.assign({}, state);
+            return Object.assign({}, state, {
+                newUser: action.payload,
+                [VALIDATION_STATUS]: null,
+                [PASSWORD_STATUS]: null
+            });
         case WIPE_DATA: {
-            state.newUser = action.payload;
-            state[USER_SIGNATURE] = "";
-            state[VALIDATION_STATUS] = null;
-            state[PASSWORD_STATUS] = null;
-            return Object.assign({}, state);
+            return Object.assign({}, state, {
+                newUser: action.payload,
+                [USER_SIGNATURE]: "",
+                [VALIDATION_STATUS]: null,
+                [PASSWORD_STATUS]: null
+            });
         }
         case SET_USER_SIGNATURE: {
             return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
