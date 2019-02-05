@@ -23,7 +23,7 @@ public class UserDaoImpl implements UserDao {
     public void saveUser(User user, String signatureUser) throws SQLException {
         boolean isExistUser = isUserExist(user.getUserName());
         if (isExistUser && signatureUser.isEmpty()) {
-            throw new SQLException("Username is exist");
+            throw new SQLException("Username, Username is exist");
         }
         String password = "";
         if (isExistUser) {

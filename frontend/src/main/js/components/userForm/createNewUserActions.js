@@ -11,7 +11,8 @@ import {
     UPDATE_NEW_USER,
     USERNAME,
     WIPE_DATA,
-    USER_LIST
+    USER_LIST,
+    ADD_ERROR,
 } from "../../const.js";
 import axios from "axios";
 import {setActiveArea} from "../root/actions.jsx";
@@ -29,22 +30,6 @@ let updateNewUser = function (name, value) {
     }
 };
 
-export function wipeData() {
-    let result = {
-        [USERNAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, validationState: null, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [LAST_NAME]: {type: TEXT_TYPE, validationState: null, value: ""},
-        [ADMIN]: {type: TEXT_TYPE, validationState: null, value: NOT_ADMIN}
-    };
-
-    return {
-        type: WIPE_DATA,
-        payload: result
-    }
-}
-
 export function sendForm(user, signatureUser, currentUser) {
     let result = {
         [USERNAME]: user[USERNAME].value,
@@ -61,13 +46,36 @@ export function sendForm(user, signatureUser, currentUser) {
                     dispatch(wipeData());
                     dispatch(setActiveArea(USER_LIST));
                 } else {
-                    alert("Has error " + data.error.msg);
+                    dispatch(addError(data.error.msg.split(',')));
                 }
             }
         ).catch((onrejected) => {
                 alert("Has error:" + onrejected);
             }
         );
+    }
+}
+
+export function wipeData() {
+    let result = {
+        [USERNAME]: {type: TEXT_TYPE, value: ""},
+        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
+        [FIRST_NAME]: {type: TEXT_TYPE, value: ""},
+        [LAST_NAME]: {type: TEXT_TYPE, value: ""},
+        [ADMIN]: {type: TEXT_TYPE, value: NOT_ADMIN}
+    };
+
+    return {
+        type: WIPE_DATA,
+        payload: result
+    }
+}
+
+function addError(error) {
+    return {
+        type: ADD_ERROR,
+        payload: error
     }
 }
 
