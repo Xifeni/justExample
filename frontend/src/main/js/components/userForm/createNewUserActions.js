@@ -16,6 +16,7 @@ import {
 } from "../../const.js";
 import axios from "axios";
 import {setActiveArea} from "../root/actions.jsx";
+import {sha256} from "js-sha256";
 
 export function sendParam(param) {
     return function (dispatch) {
@@ -33,8 +34,7 @@ let updateNewUser = function (name, value) {
 export function sendForm(user, signatureUser, currentUser) {
     let result = {
         [USERNAME]: user[USERNAME].value,
-        [PASSWORD]: user[PASSWORD].value,
-        [RETRY_PASSWORD]: user[RETRY_PASSWORD].value,
+        [PASSWORD]: shufflePassword(user[PASSWORD].value),
         [FIRST_NAME]: user[FIRST_NAME].value,
         [LAST_NAME]: user[LAST_NAME].value,
         [ADMIN]: user[ADMIN].value,
@@ -77,6 +77,11 @@ function addError(error) {
         type: ADD_ERROR,
         payload: error
     }
+}
+
+function shufflePassword(password) {
+    console.log(sha256.hmac("salt", password));
+    return sha256.hmac("salt", password);
 }
 
 function axiosWrapper(className, ...methodParams) {
