@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {setActiveArea} from "../root/actions.jsx";
 
-import FormItem from "./label.js";
+import FormItem from "./fromItem.js";
 import FormCheckBox from "./checkBox";
 import {wipeData, sendForm} from "./createNewUserActions";
 import {PASSWORD_ERROR_MESSAGE, VALIDATION_STATUS, PASSWORD_STATUS, USER_LIST} from "../../const.js";
@@ -19,7 +19,7 @@ class FormList extends React.Component {
         return (
             <Modal.Dialog>
                 <Modal.Header>
-                    <Modal.Title>Modal title</Modal.Title>
+                    <Modal.Title>{(this.props.newUser[USERNAME].value === "" && "Create user") || "Edit user"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form>

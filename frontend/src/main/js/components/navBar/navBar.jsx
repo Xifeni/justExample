@@ -4,6 +4,7 @@ import Navbar from "react-bootstrap/lib/NavBar";
 import NavItem from "react-bootstrap/lib/NavItem";
 import {Panel} from "react-bootstrap";
 import PanelBody from "react-bootstrap/es/PanelBody";
+import PropTypes from 'prop-types';
 
 class Item extends React.Component {
     constructor(props) {
@@ -42,3 +43,9 @@ export default class NavigationBar extends React.Component {
     }
 }
 
+Item.propTypes = {
+    key: PropTypes.string.isRequired,
+    text: PropTypes.string.isRequired,
+    idArea: PropTypes.string.isRequired,
+    setActiveArea: PropTypes.func.isRequired,
+};

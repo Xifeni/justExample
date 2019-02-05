@@ -19,7 +19,7 @@ class FormCheckBox extends React.Component {
     render() {
         return (
             <FormGroup>
-                <Checkbox defaultChecked={this.props.newUser[ADMIN].value === ADMIN}
+                <Checkbox defaultChecked={this.props.isAdmin.value === ADMIN}
                           onChange={this.handleChange}>Manager</Checkbox>
             </FormGroup>
         )
@@ -28,7 +28,7 @@ class FormCheckBox extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        newUser: state.createUserReducer.newUser,
+        isAdmin: state.createUserReducer.newUser[ADMIN],
     };
 }
 

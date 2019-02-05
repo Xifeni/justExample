@@ -3,7 +3,9 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {sendParam} from "./createNewUserActions";
-import {ERROR, LANG_WARN, SUCCESS, VALIDATION_ARRAY} from "../../const";
+import {ERROR, SUCCESS, VALIDATION_ARRAY} from "../../const";
+import PropTypes from 'prop-types';
+
 
 class FormItem extends React.Component {
     constructor(props) {
@@ -55,9 +57,19 @@ function mapStateToProps(state, props) {
     };
 }
 
+
+FormItem.propType = {
+    key: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    value: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    validationState: PropTypes.string
+}
+
 export default connect(mapStateToProps, (dispatch) => {
         return {
             sendParam: bindActionCreators(sendParam, dispatch)
         }
     }
 )(FormItem);
+
