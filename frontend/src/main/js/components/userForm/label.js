@@ -50,7 +50,6 @@ function transformToStyle(status) {
 }
 
 function mapStateToProps(state, props) {
-    console.log(state.createUserReducer[VALIDATION_ARRAY][props.name]);
     return {
         validStatus: state.createUserReducer[VALIDATION_ARRAY][props.name],
     };

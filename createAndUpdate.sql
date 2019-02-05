@@ -35,5 +35,5 @@ INSERT INTO users (username, firstname, lastname) VALUES ('user', 'user', 'user'
 INSERT INTO permission (username, permission, rolename) VALUES ('test', '111', 'test');
 INSERT INTO permission (username, permission, rolename) VALUES ('user', '100', 'user');
 
-INSERT INTO vault (username, password, current_session) VALUES ('test', 'test', null);
-INSERT INTO vault (username, password, current_session) VALUES ('user', 'user', null);
+INSERT INTO vault (username, password, current_session) VALUES ('test', 'edd5bb5389dfb55beb4d3ac56b7546c17cd464bc4da27aaf95b7dc9cbae8cf1f', null);
+INSERT INTO vault (username, password, current_session) VALUES ('user', '48cee8d8b352a2221a8993ac5fafd739ef877013a7576e582ac1363b92995782', null);

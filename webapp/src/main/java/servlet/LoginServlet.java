@@ -2,12 +2,18 @@ package servlet;
 
 import controller.AuthenticationDataController;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 @WebServlet(urlPatterns = "/login", name = "login")
@@ -28,6 +34,14 @@ public class LoginServlet extends HttpServlet {
             String sessionId = request.getSession().getId();
             boolean isLogged = false;
 
+            if (password != null) {
+                Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+                SecretKeySpec secretKey = new SecretKeySpec("salt".getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+                sha256_HMAC.init(secretKey);
+                byte[] hashInBytes = sha256_HMAC.doFinal(password.getBytes(StandardCharsets.UTF_8));
+                password = DatatypeConverter.printHexBinary(hashInBytes).toLowerCase();
+            }
+
             if (login != null && password != null) {
                 isLogged = controller.isCorrectRequest(login, password);
             }
@@ -37,7 +51,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 response.sendRedirect("/login");
             }
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }
     }
