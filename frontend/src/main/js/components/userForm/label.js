@@ -28,15 +28,15 @@ class FormItem extends React.Component {
         return (
             <FormGroup
                 key={this.props.key}
-                validationState={transformToStyle(this.props.validStatus[this.props.name].isValid)}>
+                validationState={transformToStyle(this.props.validStatus.isValid)}>
                 <ControlLabel>{this.props.name}</ControlLabel>
                 <FormControl
                     id={this.props.name}
                     type={this.props.type}
                     value={this.state.value}
                     onChange={this.handleChange}/>
-                <HelpBlock>{(this.props.validStatus[this.props.name].isValid === false
-                    && this.props.validStatus[this.props.name].error.join())}</HelpBlock>
+                <HelpBlock>{(this.props.validStatus.isValid === false
+                    && this.props.validStatus.error.join())}</HelpBlock>
             </FormGroup>
         );
     }
@@ -49,9 +49,10 @@ function transformToStyle(status) {
     return status ? SUCCESS : ERROR;
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
+    console.log(state.createUserReducer[VALIDATION_ARRAY][props.name]);
     return {
-        validStatus: state.createUserReducer[VALIDATION_ARRAY],
+        validStatus: state.createUserReducer[VALIDATION_ARRAY][props.name],
     };
 }
 

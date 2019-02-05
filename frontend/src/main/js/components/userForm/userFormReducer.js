@@ -17,7 +17,7 @@ import {
     SET_USER_SIGNATURE,
     USER_SIGNATURE
 } from "../../const.js";
-import {LANG_WARN, PASSWORD_ERROR_MESSAGE} from "../../const";
+import {ADD_ERROR, LANG_WARN, PASSWORD_ERROR_MESSAGE} from "../../const";
 
 let initState = {
     newUser: {
@@ -63,6 +63,13 @@ export let createUserReducer = function (state = initState, action) {
         }
         case SET_USER_SIGNATURE: {
             return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
+        }
+        case ADD_ERROR: {
+            console.log(action.payload[0]+" : "+action.payload[1]);
+            console.log(state.VALIDATION_ARRAY[action.payload[0]]);
+            state.VALIDATION_ARRAY[action.payload[0]].error.push(action.payload[1]);
+            state.VALIDATION_ARRAY[action.payload[0]].isValid = false;
+            return Object.assign({}, state);
         }
     }
     return state;
