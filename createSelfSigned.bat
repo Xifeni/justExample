@@ -1,0 +1,1 @@
+keytool -v -genkey -dname "CN=localhost, OU=Developers, O=Actimind, L=SPB, C=RF" -ext SAN=dns:localhost -alias tomcat -storetype jks -keystore keystore.jks -validity 365 -keyalg RSA -keysize 2048 -storepass mystorepass -keypass mystorepass

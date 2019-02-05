@@ -1,0 +1,8 @@
+<Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+           port="8443" maxThreads="150" SSLEnabled="true" scheme="https"
+           secure="true" clientAuth="false" sslProtocol="TLS"
+           keystoreType="JKS" keystoreFile="${user.home}/keystore.jks"
+           keystorePass="mystorepass" keyAlias="tomcat" />
+
+<!-- also need commented " <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />-->
+<!-- Usually, it's line 27>
