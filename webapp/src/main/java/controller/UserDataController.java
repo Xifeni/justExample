@@ -10,7 +10,7 @@ import java.util.List;
 public class UserDataController {
     private UserDao userDao = new UserDaoImpl();
 
-    public List<User> getUsersList() {
+    public List<User> getUsersList() throws SQLException {
         return userDao.getUsers();
     }
 
@@ -22,7 +22,7 @@ public class UserDataController {
         userDao.saveUser(user, isCreateNewUser);
     }
 
-    public void deleteUser(String username) {
+    public void deleteUser(String username) throws SQLException {
         userDao.deleteUser(username);
     }
 }

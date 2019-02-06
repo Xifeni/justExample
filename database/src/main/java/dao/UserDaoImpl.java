@@ -1,10 +1,8 @@
 package dao;
 
 import model.User;
+import utils.connectionStore.ConnectionStore;
 import сreator.UserRawQueryCreatorImpl;
-import utils.connectionPool.ConnectionPool;
-import utils.connectionPool.ConnectionPoolImpl;
-import utils.transactionManager.TransactionManagerImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,12 +13,11 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
-    private TransactionManagerImpl transactionManagerImpl = new TransactionManagerImpl();
     private UserRawQueryCreatorImpl creator = new UserRawQueryCreatorImpl();
-    private ConnectionPool pool = ConnectionPoolImpl.getInstance();
 
     @Override
     public void saveUser(User user, String signatureUser) throws SQLException {
+        Connection connection = ConnectionStore.getConnection();
         boolean isExistUser = isUserExist(user.getUserName());
         if (isExistUser && signatureUser.isEmpty()) {
             throw new SQLException("Username, Username is exist");
@@ -33,82 +30,78 @@ public class UserDaoImpl implements UserDao {
                 password = user.getPassword();
             }
         }
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> queries;
-            if (!signatureUser.isEmpty()) {
-                queries = creator.getRawUpdateUser(connection, user, signatureUser, password);
-            } else {
-                queries = creator.getRawCreateUser(connection, user);
-            }
-            transactionManagerImpl.executeTransaction(queries, connection);
+        PreparedStatement query;
+        if (!signatureUser.isEmpty()) {
+            query = creator.getRawUpdateUser(connection, user, signatureUser);
+            getResultSet(query);
+            query = creator.getRawUpdatePassword(connection, user, password);
+            getResultSet(query);
+            query = creator.getRawUpdatePermissions(connection, user);
+            getResultSet(query);
+        } else {
+            query = creator.getRawCreateUser(connection, user);
+            getResultSet(query);
+            query = creator.getRawCreatePassword(connection, user);
+            getResultSet(query);
+            query = creator.getRawCreateUserPermission(connection, user);
+            getResultSet(query);
         }
     }
+
 
     private String getPassword(String signatureUser) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> queries;
-            queries = creator.getPassword(connection, signatureUser);
+        Connection connection = ConnectionStore.getConnection();
+        PreparedStatement query = creator.getPassword(connection, signatureUser);
+        return getResultSet(query).getString(1);
 
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(queries, connection);
-            ResultSet set = sets.get(0);
-            set.next();
-            return set.getString(1);
-        }
     }
 
     @Override
-    public void deleteUser(String user) {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> queries = creator.getRawDeleteUser(connection, user);
-            transactionManagerImpl.executeTransaction(queries, connection);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void deleteUser(String user) throws SQLException {
+        Connection connection = ConnectionStore.getConnection();
+        PreparedStatement query = creator.getRawDeleteUser(connection, user);
+        getResultSet(query);
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers() throws SQLException {
         List<User> users = new ArrayList<>();
 
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRawUsers(connection);
-
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            while (set.next()) {
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getRawUsers(connection)) {
+            ResultSet set = getResultSet(query);
+            do {
                 users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            } while (set.next());
+            return users;
         }
-        return users;
     }
 
     private boolean isUserExist(String name) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRawUser(connection, name);
-
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            return set.isBeforeFirst();
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getIsExistUserRawQuery(connection, name)) {
+            return getResultSet(query).getBoolean(1);
         }
     }
 
     @Override
     public User getUser(String name) throws SQLException {
-        List<User> users = new ArrayList<>();
-
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRawUser(connection, name);
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-            ResultSet set = sets.get(0);
-            while (set.next()) {
-                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname"), set.getString("permission")));
-            }
-            return users.get(0);
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getRawUser(connection, name)) {
+            ResultSet set = getResultSet(query);
+            return new User(set.getString("username"),
+                    set.getString("firstname"),
+                    set.getString("lastname"),
+                    set.getString("permission"));
         }
+    }
+
+    private ResultSet getResultSet(PreparedStatement query) throws SQLException {
+        query.execute();
+        ResultSet set = query.getResultSet();
+        if (set != null) {
+            set.next();
+        }
+        return set;
     }
 }

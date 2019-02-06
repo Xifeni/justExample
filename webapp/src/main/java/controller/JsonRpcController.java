@@ -16,7 +16,7 @@ public class JsonRpcController {
         return authDataController.getPermissions(name);
     }
 
-    public User[] getUsers() {
+    public User[] getUsers() throws SQLException {
         return userDataController.getUsersList().toArray(new User[0]);
     }
 

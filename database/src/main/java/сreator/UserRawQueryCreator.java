@@ -9,15 +9,25 @@ import java.util.List;
 
 public interface UserRawQueryCreator {
 
-    List<PreparedStatement> getRawCreateUser(Connection connection, User user) throws SQLException;
+    PreparedStatement getRawDeleteUser(Connection connection, String user) throws SQLException;
 
-    List<PreparedStatement> getRawDeleteUser(Connection connection, String user) throws SQLException;
+    PreparedStatement getRawUsers(Connection connection) throws SQLException;
 
-    List<PreparedStatement> getRawUsers(Connection connection) throws SQLException;
+    PreparedStatement getRawUser(Connection connection, String name) throws SQLException;
 
-    List<PreparedStatement> getRawUser(Connection connection, String name) throws SQLException;
+    PreparedStatement getPassword(Connection connection, String signatureUser) throws SQLException;
 
-    List<PreparedStatement> getRawUpdateUser(Connection connection, User user, String signatureUser, String password) throws SQLException;
+    PreparedStatement getIsExistUserRawQuery(Connection connection, String username) throws SQLException;
 
-    List<PreparedStatement> getPassword(Connection connection, String signatureUser) throws SQLException;
+    PreparedStatement getRawUpdatePermissions(Connection connection, User user) throws SQLException;
+
+    PreparedStatement getRawUpdatePassword(Connection connection, User user, String password) throws SQLException;
+
+    PreparedStatement getRawUpdateUser(Connection connection, User user, String signatureUser) throws SQLException;
+
+    PreparedStatement getRawCreatePassword(Connection connection, User user) throws SQLException;
+
+    PreparedStatement getRawCreateUserPermission(Connection connection, User user) throws SQLException;
+
+    PreparedStatement getRawCreateUser(Connection connection, User user) throws SQLException;
 }

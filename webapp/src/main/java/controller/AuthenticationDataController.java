@@ -21,7 +21,6 @@ public class AuthenticationDataController {
         authDao.registerSessionUser(login, sessionId);
     }
 
-
     public String getPermissions(String login) throws SQLException {
         return authDao.getUserPermission(login);
     }

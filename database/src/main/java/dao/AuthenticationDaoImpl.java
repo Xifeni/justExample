@@ -1,81 +1,72 @@
 package dao;
 
+import utils.connectionStore.ConnectionStore;
 import сreator.AuthenticationRawQueryCreator;
 import сreator.AuthenticationRawQueryCreatorImpl;
-import utils.connectionPool.ConnectionPool;
-import utils.connectionPool.ConnectionPoolImpl;
-import utils.transactionManager.TransactionManagerImpl;
 
 import java.sql.*;
-import java.util.List;
 
 public class AuthenticationDaoImpl implements AuthenticationDao {
 
-    private TransactionManagerImpl transactionManagerImpl = new TransactionManagerImpl();
     private AuthenticationRawQueryCreator creator = new AuthenticationRawQueryCreatorImpl();
-    private ConnectionPool pool = ConnectionPoolImpl.getInstance();
 
     @Override
     public boolean isAuthenticatedUser(String sessionId) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRegisteredUserRawQuery(connection, sessionId);
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            set.next();
-            return set.getBoolean(1);
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getRegisteredUserRawQuery(connection, sessionId)) {
+            return getResultSet(query).getBoolean(1);
         }
     }
 
     @Override
     public boolean isValidUser(String password, String login) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getAuthenticatedUserRawQuery(connection, password, login);
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            set.next();
-            return set.getBoolean(1);
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getAuthenticatedUserRawQuery(connection, password, login)) {
+            return getResultSet(query).getBoolean(1);
         }
     }
 
     @Override
     public void registerSessionUser(String login, String sessionId) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRegistrationRawQuery(connection, login, sessionId);
-            transactionManagerImpl.executeTransaction(query, connection);
+        Connection connection = ConnectionStore.getConnection();
+        PreparedStatement query = creator.getRegistrationRawQuery(connection, login, sessionId);
+        try {
+            getResultSet(query);
+        } finally {
+            query.close();
         }
     }
 
     @Override
     public void clearSession(String username) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getClearSessionRawQuery(connection, username);
-            transactionManagerImpl.executeTransaction(query, connection);
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getClearSessionRawQuery(connection, username)) {
+            getResultSet(query);
         }
     }
 
     @Override
-    public String getUsername(String id) throws SQLException{
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getRawUsername(connection, id);
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            set.next();
-            return set.getString(1);
+    public String getUsername(String id) throws SQLException {
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getRawUsername(connection, id)) {
+            return getResultSet(query).getString(1);
         }
     }
 
     @Override
     public String getUserPermission(String login) throws SQLException {
-        try (Connection connection = pool.getConnection()) {
-            List<PreparedStatement> query = creator.getLegitRequestRawQuery(connection, login);
-            List<ResultSet> sets = transactionManagerImpl.executeTransaction(query, connection);
-
-            ResultSet set = sets.get(0);
-            set.next();
-            return set.getString(1);
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getLegitRequestRawQuery(connection, login)) {
+            return getResultSet(query).getString(1);
         }
+    }
+
+    private ResultSet getResultSet(PreparedStatement query) throws SQLException {
+        query.execute();
+        ResultSet set = query.getResultSet();
+        if (set != null) {
+            set.next();
+        }
+        return set;
     }
 }

@@ -34,16 +34,8 @@ public class LoginServlet extends HttpServlet {
             String sessionId = request.getSession().getId();
             boolean isLogged = false;
 
-            if (password != null) {
-                Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-                SecretKeySpec secretKey = new SecretKeySpec("salt".getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-                sha256_HMAC.init(secretKey);
-                byte[] hashInBytes = sha256_HMAC.doFinal(password.getBytes(StandardCharsets.UTF_8));
-                password = DatatypeConverter.printHexBinary(hashInBytes).toLowerCase();
-            }
-
             if (login != null && password != null) {
-                isLogged = controller.isCorrectRequest(login, password);
+                isLogged = controller.isCorrectRequest(login, getHashPassword(password, "salt"));
             }
             if (isLogged) {
                 controller.registerUserSession(request.getParameter("login"), sessionId);
@@ -54,5 +46,16 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getHashPassword(String password, String salt) throws NoSuchAlgorithmException, InvalidKeyException {
+        if (password != null) {
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secretKey = new SecretKeySpec(salt.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+            sha256_HMAC.init(secretKey);
+            byte[] hashInBytes = sha256_HMAC.doFinal(password.getBytes(StandardCharsets.UTF_8));
+            password = DatatypeConverter.printHexBinary(hashInBytes).toLowerCase();
+        }
+        return password;
     }
 }

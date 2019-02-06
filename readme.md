@@ -27,3 +27,5 @@ For use https need:
 - execute in console createSelfSigned.bat
 - add keystore.jks in ../users/{your_user}/
 - add to server.xml(in Tomcat directory) data from customServer.xml
+
+default login/password - test/test.

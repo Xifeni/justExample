@@ -17,7 +17,6 @@ create table vault
       on update cascade on delete cascade
 );
 
-
 create table permission
 (
   username   varchar(32)  not null
