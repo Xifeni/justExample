@@ -23,17 +23,14 @@ public class LoginFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String sessionId = ((HttpServletRequest) request).getSession().getId();
         try {
-            int i = 0;
-            request.setAttribute("counter", i);
             if (!controller.isCorrectRequest(sessionId)) {
                 request.getRequestDispatcher("/login").forward(request, response);
             } else {
                 chain.doFilter(request, response);
             }
-            System.out.println("i:"+i);
         } catch (SQLException e) {
             e.printStackTrace();
-            ((HttpServletResponse) response).sendError(404, e.getSQLState());
+            ((HttpServletResponse) response).sendError(500, e.getSQLState());
         }
     }
 

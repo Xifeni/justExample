@@ -45,6 +45,7 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
+            response.sendError(500, e.getMessage());
         }
     }
 
