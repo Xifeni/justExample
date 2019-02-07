@@ -15,7 +15,7 @@ import {
     USER_LIST,
     USERNAME
 } from "../../const.js";
-import {setActiveArea} from "../root/actions.jsx";
+import {setActiveArea} from "../root/actions.js";
 import axios from "axios";
 
 export function goToEditUser(userName, signature) {

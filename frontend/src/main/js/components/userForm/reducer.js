@@ -15,9 +15,11 @@ import {
     WIPE_DATA,
     VALIDATION_ARRAY,
     SET_USER_SIGNATURE,
-    USER_SIGNATURE
+    USER_SIGNATURE,
+    ADD_ERROR,
+    LANG_WARN,
+    PASSWORD_ERROR_MESSAGE
 } from "../../const.js";
-import {ADD_ERROR, LANG_WARN, PASSWORD_ERROR_MESSAGE} from "../../const";
 
 let initState = {
     newUser: {
@@ -65,9 +67,20 @@ export let createUserReducer = function (state = initState, action) {
             return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
         }
         case ADD_ERROR: {
-            state.VALIDATION_ARRAY[action.payload[0]].error.push(action.payload[1]);
-            state.VALIDATION_ARRAY[action.payload[0]].isValid = false;
-            return Object.assign({}, state);
+            return {
+                ...state,
+                VALIDATION_ARRAY: {
+                    ...state.VALIDATION_ARRAY,
+                    [action.payload[0]]: {
+                        error: [...state.VALIDATION_ARRAY[action.payload[0]].error, action.payload[1]],
+                        isValid: false
+                    },
+                    [VALIDATION_STATUS] : {
+                        error: [""],
+                        isValid: false
+                    }
+                }
+            };
         }
     }
     return state;

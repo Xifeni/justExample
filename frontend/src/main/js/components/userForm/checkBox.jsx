@@ -3,7 +3,7 @@ import {ADMIN, NOT_ADMIN} from "../../const";
 import {Checkbox, FormGroup} from "react-bootstrap";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {sendParam} from "./createNewUserActions";
+import {sendParam} from "./actions";
 
 class FormCheckBox extends React.Component {
     constructor(props) {

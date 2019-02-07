@@ -2,11 +2,11 @@ import {Button, HelpBlock, Modal} from "react-bootstrap";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {setActiveArea} from "../root/actions.jsx";
+import {setActiveArea} from "../root/actions.js";
 
-import FormItem from "./fromItem.js";
-import FormCheckBox from "./checkBox";
-import {wipeData, sendForm} from "./createNewUserActions";
+import FormItem from "./fromItem.jsx";
+import FormCheckBox from "./checkBox.jsx";
+import {wipeData, sendForm} from "./actions";
 import {PASSWORD_ERROR_MESSAGE, VALIDATION_STATUS, PASSWORD_STATUS, USER_LIST} from "../../const.js";
 import {USER_SIGNATURE, USERNAME, VALIDATION_ARRAY} from "../../const";
 
@@ -50,7 +50,6 @@ class FormList extends React.Component {
             </Modal.Dialog>)
     }
 }
-
 
 function checkValidationState(signature, passStatus, validStatus) {
     if (signature.length !== 0 && passStatus !== false && validStatus === null) {

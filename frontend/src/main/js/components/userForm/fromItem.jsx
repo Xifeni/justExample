@@ -2,7 +2,7 @@ import {ControlLabel, FormControl, FormGroup, HelpBlock} from "react-bootstrap";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {sendParam} from "./createNewUserActions";
+import {sendParam} from "./actions";
 import {ERROR, SUCCESS, VALIDATION_ARRAY} from "../../const";
 import PropTypes from 'prop-types';
 
@@ -17,7 +17,6 @@ class FormItem extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
     }
-
 
     handleChange(e) {
         this.setState({
@@ -64,7 +63,7 @@ FormItem.propType = {
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     validationState: PropTypes.string
-}
+};
 
 export default connect(mapStateToProps, (dispatch) => {
         return {

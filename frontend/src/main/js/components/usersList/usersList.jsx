@@ -3,7 +3,7 @@ import {Component} from "react";
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getUsers, deleteUser, goToEditUser} from "./userListActions";
+import {getUsers, deleteUser, goToEditUser} from "./actions";
 import Button from "react-bootstrap/es/Button";
 import {ADMIN, USERNAME, DELETE_MESSAGE} from "../../const.js";
 import PropTypes from 'prop-types';
@@ -38,7 +38,6 @@ class UsersList extends Component {
     componentDidMount() {
         this.props.loadUsers();
     }
-
 
     render() {
         if (!this.props.loadingStatus) return "loading";

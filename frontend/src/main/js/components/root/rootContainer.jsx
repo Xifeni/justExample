@@ -3,15 +3,11 @@ import {bindActionCreators} from 'redux'
 import {connect} from "react-redux";
 import React from "react";
 
-import {setActiveArea} from "./actions.jsx";
+import {setActiveArea} from "./actions.js";
 import UsersList from "../usersList/usersList.jsx";
 import NavigationBar from "../navBar/navBar.jsx";
-import FormList from "../userForm/createUserForm";
-import {
-    getPermission,
-    getUsers,
-    logout
-} from "./actions.jsx";
+import FormList from "../userForm/createUserForm.jsx";
+import {getPermission, logout} from "./actions.js";
 import {
     CREATE_USER,
     LOGOUT,

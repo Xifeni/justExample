@@ -14,7 +14,7 @@ let initialState = {
     },
 };
 
-let generalReducer = function (state = initialState, action) {
+let rootReducer = function (state = initialState, action) {
     switch (action.type) {
         case SET_ACTIVE_AREA : {
             return Object.assign({}, state, {activeArea: action.payload});
@@ -31,4 +31,4 @@ let generalReducer = function (state = initialState, action) {
     return state;
 };
 
-export default generalReducer;
+export default rootReducer;
