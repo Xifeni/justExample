@@ -4,16 +4,15 @@ import {
     LAST_NAME,
     NOT_ADMIN,
     PASSWORD,
-    PASSWORD_TYPE,
     RETRY_PASSWORD,
     RPC_TESTER,
-    TEXT_TYPE,
     UPDATE_NEW_USER,
     USERNAME,
     WIPE_DATA,
     USER_LIST,
     ADD_ERROR,
-} from "../../const.js";
+    VALIDATE_FORM
+} from "../../const";
 import axios from "axios";
 import {setActiveArea} from "../root/actions.js";
 import {sha256} from "js-sha256";
@@ -21,8 +20,15 @@ import {sha256} from "js-sha256";
 export function sendParam(param) {
     return function (dispatch) {
         dispatch(updateNewUser(param.name, param.value));
+        dispatch(validateForm());
     }
 }
+
+let validateForm = function () {
+    return {
+        type: VALIDATE_FORM
+    }
+};
 
 let updateNewUser = function (name, value) {
     return {
@@ -58,21 +64,20 @@ export function sendForm(user, signatureUser, currentUser) {
 
 export function wipeData() {
     let result = {
-        [USERNAME]: {type: TEXT_TYPE, value: ""},
-        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, value: ""},
-        [LAST_NAME]: {type: TEXT_TYPE, value: ""},
-        [ADMIN]: {type: TEXT_TYPE, value: NOT_ADMIN}
+        [USERNAME]: {value: "", error: []},
+        [PASSWORD]: {value: "", error: []},
+        [RETRY_PASSWORD]: {value: "", error: []},
+        [FIRST_NAME]: {value: "", error: []},
+        [LAST_NAME]: {value: "", error: []},
+        [ADMIN]: {value: NOT_ADMIN, error: []}
     };
-
     return {
         type: WIPE_DATA,
         payload: result
     }
 }
 
-function addError(error) {
+export function addError(error) {
     return {
         type: ADD_ERROR,
         payload: error

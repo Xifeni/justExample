@@ -4,112 +4,98 @@ import {
     LAST_NAME,
     NOT_ADMIN,
     PASSWORD,
-    PASSWORD_TYPE,
     RETRY_PASSWORD,
-    PASSWORD_STATUS,
-    TEXT_TYPE,
-    VALIDATION_STATUS,
     UPDATE_NEW_USER,
     USERNAME,
     SET_PRESET_USER,
     WIPE_DATA,
-    VALIDATION_ARRAY,
     SET_USER_SIGNATURE,
     USER_SIGNATURE,
     ADD_ERROR,
-    LANG_WARN,
-    PASSWORD_ERROR_MESSAGE
+    VALIDATE_FORM
 } from "../../const.js";
+import {LANG_WARN} from "../../const";
 
 let initState = {
     newUser: {
-        [USERNAME]: {type: TEXT_TYPE, value: ""},
-        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, value: ""},
-        [LAST_NAME]: {type: TEXT_TYPE, value: ""},
-        [ADMIN]: {type: TEXT_TYPE, value: NOT_ADMIN},
-    },
-    [VALIDATION_ARRAY]: {
-        [PASSWORD_STATUS]: {isValid: null, error: [PASSWORD_ERROR_MESSAGE]},
-        [VALIDATION_STATUS]: {isValid: null, error: [""]},
-        [USERNAME]: {isValid: null, error: [LANG_WARN]},
-        [PASSWORD]: {isValid: null, error: [LANG_WARN]},
-        [RETRY_PASSWORD]: {isValid: null, error: [LANG_WARN]},
-        [FIRST_NAME]: {isValid: null, error: [LANG_WARN]},
-        [LAST_NAME]: {isValid: null, error: [LANG_WARN]},
-        [ADMIN]: {isValid: true, error: [LANG_WARN]},
+        [USERNAME]: {value: "", error: []},
+        [PASSWORD]: {value: "", error: []},
+        [RETRY_PASSWORD]: {value: "", error: []},
+        [FIRST_NAME]: {value: "", error: []},
+        [LAST_NAME]: {value: "", error: []},
+        [ADMIN]: {value: NOT_ADMIN, error: []},
     },
     [USER_SIGNATURE]: ""
 };
 
-export let createUserReducer = function (state = initState, action) {
-    switch (action.type) {
-        case UPDATE_NEW_USER : {
-            state.newUser[action.payload.name].value = action.payload.value;
-            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = validatePassword(state.newUser);
-            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = validateForm(state.newUser, state.VALIDATION_ARRAY);
-            return Object.assign({}, state);
-        }
-        case SET_PRESET_USER:
-            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = null;
-            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = null;
-            return Object.assign({}, state, {newUser: action.payload});
-        case WIPE_DATA: {
-            state.VALIDATION_ARRAY[PASSWORD_STATUS].isValid = null;
-            state.VALIDATION_ARRAY[VALIDATION_STATUS].isValid = null;
-            return Object.assign({}, state, {
-                newUser: action.payload,
-                [USER_SIGNATURE]: "",
-            });
-        }
-        case SET_USER_SIGNATURE: {
-            return Object.assign({}, state, {[USER_SIGNATURE]: action.payload});
-        }
-        case ADD_ERROR: {
-            return {
-                ...state,
-                VALIDATION_ARRAY: {
-                    ...state.VALIDATION_ARRAY,
-                    [action.payload[0]]: {
-                        error: [...state.VALIDATION_ARRAY[action.payload[0]].error, action.payload[1]],
-                        isValid: false
+export let createUserReducer = function (state = initState, {type, payload}) {
+        switch (type) {
+            case UPDATE_NEW_USER : {
+                return {
+                    ...state,
+                    newUser: {
+                        ...state.newUser,
+                        [payload.name]: {value: payload.value, error: [...state.newUser[payload.name].error]}
                     },
-                    [VALIDATION_STATUS] : {
-                        error: [""],
-                        isValid: false
-                    }
+                };
+            }
+            case VALIDATE_FORM: {
+                validateForm(state.newUser);
+                return {...state, newUser: {...state.newUser}}
+            }
+            case SET_PRESET_USER:
+                return {
+                    ...state, newUser: payload
+                };
+            case
+            WIPE_DATA: {
+                return {
+                    ...state,
+                    [USER_SIGNATURE]: "",
+                    newUser: {
+                        [USERNAME]: {value: "", error: []},
+                        [PASSWORD]: {value: "", error: []},
+                        [RETRY_PASSWORD]: {value: "", error: []},
+                        [FIRST_NAME]: {value: "", error: []},
+                        [LAST_NAME]: {value: "", error: []},
+                        [ADMIN]: {value: NOT_ADMIN, error: []},
+                    },
                 }
-            };
+            }
+            case
+            SET_USER_SIGNATURE: {
+                return {...state, [USER_SIGNATURE]: payload}
+            }
+            case
+            ADD_ERROR: {
+                return {
+                    ...state,
+                    newUser: {
+                        ...state.newUser,
+                        [payload[0]]: {
+                            error: [...state.newUser[payload[0]].error, payload[1]],
+                            isValid: false
+                        }
+                    }
+                };
+            }
+        }
+        return state;
+    }
+;
+
+function validateForm(newUser) {
+    for (let param in newUser) {
+        let error = simpleValidation(param, newUser[param].value);
+        if (error !== "") {
+            newUser[param].error[0] = error;
+        } else {
+            newUser[param].error = [];
         }
     }
-    return state;
-};
-
-function validateForm(newUser, VALIDATION_ARRAY) {
-    let flag = true;
-    for (let param in newUser) {
-        VALIDATION_ARRAY[param].isValid = simpleValidation(newUser[param].value);
-        flag = flag && VALIDATION_ARRAY[param].isValid;
-    }
-    return flag;
 }
 
-
-function validatePassword(newUser) {
-    let pass = [];
-    for (let param in newUser) {
-        if (newUser[param].type === PASSWORD_TYPE) {
-            pass.push(newUser[param]);
-        }
-    }
-    return pass[0].value === pass[1].value;
-}
-
-function simpleValidation(value) {
-    if (value.length === 0) {
-        return null
-    }
-    return (!/[^a-zA-Z1-9]/.test(value));
+function simpleValidation(param, value) {
+    return (!/[^a-zA-Z1-9]/.test(value)) ? "" : LANG_WARN;
 }
 

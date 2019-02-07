@@ -20,13 +20,8 @@ export const SUCCESS = "success";
 export const PASSWORD_ERROR_MESSAGE = "Password and retype password is not equals";
 export const NOT_ADMIN = "notAdmin";
 export const DELETE_MESSAGE = "Нарушение шестой заповеди. Вы уверены?";
-export const TEXT_TYPE = "text";
-export const PASSWORD_TYPE = "password";
-export const PASSWORD_STATUS = "PASSWORD_STATUS";
-export const VALIDATION_STATUS = "VALIDATION_STATUS";
 export const SET_PRESET_USER = "SET_PRESET_USER";
-export const VALIDATION_ARRAY = "VALIDATION_ARRAY";
 export const SET_USER_SIGNATURE = "SET_USER_SIGNATURE";
 export const USER_SIGNATURE = "USER_SIGNATURE";
 export const ADD_ERROR = "ADD_ERROR";
-
+export const VALIDATE_FORM = "VALIDATE_FORM";

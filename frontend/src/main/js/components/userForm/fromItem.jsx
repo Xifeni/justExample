@@ -3,7 +3,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {sendParam} from "./actions";
-import {ERROR, SUCCESS, VALIDATION_ARRAY} from "../../const";
+import {ERROR, SUCCESS} from "../../const";
 import PropTypes from 'prop-types';
 
 
@@ -29,30 +29,30 @@ class FormItem extends React.Component {
         return (
             <FormGroup
                 key={this.props.key}
-                validationState={transformToStyle(this.props.validStatus.isValid)}>
+                validationState={transformToStyle(this.props.errors, this.state.value)}>
                 <ControlLabel>{this.props.name}</ControlLabel>
                 <FormControl
                     id={this.props.name}
                     type={this.props.type}
                     value={this.state.value}
                     onChange={this.handleChange}/>
-                <HelpBlock>{(this.props.validStatus.isValid === false
-                    && this.props.validStatus.error.join())}</HelpBlock>
+                <HelpBlock>{(this.props.errors !== null && this.props.errors.length !== 0
+                    && this.props.errors.join())}</HelpBlock>
             </FormGroup>
         );
     }
 }
 
-function transformToStyle(status) {
-    if (status === null) {
+function transformToStyle(errors, value) {
+    if (errors === null && value === null) {
         return null;
     }
-    return status ? SUCCESS : ERROR;
+    return errors.length === 0 ? SUCCESS : ERROR;
 }
 
 function mapStateToProps(state, props) {
     return {
-        validStatus: state.createUserReducer[VALIDATION_ARRAY][props.name],
+        errors: state.createUserReducer.newUser[props.name].error,
     };
 }
 

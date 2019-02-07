@@ -6,12 +6,10 @@ import {
     LAST_NAME,
     NOT_ADMIN,
     PASSWORD,
-    PASSWORD_TYPE,
     RETRY_PASSWORD,
     RPC_TESTER,
     SET_PRESET_USER,
     SET_USER_SIGNATURE,
-    TEXT_TYPE,
     USER_LIST,
     USERNAME
 } from "../../const.js";
@@ -42,12 +40,12 @@ export function goToEditUser(userName, signature) {
 
 function setPresetUser(presetUser) {
     let result = {
-        [USERNAME]: {type: TEXT_TYPE, value: presetUser[USERNAME]},
-        [PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [RETRY_PASSWORD]: {type: PASSWORD_TYPE, value: ""},
-        [FIRST_NAME]: {type: TEXT_TYPE, value: presetUser[FIRST_NAME]},
-        [LAST_NAME]: {type: TEXT_TYPE, value: presetUser[LAST_NAME]},
-        [ADMIN]: {type: TEXT_TYPE, value: presetUser[ADMIN]}
+        [USERNAME]: {value: presetUser[USERNAME], error: []},
+        [PASSWORD]: {value: "", error: []},
+        [RETRY_PASSWORD]: {value: "", error: []},
+        [FIRST_NAME]: {value: presetUser[FIRST_NAME], error: []},
+        [LAST_NAME]: {value: presetUser[LAST_NAME], error: []},
+        [ADMIN]: {value: presetUser[ADMIN], error: []}
     };
     return {
         type: SET_PRESET_USER,
