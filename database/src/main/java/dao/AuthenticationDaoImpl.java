@@ -29,11 +29,8 @@ public class AuthenticationDaoImpl implements AuthenticationDao {
     @Override
     public void registerSessionUser(String login, String sessionId) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        PreparedStatement query = creator.getRegistrationRawQuery(connection, login, sessionId);
-        try {
+        try (PreparedStatement query = creator.getRegistrationRawQuery(connection, login, sessionId)) {
             getResultSet(query);
-        } finally {
-            query.close();
         }
     }
 

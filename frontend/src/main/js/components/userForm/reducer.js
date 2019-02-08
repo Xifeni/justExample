@@ -96,6 +96,6 @@ function validateForm(newUser) {
 }
 
 function simpleValidation(param, value) {
-    return (!/[^a-zA-Z1-9]/.test(value)) ? "" : LANG_WARN;
+    return (/^[a-zA-Z0-9]+$/.test(value)) ? "" : LANG_WARN;
 }
 

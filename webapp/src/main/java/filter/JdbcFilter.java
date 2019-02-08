@@ -36,7 +36,7 @@ public class JdbcFilter implements Filter {
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
-            throw new SQLException(e);
+            throw e;
         }
     }
 
