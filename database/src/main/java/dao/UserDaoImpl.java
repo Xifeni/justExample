@@ -32,18 +32,10 @@ public class UserDaoImpl implements UserDao {
         }
         PreparedStatement query;
         if (!signatureUser.isEmpty()) {
-            query = creator.getRawUpdateUser(connection, user, signatureUser);
-            getResultSet(query);
-            query = creator.getRawUpdatePassword(connection, user, password);
-            getResultSet(query);
-            query = creator.getRawUpdatePermissions(connection, user);
+            query = creator.getRawUpdateUser(connection, user, signatureUser, password);
             getResultSet(query);
         } else {
             query = creator.getRawCreateUser(connection, user);
-            getResultSet(query);
-            query = creator.getRawCreatePassword(connection, user);
-            getResultSet(query);
-            query = creator.getRawCreateUserPermission(connection, user);
             getResultSet(query);
         }
     }
@@ -92,7 +84,7 @@ public class UserDaoImpl implements UserDao {
             return new User(set.getString("username"),
                     set.getString("firstname"),
                     set.getString("lastname"),
-                    set.getString("permission"));
+                    set.getString("permissions"));
         }
     }
 

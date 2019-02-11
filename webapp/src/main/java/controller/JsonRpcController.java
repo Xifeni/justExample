@@ -26,7 +26,7 @@ public class JsonRpcController {
     }
 
     public User getUser(String name, String signatureUser) throws SQLException, WrongPermission {
-        if (authDataController.getPermissions(signatureUser).equalsIgnoreCase("111")) {
+        if (isAdmin(signatureUser)) {
             return userDataController.getUser(name);
         } else {
             throw new WrongPermission();
@@ -39,7 +39,7 @@ public class JsonRpcController {
                 jsonUser.getString("Last name"),
                 jsonUser.getString("Admin"),
                 getHashPassword(jsonUser.getString("Password"), "salt"));
-        if (authDataController.getPermissions(signatureUser).equalsIgnoreCase("111")) {
+        if (isAdmin(signatureUser)) {
             userDataController.saveUser(user, jsonUser.getString("signatureUser"));
         } else {
             throw new WrongPermission();
@@ -47,10 +47,14 @@ public class JsonRpcController {
     }
 
     public void deleteUser(String username, String signatureUser) throws Exception {
-        if (authDataController.getPermissions(signatureUser).equalsIgnoreCase("111")) {
+        if (isAdmin(signatureUser)) {
             userDataController.deleteUser(username);
         } else {
             throw new WrongPermission();
         }
+    }
+
+    private boolean isAdmin(String signatureUser) throws SQLException {
+        return authDataController.getPermissions(signatureUser).equalsIgnoreCase("111");
     }
 }

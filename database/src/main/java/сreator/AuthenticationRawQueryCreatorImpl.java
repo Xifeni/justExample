@@ -6,27 +6,27 @@ import java.sql.SQLException;
 
 public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQueryCreator {
 
-    private static final String IS_AUTH_USER = "SELECT EXISTS (SELECT * FROM vault WHERE username = ? AND password = ?);";
-    private static final String REGISTER_USER_SESSION = "UPDATE VAULT SET CURRENT_SESSION = ? WHERE USERNAME = ?";
-    private static final String IS_REGISTERED_USER = "SELECT EXISTS (SELECT * FROM VAULT WHERE CURRENT_SESSION = ?)";
-    private static final String GET_PERMISSION_USER = "SELECT PERMISSION FROM PERMISSION WHERE USERNAME = ?";
-    private static final String CLEAR_SESSIONS = "UPDATE VAULT SET CURRENT_SESSION = NULL WHERE username = ?";
-    private static final String GET_USERNAME = "SELECT USERNAME FROM VAULT WHERE CURRENT_SESSION = ?";
+    private static final String IS_AUTH_USER = "SELECT EXISTS (SELECT * FROM sessions WHERE id = (SELECT id FROM users where username = ? AND password = ?))";
+    private static final String REGISTER_USER_SESSION = "UPDATE sessions SET CURRENT_SESSION = ? WHERE id = (select id from users where username = ?)";
+    private static final String IS_REGISTERED_USER = "SELECT EXISTS (SELECT * FROM sessions WHERE CURRENT_SESSION = ?)";
+    private static final String GET_PERMISSION_USER = "SELECT permissions FROM users WHERE USERNAME = ?";
+    private static final String CLEAR_SESSIONS = "UPDATE sessions SET CURRENT_SESSION = NULL WHERE id = (SELECT id from  users where username = ?)";
+    private static final String GET_USERNAME = "select username from users where id = (SELECT id FROM sessions WHERE CURRENT_SESSION = ?)";
 
 
     @Override
-    public PreparedStatement getAuthenticatedUserRawQuery(Connection connection, String login, String password) throws SQLException {
+    public PreparedStatement getAuthenticatedUserRawQuery(Connection connection, String username, String password) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(IS_AUTH_USER);
-        statement.setString(1, login);
+        statement.setString(1, username);
         statement.setString(2, password);
         return statement;
     }
 
     @Override
-    public PreparedStatement getRegistrationRawQuery(Connection connection, String login, String sessionId) throws SQLException {
+    public PreparedStatement getRegistrationRawQuery(Connection connection, String username, String sessionId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(REGISTER_USER_SESSION);
         statement.setString(1, sessionId);
-        statement.setString(2, login);
+        statement.setString(2, username);
         return statement;
     }
 

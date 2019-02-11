@@ -19,15 +19,7 @@ public interface UserRawQueryCreator {
 
     PreparedStatement getIsExistUserRawQuery(Connection connection, String username) throws SQLException;
 
-    PreparedStatement getRawUpdatePermissions(Connection connection, User user) throws SQLException;
-
-    PreparedStatement getRawUpdatePassword(Connection connection, User user, String password) throws SQLException;
-
-    PreparedStatement getRawUpdateUser(Connection connection, User user, String signatureUser) throws SQLException;
-
-    PreparedStatement getRawCreatePassword(Connection connection, User user) throws SQLException;
-
-    PreparedStatement getRawCreateUserPermission(Connection connection, User user) throws SQLException;
+    PreparedStatement getRawUpdateUser(Connection connection, User user, String signatureUser, String password) throws SQLException;
 
     PreparedStatement getRawCreateUser(Connection connection, User user) throws SQLException;
 }
