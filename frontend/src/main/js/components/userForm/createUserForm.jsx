@@ -16,7 +16,6 @@ import {
     USERNAME
 } from "../../const";
 
-
 class FormList extends React.Component {
     constructor(props) {
         super(props);
@@ -28,7 +27,7 @@ class FormList extends React.Component {
 
     render() {
         return (
-            <Modal.Dialog>
+            <Modal show={true}>
                 <Modal.Header>
                     <Modal.Title>{(this.state.isEditingUser && "Edit user") || "Create user"}</Modal.Title>
                 </Modal.Header>
@@ -44,32 +43,39 @@ class FormList extends React.Component {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <HelpBlock>{checkPassword(this.props.newUser) && PASSWORD_ERROR_MESSAGE}</HelpBlock>
+                    <HelpBlock>{!checkPassword(this.props.newUser) && PASSWORD_ERROR_MESSAGE}</HelpBlock>
                     <Button onClick={() => {
                         this.props.setActiveArea(USER_LIST);
                         this.props.clearErrorStatus();
                     }}>Close</Button>
                     <Button bsStyle="primary"
-                            disabled={checkValidationState(this.props.signature, this.props.newUser)}
+                            disabled={
+                                !(checkValidationState(this.props.signature, this.props.newUser, this.state.isEditingUser)
+                                && checkPassword(this.props.newUser))}
                             onClick={() => {
                                 this.props.sendForm(this.props.newUser, this.props.signature, this.props.currentUser);
                             }}>Save</Button>
                 </Modal.Footer>
-            </Modal.Dialog>)
+            </Modal>)
     }
 }
 
-function checkValidationState(signature, newUser) {
+function checkValidationState(signature, newUser, isEditingUser) {
     for (let param in newUser) {
         if (newUser[param].error.length !== 0) {
-            return true;
+            if ((param === PASSWORD || param === RETRY_PASSWORD)
+                && isEditingUser
+                && newUser[param].value === "") {
+                continue;
+            }
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 function checkPassword(newUser) {
-    return newUser[PASSWORD].value !== newUser[RETRY_PASSWORD].value;
+    return newUser[PASSWORD].value === newUser[RETRY_PASSWORD].value;
 }
 
 

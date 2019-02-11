@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 import {setActiveArea} from "../root/actions.js";
 import {sha256} from "js-sha256";
+import {getUsers} from "../usersList/actions";
 
 export function sendParam(param) {
     return function (dispatch) {
@@ -40,7 +41,7 @@ let updateNewUser = function (name, value) {
 export function sendForm(user, signatureUser, currentUser) {
     let result = {
         [USERNAME]: user[USERNAME].value,
-        [PASSWORD]: sha256.hmac("salt", user[PASSWORD].value),
+        [PASSWORD]: user[PASSWORD].value,
         [FIRST_NAME]: user[FIRST_NAME].value,
         [LAST_NAME]: user[LAST_NAME].value,
         [ADMIN]: user[ADMIN].value,
@@ -50,6 +51,7 @@ export function sendForm(user, signatureUser, currentUser) {
         axiosWrapper([RPC_TESTER] + '.saveUser', result, currentUser).then((data) => {
                 if (data.error === undefined) {
                     dispatch(wipeData());
+                    dispatch(getUsers());
                     dispatch(setActiveArea(USER_LIST));
                 } else {
                     dispatch(addError(data.error.msg.split(',')));

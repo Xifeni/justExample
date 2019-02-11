@@ -10,35 +10,27 @@ import FormList from "../userForm/createUserForm.jsx";
 import {getPermission, logout} from "./actions.js";
 import {
     CREATE_USER,
-    LOGOUT,
-    USER_LIST,
     USERNAME,
     LAST_NAME,
     FIRST_NAME,
     RETRY_PASSWORD,
     PASSWORD,
     ADMIN
-} from '../../const.js'
+} from '../../const'
 
 class AppView extends React.Component {
 
     constructor(props) {
         super(props);
         this.props.loadPermissions();
-        this.getNavItems = this.getNavItems.bind(this);
     }
 
-    getNavItems() {
-        if (this.props.currentUser[ADMIN] === ADMIN) {
-            return [
-                {name: USER_LIST, text: 'Список пользователей'},
-                {name: CREATE_USER, text: 'Создать нового пользователя'},
-                {name: LOGOUT, text: 'Выйти'}]
-        } else {
-            return [
-                {name: USER_LIST, text: 'Список пользователей'},
-                {name: LOGOUT, text: 'Выйти'}]
-        }
+    getIsAdmin() {
+       return this.props.currentUser[ADMIN] === ADMIN;
+    }
+
+    getCurrentUsername() {
+        return this.props.currentUser[USERNAME];
     }
 
     render() {
@@ -46,13 +38,12 @@ class AppView extends React.Component {
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
-                        <NavigationBar {...this.props} areas={this.getNavItems()}/>
+                        <NavigationBar {...this.props} isAdmin={this.getIsAdmin()} currentUsername={this.getCurrentUsername()}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={8}>
-                        {this.props.activeArea === (USER_LIST) && <UsersList {...this.props}/>}
-                        {this.props.activeArea === (LOGOUT) && this.props.logout(this.props.currentUser[USERNAME])}
+                        <UsersList {...this.props}/>
                         {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
                             {
                                 id: [USERNAME],

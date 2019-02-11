@@ -2,19 +2,17 @@ package servlet;
 
 import controller.AuthenticationDataController;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+
+import static utils.PasswordProcessor.getHashPassword;
 
 @WebServlet(urlPatterns = "/login", name = "login")
 public class LoginServlet extends HttpServlet {
@@ -33,7 +31,6 @@ public class LoginServlet extends HttpServlet {
             String password = request.getParameter("password");
             String sessionId = request.getSession().getId();
             boolean isLogged = false;
-
             if (login != null && password != null) {
                 isLogged = controller.isCorrectRequest(login, getHashPassword(password, "salt"));
             }
@@ -47,16 +44,5 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
             response.sendError(500, e.getMessage());
         }
-    }
-
-    private String getHashPassword(String password, String salt) throws NoSuchAlgorithmException, InvalidKeyException {
-        if (password != null) {
-            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secretKey = new SecretKeySpec(salt.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-            sha256_HMAC.init(secretKey);
-            byte[] hashInBytes = sha256_HMAC.doFinal(password.getBytes(StandardCharsets.UTF_8));
-            password = DatatypeConverter.printHexBinary(hashInBytes).toLowerCase();
-        }
-        return password;
     }
 }

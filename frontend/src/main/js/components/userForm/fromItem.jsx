@@ -44,7 +44,7 @@ class FormItem extends React.Component {
 }
 
 function transformToStyle(errors, value) {
-    if (errors === null && value === null) {
+    if (errors.length === 0 && value === "") {
         return null;
     }
     return errors.length === 0 ? SUCCESS : ERROR;

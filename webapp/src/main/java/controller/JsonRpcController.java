@@ -3,8 +3,9 @@ package controller;
 import exception.WrongPermission;
 import model.User;
 import org.json.JSONObject;
-
 import java.sql.SQLException;
+
+import static utils.PasswordProcessor.getHashPassword;
 
 public class JsonRpcController {
 
@@ -37,7 +38,7 @@ public class JsonRpcController {
                 jsonUser.getString("First name"),
                 jsonUser.getString("Last name"),
                 jsonUser.getString("Admin"),
-                jsonUser.getString("Password"));
+                getHashPassword(jsonUser.getString("Password"), "salt"));
         if (authDataController.getPermissions(signatureUser).equalsIgnoreCase("111")) {
             userDataController.saveUser(user, jsonUser.getString("signatureUser"));
         } else {
