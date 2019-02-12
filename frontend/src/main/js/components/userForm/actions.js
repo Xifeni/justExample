@@ -15,7 +15,6 @@ import {
 } from "../../const";
 import axios from "axios";
 import {setActiveArea} from "../root/actions.js";
-import {sha256} from "js-sha256";
 import {getUsers} from "../usersList/actions";
 
 export function sendParam(param) {
