@@ -19,7 +19,7 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
                                                                 "USERS.LASTNAME = ?," +
                                                                 "USERS.USERNAME = ?," +
                                                                 "users.permissions = ?," +
-                                                                "users.password = ? WHERE USERNAME = ?";
+                                                                "users.password = ? WHERE id = (SELECT id where username = ?)";
     private static final String GET_PASSWORD = "SELECT PASSWORD FROM users WHERE USERNAME = ?";
     private static final String IS_EXIST_USER = "SELECT EXISTS (SELECT * FROM USERS WHERE username = ?);";
 

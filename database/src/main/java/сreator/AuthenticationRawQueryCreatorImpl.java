@@ -10,7 +10,7 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
     private static final String REGISTER_USER_SESSION = "UPDATE sessions SET CURRENT_SESSION = ? WHERE id = (select id from users where username = ?)";
     private static final String IS_REGISTERED_USER = "SELECT EXISTS (SELECT * FROM sessions WHERE CURRENT_SESSION = ?)";
     private static final String GET_PERMISSION_USER = "SELECT permissions FROM users WHERE USERNAME = ?";
-    private static final String CLEAR_SESSIONS = "UPDATE sessions SET CURRENT_SESSION = NULL WHERE id = (SELECT id from  users where username = ?)";
+    private static final String CLEAR_SESSIONS = "UPDATE sessions SET CURRENT_SESSION = NULL WHERE CURRENT_SESSION = ?";
     private static final String GET_USERNAME = "select username from users where id = (SELECT id FROM sessions WHERE CURRENT_SESSION = ?)";
 
 
@@ -45,9 +45,9 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
     }
 
     @Override
-    public PreparedStatement getClearSessionRawQuery(Connection connection, String username) throws SQLException {
+    public PreparedStatement getClearSessionRawQuery(Connection connection, String sessionId) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(CLEAR_SESSIONS);
-        statement.setString(1, username);
+        statement.setString(1, sessionId);
         return statement;
     }
 

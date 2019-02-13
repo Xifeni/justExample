@@ -13,5 +13,5 @@ public interface AuthenticationDao {
 
     String getUsername(String id) throws SQLException;
 
-    void clearSession(String username) throws SQLException;
+    void clearSession(String SessionId) throws SQLException;
 }

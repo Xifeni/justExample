@@ -1,38 +1,28 @@
+create table sessions
+(
+  current_session varchar(32) null,
+  id              int         not null
+);
+
 create table users
 (
-  username  varchar(32)  not null
-    primary key,
-  firstname varchar(128) null,
-  lastname  varchar(128) null
+  id          int auto_increment,
+  username    varchar(32)     not null,
+  firstname   varchar(128)    null,
+  lastname    varchar(128)    null,
+  permissions int default 100 not null,
+  password    varchar(64)     null,
+  constraint users_id_uindex
+    unique (id),
+  constraint users_username_uindex
+    unique (username)
 );
 
-create table vault
-(
-  username        varchar(32) not null
-    primary key,
-  password        varchar(64) not null,
-  current_session varchar(32) null,
-  constraint vault_users_username_fk
-    foreign key (username) references users (username)
-      on update cascade on delete cascade
-);
+alter table users
+  add primary key (id);
 
-create table permission
-(
-  username   varchar(32)  not null
-    primary key,
-  permission varchar(4)   null,
-  rolename   varchar(128) null,
-  constraint permission_users_username_fk
-    foreign key (username) references users (username)
-      on update cascade on delete cascade
-);
+INSERT INTO users (username, firstname, lastname, permissions, password) VALUES ('test', 'test', 'test', '111', 'edd5bb5389dfb55beb4d3ac56b7546c17cd464bc4da27aaf95b7dc9cbae8cf1f');
+INSERT INTO users (username, firstname, lastname, permissions, password) VALUES ('user', 'user', 'user', '100', '48cee8d8b352a2221a8993ac5fafd739ef877013a7576e582ac1363b92995782');
 
-INSERT INTO users (username, firstname, lastname) VALUES ('test', 'test', 'test');
-INSERT INTO users (username, firstname, lastname) VALUES ('user', 'user', 'user');
-
-INSERT INTO permission (username, permission, rolename) VALUES ('test', '111', 'test');
-INSERT INTO permission (username, permission, rolename) VALUES ('user', '100', 'user');
-
-INSERT INTO vault (username, password, current_session) VALUES ('test', 'edd5bb5389dfb55beb4d3ac56b7546c17cd464bc4da27aaf95b7dc9cbae8cf1f', null);
-INSERT INTO vault (username, password, current_session) VALUES ('user', '48cee8d8b352a2221a8993ac5fafd739ef877013a7576e582ac1363b92995782', null);
+INSERT INTO sessions (id) VALUES (1);
+INSERT INTO sessions (id) VALUES (2);

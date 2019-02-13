@@ -32,6 +32,8 @@ public class JdbcFilter implements Filter {
         } catch (SQLException e) {
             e.printStackTrace();
             ((HttpServletResponse) response).sendError(500, e.getMessage());
+        } finally {
+            ConnectionStore.setConnection(null);
         }
     }
 

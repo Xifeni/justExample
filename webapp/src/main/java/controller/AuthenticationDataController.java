@@ -29,7 +29,7 @@ public class AuthenticationDataController {
         return authDao.getUsername(id);
     }
 
-    public void logout(String username) throws SQLException {
-        authDao.clearSession(username);
+    public void logout(String sessionId) throws SQLException {
+        authDao.clearSession(sessionId);
     }
 }

@@ -21,10 +21,6 @@ public class JsonRpcController {
         return userDataController.getUsersList().toArray(new User[0]);
     }
 
-    public void logout(String username) throws SQLException {
-        authDataController.logout(username);
-    }
-
     public User getUser(String name, String signatureUser) throws SQLException, WrongPermission {
         if (isAdmin(signatureUser)) {
             return userDataController.getUser(name);

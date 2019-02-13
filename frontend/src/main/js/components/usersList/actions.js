@@ -94,7 +94,7 @@ let addUsers = function (users) {
 };
 
 function axiosWrapper(className, ...methodParams) {
-    return axios.post("/JSON-RPC", JSON.stringify({
+    return axios.post("JSON-RPC", JSON.stringify({
         method: className,
         params: methodParams
     })).then(({data}) => (data));

@@ -24,18 +24,16 @@ let setCurrentUser = function (currentUser) {
 
 export function logout(currentUser) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER]+'.logout', currentUser).then(() => {
-            window.location.reload();
-        }).catch(() => {
-            window.location.reload();
-        })
+        axios.get("logout")
+            .then(() => window.location.reload())
+            .catch(() => {window.location.reload()});
     }
 }
 
 export function getPermission() {
     return function (dispatch) {
         let isAdmin = NOT_ADMIN;
-        let name = document.getElementById('container').getAttribute("data-username");
+        let name = window._CURRENT_USER_;
         axiosWrapper([RPC_TESTER] + '.getPermission', name).then((data) => {
             let result = data.result;
             if (result === "111") {
@@ -50,7 +48,7 @@ export function getPermission() {
 }
 
 function axiosWrapper(className, ...methodParams) {
-    return axios.post("/JSON-RPC", JSON.stringify({
+    return axios.post("JSON-RPC", JSON.stringify({
         method: className,
         params: methodParams
     })).then(({data}) => (data));

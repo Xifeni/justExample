@@ -36,9 +36,9 @@ public class LoginServlet extends HttpServlet {
             }
             if (isLogged) {
                 controller.registerUserSession(request.getParameter("login"), sessionId);
-                response.sendRedirect("/main");
+                response.sendRedirect(request.getContextPath()+"/main");
             } else {
-                response.sendRedirect("/login");
+                response.sendRedirect(request.getContextPath()+"/login");
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();

@@ -30,35 +30,35 @@ public class UserDaoImpl implements UserDao {
                 password = user.getPassword();
             }
         }
+
         PreparedStatement query;
         if (!signatureUser.isEmpty()) {
             query = creator.getRawUpdateUser(connection, user, signatureUser, password);
-            getResultSet(query);
         } else {
             query = creator.getRawCreateUser(connection, user);
-            getResultSet(query);
         }
+        getResultSet(query);
     }
 
 
     private String getPassword(String signatureUser) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        PreparedStatement query = creator.getPassword(connection, signatureUser);
-        return getResultSet(query).getString(1);
-
+        try (PreparedStatement query = creator.getPassword(connection, signatureUser)) {
+            return getResultSet(query).getString(1);
+        }
     }
 
     @Override
     public void deleteUser(String user) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        PreparedStatement query = creator.getRawDeleteUser(connection, user);
-        getResultSet(query);
+        try (PreparedStatement query = creator.getRawDeleteUser(connection, user)) {
+            getResultSet(query);
+        }
     }
 
     @Override
     public List<User> getUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-
         Connection connection = ConnectionStore.getConnection();
         try (PreparedStatement query = creator.getRawUsers(connection)) {
             ResultSet set = getResultSet(query);
