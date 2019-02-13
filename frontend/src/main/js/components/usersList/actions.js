@@ -78,7 +78,10 @@ export function getUsers() {
         axiosWrapper(RPC_TESTER + '.getUsers').then((data) => {
             let users = [];
             let result = data.result;
-            result.map(user => users.push(user.userName));
+            result.map(user => users.push({
+                [USERNAME]: user.userName,
+                [FIRST_NAME]: user.firstName,
+                [LAST_NAME]: user.lastName}));
             dispatch(addUsers(users));
         }).catch((onrejected) => {
             alert("has error" + onrejected);

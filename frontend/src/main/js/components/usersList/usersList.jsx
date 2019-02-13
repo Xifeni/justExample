@@ -7,6 +7,7 @@ import {getUsers, deleteUser, goToEditUser} from "./actions";
 import Button from "react-bootstrap/es/Button";
 import {ADMIN, USERNAME, DELETE_MESSAGE} from "../../const.js";
 import PropTypes from 'prop-types';
+import {FIRST_NAME, LAST_NAME} from "../../const";
 
 class UserItem extends Component {
     constructor(props) {
@@ -16,15 +17,18 @@ class UserItem extends Component {
     render() {
         return ((this.props.currentUser[ADMIN] === ADMIN && this.props.currentUser[USERNAME] !== this.props.item) &&
             <tr>
-                <td><a
-                    onClick={() => this.props.goToEditUser(this.props.item, this.props.currentUser[USERNAME])}>{this.props.item}</a>
+                <td>
+                    {this.props.item[FIRST_NAME] + " " + this.props.item[LAST_NAME]+ " "}
+                    <a onClick={() => this.props.goToEditUser(this.props.item[USERNAME], this.props.currentUser[USERNAME])}>{"@"+this.props.item[USERNAME]}</a>
                 </td>
-                <td><Button onClick={() => {
-                    confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item, this.props.currentUser[USERNAME]);
-                }}>Delete user</Button></td>
+                <td>
+                    <Button onClick={() => {
+                        confirm(DELETE_MESSAGE) && this.props.deleteUser(this.props.item, this.props.currentUser[USERNAME]);
+                    }}>Delete user</Button>
+                </td>
             </tr>) ||
             <tr>
-                <td>{this.props.item}</td>
+                <td>{this.props.item[FIRST_NAME] + " " + this.props.item[LAST_NAME]}</td>
             </tr>
     }
 }
