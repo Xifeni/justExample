@@ -47,7 +47,7 @@ export function sendForm(user, signatureUser, currentUser) {
         signatureUser: signatureUser
     };
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.saveUser', result, currentUser).then((data) => {
+        axiosWrapper([RPC_TESTER] + '.saveUser', result).then((data) => {
                 if (data.error === undefined) {
                     dispatch(wipeData());
                     dispatch(getUsers());
@@ -86,7 +86,7 @@ export function addError(error) {
 }
 
 function axiosWrapper(className, ...methodParams) {
-    return axios.post("/JSON-RPC", JSON.stringify({
+    return axios.post("JSON-RPC", JSON.stringify({
         method: className,
         params: methodParams
     })).then(({data}) => (data));

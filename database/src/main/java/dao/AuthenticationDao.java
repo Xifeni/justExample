@@ -9,9 +9,9 @@ public interface AuthenticationDao {
 
     void registerSessionUser(String login, String sessionId) throws SQLException;
 
-    String getUserPermission(String login) throws SQLException;
+    String getUserPermission(String sessionId) throws SQLException;
 
     String getUsername(String id) throws SQLException;
 
-    void clearSession(String username) throws SQLException;
+    void clearSession(String SessionId) throws SQLException;
 }

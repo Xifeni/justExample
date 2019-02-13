@@ -12,14 +12,14 @@ import java.util.List;
 public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
 
     private static final String CREATE_USER = "INSERT INTO USERS (USERNAME, FIRSTNAME, LASTNAME, permissions, password) VALUES(?,?,?,?,?)";
-    private static final String DELETE_USER = "DELETE FROM USERS WHERE USERNAME = ?";
+    private static final String DELETE_USER = "DELETE FROM USERS WHERE id = (select ID from users where username = ?)";
     private static final String GET_USERS = "SELECT * FROM USERS";
     private static final String GET_USER = "SELECT * FROM USERS where users.username = ?";
     private static final String UPDATE_USER = "UPDATE USERS SET USERS.FIRSTNAME = ?, " +
                                                                 "USERS.LASTNAME = ?," +
                                                                 "USERS.USERNAME = ?," +
                                                                 "users.permissions = ?," +
-                                                                "users.password = ? WHERE USERNAME = ?";
+                                                                "users.password = ? WHERE id = (SELECT id where username = ?)";
     private static final String GET_PASSWORD = "SELECT PASSWORD FROM users WHERE USERNAME = ?";
     private static final String IS_EXIST_USER = "SELECT EXISTS (SELECT * FROM USERS WHERE username = ?);";
 

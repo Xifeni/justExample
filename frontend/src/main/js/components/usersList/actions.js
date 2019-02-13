@@ -60,9 +60,9 @@ function setUserSignature(username) {
     }
 }
 
-export function deleteUser(username, signature) {
+export function deleteUser(user) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.deleteUser', username, signature).then(() => {
+        axiosWrapper([RPC_TESTER] + '.deleteUser', user[USERNAME]).then(() => {
                 dispatch(setActiveArea(USER_LIST));
                 dispatch(getUsers())
             }
@@ -97,7 +97,7 @@ let addUsers = function (users) {
 };
 
 function axiosWrapper(className, ...methodParams) {
-    return axios.post("/JSON-RPC", JSON.stringify({
+    return axios.post("JSON-RPC", JSON.stringify({
         method: className,
         params: methodParams
     })).then(({data}) => (data));

@@ -35,9 +35,9 @@ public class AuthenticationDaoImpl implements AuthenticationDao {
     }
 
     @Override
-    public void clearSession(String username) throws SQLException {
+    public void clearSession(String sessionId) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        try (PreparedStatement query = creator.getClearSessionRawQuery(connection, username)) {
+        try (PreparedStatement query = creator.getClearSessionRawQuery(connection, sessionId)) {
             getResultSet(query);
         }
     }

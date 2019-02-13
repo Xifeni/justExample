@@ -21,15 +21,15 @@ public class AuthenticationDataController {
         authDao.registerSessionUser(login, sessionId);
     }
 
-    public String getPermissions(String login) throws SQLException {
-        return authDao.getUserPermission(login);
+    public String getPermissions(String sessionId) throws SQLException {
+        return authDao.getUserPermission(sessionId);
     }
 
     public String getUsername(String id) throws SQLException {
         return authDao.getUsername(id);
     }
 
-    public void logout(String username) throws SQLException {
-        authDao.clearSession(username);
+    public void logout(String sessionId) throws SQLException {
+        authDao.clearSession(sessionId);
     }
 }

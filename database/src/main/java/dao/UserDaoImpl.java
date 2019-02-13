@@ -30,46 +30,50 @@ public class UserDaoImpl implements UserDao {
                 password = user.getPassword();
             }
         }
+
         PreparedStatement query;
         if (!signatureUser.isEmpty()) {
             query = creator.getRawUpdateUser(connection, user, signatureUser, password);
-            getResultSet(query);
         } else {
             query = creator.getRawCreateUser(connection, user);
-            getResultSet(query);
         }
+        getResultSet(query);
+        query.close();
     }
 
 
     private String getPassword(String signatureUser) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        PreparedStatement query = creator.getPassword(connection, signatureUser);
-        return getResultSet(query).getString(1);
-
+        try (PreparedStatement query = creator.getPassword(connection, signatureUser)) {
+            return getResultSet(query).getString(1);
+        }
     }
 
     @Override
-    public void deleteUser(String user) throws SQLException {
+    public void deleteUser(String username) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        PreparedStatement query = creator.getRawDeleteUser(connection, user);
-        getResultSet(query);
+        try (PreparedStatement query = creator.getRawDeleteUser(connection, username)) {
+            getResultSet(query);
+        }
     }
 
     @Override
     public List<User> getUsers() throws SQLException {
         List<User> users = new ArrayList<>();
-
         Connection connection = ConnectionStore.getConnection();
         try (PreparedStatement query = creator.getRawUsers(connection)) {
             ResultSet set = getResultSet(query);
             do {
-                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
+                users.add(new User(set.getString("username"),
+                        set.getString("firstname"),
+                        set.getString("lastname")));
             } while (set.next());
             return users;
         }
     }
 
-    private boolean isUserExist(String name) throws SQLException {
+    @Override
+    public boolean isUserExist(String name) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
         try (PreparedStatement query = creator.getIsExistUserRawQuery(connection, name)) {
             return getResultSet(query).getBoolean(1);

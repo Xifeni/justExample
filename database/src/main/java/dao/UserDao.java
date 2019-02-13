@@ -12,5 +12,7 @@ public interface UserDao {
 
     List<User> getUsers() throws SQLException;
 
+    boolean isUserExist(String name) throws SQLException;
+
     User getUser(String name) throws SQLException;
 }

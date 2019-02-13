@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebFilter(urlPatterns = "/*")
+@WebFilter(urlPatterns = {"/login", "/main", "/JSON-RPC", "/logout"})
 public class JdbcFilter implements Filter {
     private ConnectionPool pool;
 
@@ -22,16 +22,24 @@ public class JdbcFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try (Connection connection = pool.getConnection()) {
-            ConnectionStore.setConnection(connection);
-            chain.doFilter(request, response);
             try {
+                ConnectionStore.setConnection(connection);
+                chain.doFilter(request, response);
                 connection.commit();
             } catch (SQLException e) {
-                connection.rollback();
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                    throw new ServletException(e1);
+                }
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            ((HttpServletResponse) response).sendError(500, e.getMessage());
+            throw new ServletException(e);
+        } finally {
+            ConnectionStore.setConnection(null);
         }
     }
 
