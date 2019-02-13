@@ -22,7 +22,7 @@ let setCurrentUser = function (currentUser) {
     }
 };
 
-export function logout(currentUser) {
+export function logout() {
     return function (dispatch) {
         axios.get("logout")
             .then(() => window.location.reload())
@@ -33,8 +33,7 @@ export function logout(currentUser) {
 export function getPermission() {
     return function (dispatch) {
         let isAdmin = NOT_ADMIN;
-        let name = window._CURRENT_USER_;
-        axiosWrapper([RPC_TESTER] + '.getPermission', name).then((data) => {
+        axiosWrapper([RPC_TESTER] + '.getPermission').then((data) => {
             let result = data.result;
             if (result === "111") {
                 isAdmin = ADMIN;

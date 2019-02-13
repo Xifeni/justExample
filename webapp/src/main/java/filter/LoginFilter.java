@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebFilter(servletNames = "LoginFilter", urlPatterns = "/*")
+@WebFilter(urlPatterns = {"/login", "/main", "/JSON-RPC"})
 public class LoginFilter implements Filter {
 
     private AuthenticationDataController controller = new AuthenticationDataController();

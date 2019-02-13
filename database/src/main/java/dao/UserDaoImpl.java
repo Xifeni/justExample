@@ -38,6 +38,7 @@ public class UserDaoImpl implements UserDao {
             query = creator.getRawCreateUser(connection, user);
         }
         getResultSet(query);
+        query.close();
     }
 
 
@@ -49,9 +50,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteUser(String user) throws SQLException {
+    public void deleteUser(String username) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        try (PreparedStatement query = creator.getRawDeleteUser(connection, user)) {
+        try (PreparedStatement query = creator.getRawDeleteUser(connection, username)) {
             getResultSet(query);
         }
     }
@@ -63,13 +64,16 @@ public class UserDaoImpl implements UserDao {
         try (PreparedStatement query = creator.getRawUsers(connection)) {
             ResultSet set = getResultSet(query);
             do {
-                users.add(new User(set.getString("username"), set.getString("firstname"), set.getString("lastname")));
+                users.add(new User(set.getString("username"),
+                        set.getString("firstname"),
+                        set.getString("lastname")));
             } while (set.next());
             return users;
         }
     }
 
-    private boolean isUserExist(String name) throws SQLException {
+    @Override
+    public boolean isUserExist(String name) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
         try (PreparedStatement query = creator.getIsExistUserRawQuery(connection, name)) {
             return getResultSet(query).getBoolean(1);

@@ -9,7 +9,7 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
     private static final String IS_AUTH_USER = "SELECT EXISTS (SELECT * FROM sessions WHERE id = (SELECT id FROM users where username = ? AND password = ?))";
     private static final String REGISTER_USER_SESSION = "UPDATE sessions SET CURRENT_SESSION = ? WHERE id = (select id from users where username = ?)";
     private static final String IS_REGISTERED_USER = "SELECT EXISTS (SELECT * FROM sessions WHERE CURRENT_SESSION = ?)";
-    private static final String GET_PERMISSION_USER = "SELECT permissions FROM users WHERE USERNAME = ?";
+    private static final String GET_PERMISSION_USER = "SELECT permissions FROM users WHERE id = (select id from sessions where current_session = ?)";
     private static final String CLEAR_SESSIONS = "UPDATE sessions SET CURRENT_SESSION = NULL WHERE CURRENT_SESSION = ?";
     private static final String GET_USERNAME = "select username from users where id = (SELECT id FROM sessions WHERE CURRENT_SESSION = ?)";
 
