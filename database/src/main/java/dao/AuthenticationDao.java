@@ -5,7 +5,7 @@ import java.sql.SQLException;
 public interface AuthenticationDao {
     boolean isAuthenticatedUser(String sessionId) throws SQLException;
 
-    boolean isValidUser(String password, String login) throws SQLException;
+    boolean isValidUser(String login, String password) throws SQLException;
 
     void registerSessionUser(String login, String sessionId) throws SQLException;
 

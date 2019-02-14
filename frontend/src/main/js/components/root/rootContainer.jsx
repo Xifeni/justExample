@@ -22,15 +22,18 @@ class AppView extends React.Component {
 
     constructor(props) {
         super(props);
-        this.props.loadPermissions();
     }
 
     getIsAdmin() {
-       return this.props.currentUser[ADMIN] === ADMIN;
+        return this.props.currentUser[ADMIN] === ADMIN;
     }
 
     getCurrentUsername() {
         return this.props.currentUser[USERNAME];
+    }
+
+    componentDidMount() {
+        this.props.loadPermissions();
     }
 
     render() {
@@ -38,38 +41,14 @@ class AppView extends React.Component {
             <Grid>
                 <Row className="show-grid">
                     <Col xs={12} md={8}>
-                        <NavigationBar {...this.props} isAdmin={this.getIsAdmin()} currentUsername={this.getCurrentUsername()}/>
+                        <NavigationBar {...this.props} isAdmin={this.getIsAdmin()}
+                                       currentUsername={this.getCurrentUsername()}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={8}>
                         <UsersList {...this.props}/>
-                        {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} items={[
-                            {
-                                id: [USERNAME],
-                                label: 'Username',
-                                type: 'text',
-                            },
-                            {
-                                id: [PASSWORD],
-                                label: 'Password',
-                                type: "password",
-                            },
-                            {
-                                id: [RETRY_PASSWORD],
-                                label: 'Retype password',
-                                type: "password",
-                            },
-                            {
-                                id: [FIRST_NAME],
-                                label: 'First name',
-                                type: 'text',
-                            },
-                            {
-                                id: [LAST_NAME],
-                                label: 'Last name',
-                                type: 'text',
-                            }]} presetUser={this.props.presetUser}/>}
+                        {this.props.activeArea === (CREATE_USER) && <FormList {...this.props} presetUser={this.props.presetUser}/>}
                     </Col>
                 </Row>
             </Grid>

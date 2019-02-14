@@ -2,9 +2,12 @@ package controller;
 
 import exception.WrongPermission;
 import model.User;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpSession;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import static utils.PasswordProcessor.getHashPassword;
@@ -31,14 +34,19 @@ public class JsonRpcController {
         }
     }
 
-    public void saveUser(JSONObject jsonUser, HttpSession session) throws Exception {
-        User user = new User(jsonUser.getString("Username"),
-                jsonUser.getString("First name"),
-                jsonUser.getString("Last name"),
-                jsonUser.getString("Admin"),
-                getHashPassword(jsonUser.getString("Password"), "salt"));
+    public void saveNewUser(JSONObject jsonUser, HttpSession session) throws Exception {
+        User user = getUser(jsonUser);
         if (isAdmin(session.getId())) {
-            userDataController.saveUser(user, jsonUser.getString("signatureUser"));
+            userDataController.saveNewUser(user);
+        } else {
+            throw new WrongPermission();
+        }
+    }
+
+    public void saveEditedUser(JSONObject jsonUser, HttpSession session) throws Exception {
+        User user = getUser(jsonUser);
+        if (isAdmin(session.getId())) {
+            userDataController.saveEditedUser(user, jsonUser.getString("oldEditableUsername"));
         } else {
             throw new WrongPermission();
         }
@@ -54,5 +62,13 @@ public class JsonRpcController {
 
     private boolean isAdmin(String sessionId) throws SQLException {
         return authDataController.getPermissions(sessionId).equalsIgnoreCase("111");
+    }
+
+    private User getUser(JSONObject jsonUser) throws JSONException, NoSuchAlgorithmException, InvalidKeyException {
+        return new User(jsonUser.getString("Username"),
+                jsonUser.getString("First name"),
+                jsonUser.getString("Last name"),
+                jsonUser.getString("Admin"),
+                getHashPassword(jsonUser.getString("Password"), "salt"));
     }
 }

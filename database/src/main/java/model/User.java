@@ -12,7 +12,7 @@ public class User {
     private String role;
     private String password;
 
-    public User(String userName, String firstName, String lastName, String role){
+    public User(String userName, String firstName, String lastName, String role) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,5 +23,9 @@ public class User {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public boolean haveAnyEmptyField() {
+        return userName.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || role.isEmpty();
     }
 }

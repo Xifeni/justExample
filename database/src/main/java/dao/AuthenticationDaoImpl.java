@@ -19,9 +19,9 @@ public class AuthenticationDaoImpl implements AuthenticationDao {
     }
 
     @Override
-    public boolean isValidUser(String password, String login) throws SQLException {
+    public boolean isValidUser(String login, String password) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        try (PreparedStatement query = creator.getAuthenticatedUserRawQuery(connection, password, login)) {
+        try (PreparedStatement query = creator.getAuthenticatedUserRawQuery(connection, login, password)) {
             return getResultSet(query).getBoolean(1);
         }
     }

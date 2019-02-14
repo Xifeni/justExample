@@ -1,4 +1,5 @@
 import {
+    ADD_ERROR,
     ADMIN,
     FIRST_NAME,
     LAST_NAME,
@@ -7,11 +8,10 @@ import {
     RETRY_PASSWORD,
     RPC_TESTER,
     UPDATE_NEW_USER,
-    USERNAME,
-    WIPE_DATA,
     USER_LIST,
-    ADD_ERROR,
-    VALIDATE_FORM
+    USERNAME,
+    VALIDATE_FORM,
+    WIPE_DATA
 } from "../../const";
 import axios from "axios";
 import {setActiveArea} from "../root/actions.js";
@@ -37,17 +37,43 @@ let updateNewUser = function (name, value) {
     }
 };
 
-export function sendForm(user, signatureUser, currentUser) {
-    let result = {
+function getUser(user, oldEditableUsername) {
+    return {
         [USERNAME]: user[USERNAME].value,
         [PASSWORD]: user[PASSWORD].value,
         [FIRST_NAME]: user[FIRST_NAME].value,
         [LAST_NAME]: user[LAST_NAME].value,
         [ADMIN]: user[ADMIN].value,
-        signatureUser: signatureUser
+        oldEditableUsername: oldEditableUsername
     };
+}
+
+export function saveNewUser(user, oldEditableUsername) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.saveUser', result).then((data) => {
+        axiosWrapper([RPC_TESTER] + '.saveNewUser', getUser(user, oldEditableUsername)).then((data) => {
+                if (data.error === undefined) {
+                    dispatch(wipeData());
+                    dispatch(getUsers());
+                    dispatch(setActiveArea(USER_LIST));
+                } else {
+                    let errors = data.error.msg.split(',');
+                    if (errors.length === 2) {
+                        dispatch(addError(errors));
+                    } else {
+                        alert("Has error:" + errors);
+                    }
+                }
+            }
+        ).catch((onrejected) => {
+                alert("Has error:" + onrejected);
+            }
+        );
+    }
+}
+
+export function saveEditedUser(user, oldEditableUsername) {
+    return function (dispatch) {
+        axiosWrapper([RPC_TESTER] + '.saveEditedUser', getUser(user, oldEditableUsername)).then((data) => {
                 if (data.error === undefined) {
                     dispatch(wipeData());
                     dispatch(getUsers());

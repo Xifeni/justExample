@@ -12,7 +12,7 @@ import java.util.List;
 public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
 
     private static final String CREATE_USER = "INSERT INTO USERS (USERNAME, FIRSTNAME, LASTNAME, permissions, password) VALUES(?,?,?,?,?)";
-    private static final String DELETE_USER = "DELETE FROM USERS WHERE id = (select ID from users where username = ?)";
+    private static final String DELETE_USER = "DELETE FROM USERS where username = ?";
     private static final String GET_USERS = "SELECT * FROM USERS";
     private static final String GET_USER = "SELECT * FROM USERS where users.username = ?";
     private static final String UPDATE_USER = "UPDATE USERS SET USERS.FIRSTNAME = ?, " +
@@ -22,18 +22,25 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
                                                                 "users.password = ? WHERE id = (SELECT id where username = ?)";
     private static final String GET_PASSWORD = "SELECT PASSWORD FROM users WHERE USERNAME = ?";
     private static final String IS_EXIST_USER = "SELECT EXISTS (SELECT * FROM USERS WHERE username = ?);";
+    private static final String CREATE_SESSION = "INSERT INTO sessions (id) VALUES ((SELECT id from users where username = ?))";
 
     @Override
     public PreparedStatement getRawCreateUser(Connection connection, User user) throws SQLException {
         PreparedStatement query = connection.prepareStatement(CREATE_USER);
 
-        String permissions = user.getRole().equalsIgnoreCase("admin") ? "111" : "100";
-
         query.setString(1, user.getUserName());
         query.setString(2, user.getFirstName());
         query.setString(3, user.getLastName());
-        query.setString(4, permissions);
+        query.setString(4, user.getRole());
         query.setString(5, user.getPassword());
+
+        return query;
+    }
+
+    @Override
+    public PreparedStatement getRawCreateSession(Connection connection, User user) throws SQLException {
+        PreparedStatement query = connection.prepareStatement(CREATE_SESSION);
+        query.setString(1, user.getUserName());
         return query;
     }
 
@@ -50,18 +57,16 @@ public class UserRawQueryCreatorImpl implements UserRawQueryCreator {
     }
 
     @Override
-    public PreparedStatement getRawUpdateUser(Connection connection, User user, String signatureUser, String password) throws SQLException {
+    public PreparedStatement getRawUpdateUser(Connection connection, User user, String oldEditableUsername) throws SQLException {
         PreparedStatement query = connection.prepareStatement(UPDATE_USER);
-
-        String pass = user.getPassword().isEmpty() ? password : user.getPassword();
-        String permissions = user.getRole().equalsIgnoreCase("admin") ? "111" : "100";
 
         query.setString(1, user.getFirstName());
         query.setString(2, user.getLastName());
         query.setString(3, user.getUserName());
-        query.setString(4, signatureUser);
-        query.setString(5, permissions);
-        query.setString(6, pass);
+        query.setString(4, user.getRole());
+        query.setString(5, user.getPassword());
+        query.setString(6, oldEditableUsername);
+
         return query;
     }
 

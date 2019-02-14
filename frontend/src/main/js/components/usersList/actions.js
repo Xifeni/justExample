@@ -9,16 +9,16 @@ import {
     RETRY_PASSWORD,
     RPC_TESTER,
     SET_PRESET_USER,
-    SET_USER_SIGNATURE,
+    SET_OLD_EDITABLE_USERNAME,
     USER_LIST,
     USERNAME
 } from "../../const.js";
 import {setActiveArea} from "../root/actions.js";
 import axios from "axios";
 
-export function goToEditUser(userName, signature) {
+export function goToEditUser(userName) {
     return function (dispatch) {
-        axiosWrapper([RPC_TESTER] + '.getUser', userName, signature).then((data) => {
+        axiosWrapper([RPC_TESTER] + '.getUser', userName).then((data) => {
             let result = data.result;
             let presetUser = {
                 [USERNAME]: result.userName,
@@ -55,7 +55,7 @@ function setPresetUser(presetUser) {
 
 function setUserSignature(username) {
     return {
-        type: SET_USER_SIGNATURE,
+        type: SET_OLD_EDITABLE_USERNAME,
         payload: username
     }
 }

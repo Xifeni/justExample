@@ -15,9 +15,9 @@ public class AuthenticationRawQueryCreatorImpl implements AuthenticationRawQuery
 
 
     @Override
-    public PreparedStatement getAuthenticatedUserRawQuery(Connection connection, String username, String password) throws SQLException {
+    public PreparedStatement getAuthenticatedUserRawQuery(Connection connection, String login, String password) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(IS_AUTH_USER);
-        statement.setString(1, username);
+        statement.setString(1, login);
         statement.setString(2, password);
         return statement;
     }

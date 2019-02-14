@@ -9,8 +9,8 @@ import {
     USERNAME,
     SET_PRESET_USER,
     WIPE_DATA,
-    SET_USER_SIGNATURE,
-    USER_SIGNATURE,
+    SET_OLD_EDITABLE_USERNAME,
+    OLD_EDITABLE_USERNAME,
     ADD_ERROR,
     VALIDATE_FORM
 } from "../../const.js";
@@ -25,7 +25,7 @@ let initState = {
         [LAST_NAME]: {value: "", error: []},
         [ADMIN]: {value: NOT_ADMIN, error: []},
     },
-    [USER_SIGNATURE]: ""
+    [OLD_EDITABLE_USERNAME]: ""
 };
 
 export let createUserReducer = function (state = initState, {type, payload}) {
@@ -51,7 +51,7 @@ export let createUserReducer = function (state = initState, {type, payload}) {
             WIPE_DATA: {
                 return {
                     ...state,
-                    [USER_SIGNATURE]: "",
+                    [OLD_EDITABLE_USERNAME]: "",
                     newUser: {
                         [USERNAME]: {value: "", error: []},
                         [PASSWORD]: {value: "", error: []},
@@ -63,8 +63,8 @@ export let createUserReducer = function (state = initState, {type, payload}) {
                 }
             }
             case
-            SET_USER_SIGNATURE: {
-                return {...state, [USER_SIGNATURE]: payload}
+            SET_OLD_EDITABLE_USERNAME: {
+                return {...state, [OLD_EDITABLE_USERNAME]: payload}
             }
             case
             ADD_ERROR: {
