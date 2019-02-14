@@ -31,16 +31,16 @@ export default class NavigationBar extends React.Component {
             <Navbar>
                 <Nav navbar variant="pills">
                     <NavItem>
-                        <Item key={[USER_LIST]} text={'Список пользователей'} idArea={USER_LIST}
+                        <Item key={USER_LIST} text={'Список пользователей'} idArea={USER_LIST}
                               setActiveArea={this.props.setActiveArea}/>
                     </NavItem>
                     <NavItem>
                         {this.props.isAdmin &&
-                        <Item key={[CREATE_USER]} text={'Создать нового пользователя'} idArea={CREATE_USER}
+                        <Item key={CREATE_USER} text={'Создать нового пользователя'} idArea={CREATE_USER}
                               setActiveArea={this.props.setActiveArea}/>}
                     </NavItem>
                     <NavItem>
-                        <Item key={[LOGOUT]} text={'Выйти'} idArea={this.props.currentUsername}
+                        <Item key={LOGOUT} text={'Выйти'} idArea={this.props.currentUsername}
                               setActiveArea={this.props.logout}/>
                     </NavItem>
                 </Nav>
@@ -50,7 +50,7 @@ export default class NavigationBar extends React.Component {
 }
 
 Item.propTypes = {
-    key: PropTypes.string.isRequired,
+    key: PropTypes.string,
     text: PropTypes.string.isRequired,
     idArea: PropTypes.string.isRequired,
     setActiveArea: PropTypes.func,

@@ -5,7 +5,6 @@ import utils.connectionPool.ConnectionPool;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,6 +16,7 @@ public class JdbcFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         pool = ConnectionPool.getInstance();
+        pool.init();
     }
 
     @Override
@@ -26,7 +26,7 @@ public class JdbcFilter implements Filter {
                 ConnectionStore.setConnection(connection);
                 chain.doFilter(request, response);
                 connection.commit();
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 try {
                     connection.rollback();
                 } catch (SQLException e1) {
@@ -35,7 +35,7 @@ public class JdbcFilter implements Filter {
                 }
                 e.printStackTrace();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ServletException(e);
         } finally {

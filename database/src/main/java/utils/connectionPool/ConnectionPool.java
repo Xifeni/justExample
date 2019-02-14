@@ -12,6 +12,9 @@ public class ConnectionPool {
     private static ConnectionPool pool = new ConnectionPool();
 
     private ConnectionPool() {
+    }
+
+    public void init(){
         HikariConfig config = new HikariConfig("/hikaricp.properties");
         ds = new HikariDataSource(config);
     }

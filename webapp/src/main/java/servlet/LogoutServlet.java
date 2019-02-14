@@ -21,7 +21,7 @@ public class LogoutServlet extends HttpServlet {
             authDataController.logout(req.getSession().getId());
         } catch (SQLException e) {
             e.printStackTrace();
-            resp.sendError(500, e.getMessage());
+            throw new ServletException(e);
         }
     }
 }

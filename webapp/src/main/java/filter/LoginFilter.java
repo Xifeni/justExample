@@ -28,9 +28,9 @@ public class LoginFilter implements Filter {
             } else {
                 chain.doFilter(request, response);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            ((HttpServletResponse) response).sendError(500, e.getSQLState());
+            throw new ServletException(e);
         }
     }
 

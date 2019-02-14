@@ -18,6 +18,8 @@ import static utils.PasswordProcessor.getHashPassword;
 public class LoginServlet extends HttpServlet {
 
     private AuthenticationDataController controller = new AuthenticationDataController();
+    private final String LOGIN = "login";
+    private final String PASSWORD = "password";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -25,24 +27,24 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
-            String login = request.getParameter("login");
-            String password = request.getParameter("password");
+            String login = request.getParameter(LOGIN);
+            String password = request.getParameter(PASSWORD);
             String sessionId = request.getSession().getId();
             boolean isLogged = false;
             if (login != null && password != null) {
                 isLogged = controller.isCorrectRequest(login, getHashPassword(password, "salt"));
             }
             if (isLogged) {
-                controller.registerUserSession(request.getParameter("login"), sessionId);
+                controller.registerUserSession(request.getParameter(LOGIN), sessionId);
                 response.sendRedirect(request.getContextPath()+"/main");
             } else {
                 response.sendRedirect(request.getContextPath()+"/login");
             }
         } catch (SQLException | NoSuchAlgorithmException | InvalidKeyException e) {
             e.printStackTrace();
-            response.sendError(500, e.getMessage());
+            throw new ServletException(e);
         }
     }
 }
