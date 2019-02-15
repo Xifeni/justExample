@@ -83,8 +83,8 @@ render()
                         onClick={() => {
                             this.state.isEditingUser ?
                                 this.props.saveEditedUser(this.props.newUser, this.props.editableName) :
-                                this.props.saveNewUser(this.props.newUser, this.props.editableName);
-                        }}>Save</Button>
+                                this.props.saveNewUser(this.props.newUser, this.props.editableName);}
+                        }>Save</Button>
             </Modal.Footer>
         </Modal>)
 }

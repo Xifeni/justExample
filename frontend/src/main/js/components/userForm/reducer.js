@@ -12,9 +12,9 @@ import {
     SET_OLD_EDITABLE_USERNAME,
     OLD_EDITABLE_USERNAME,
     ADD_ERROR,
-    VALIDATE_FORM
+    VALIDATE_FORM,
+    LANG_WARN
 } from "../../const.js";
-import {LANG_WARN} from "../../const";
 
 let initState = {
     newUser: {
