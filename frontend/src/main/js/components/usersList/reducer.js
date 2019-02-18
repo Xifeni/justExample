@@ -2,13 +2,13 @@ import {ADD_USERS, DELETE_USER} from "../../const";
 
 let initialState = {
     users: [],
-    loadingStatus: false
+    isLoaded: false
 };
 
 let userListReducer = function (state = initialState, action) {
     switch (action.type) {
         case ADD_USERS: {
-            return Object.assign({}, state, {users: action.payload, loadingStatus: true});
+            return Object.assign({}, state, {users: action.payload, isLoaded: true});
         }
         case DELETE_USER: {
             let index = state.users.indexOf(action.payload);

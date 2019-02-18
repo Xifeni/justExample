@@ -16,35 +16,38 @@ public class UserDaoImpl implements UserDao {
     private UserRawQueryCreatorImpl creator = new UserRawQueryCreatorImpl();
 
     @Override
-    public void saveUser(User user, String signatureUser) throws SQLException {
+    public void saveNewUser(User user) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        boolean isExistUser = isUserExist(user.getUserName());
-        if (isExistUser && signatureUser.isEmpty()) {
+        if (isUserExist(user.getUserName())) {
             throw new SQLException("Username, Username is exist");
         }
-        String password = "";
-        if (isExistUser) {
-            if (user.getPassword().isEmpty()) {
-                password = getPassword(signatureUser);
-            } else {
-                password = user.getPassword();
-            }
+        if (user.haveAnyEmptyField()) {
+            throw new SQLException("All field is required");
         }
-
-        PreparedStatement query;
-        if (!signatureUser.isEmpty()) {
-            query = creator.getRawUpdateUser(connection, user, signatureUser, password);
-        } else {
-            query = creator.getRawCreateUser(connection, user);
+        try (PreparedStatement query = creator.getRawCreateUser(connection, user)) {
+            getResultSet(query);
         }
-        getResultSet(query);
-        query.close();
+        try (PreparedStatement query = creator.getRawCreateSession(connection, user)) {
+            getResultSet(query);
+        }
     }
 
-
-    private String getPassword(String signatureUser) throws SQLException {
+    @Override
+    public void saveEditedUser(User user, String oldEditableUsername) throws SQLException {
         Connection connection = ConnectionStore.getConnection();
-        try (PreparedStatement query = creator.getPassword(connection, signatureUser)) {
+        String username = user.getUserName();
+        if (!username.equals(oldEditableUsername) && isUserExist(username)) {
+            throw new SQLException("Username, Username is exist");
+        }
+        try (PreparedStatement query = creator.getRawUpdateUser(connection, user, oldEditableUsername)) {
+            getResultSet(query);
+        }
+    }
+
+    @Override
+    public String getPassword(String username) throws SQLException {
+        Connection connection = ConnectionStore.getConnection();
+        try (PreparedStatement query = creator.getPassword(connection, username)) {
             return getResultSet(query).getString(1);
         }
     }

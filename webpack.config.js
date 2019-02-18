@@ -1,15 +1,16 @@
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const NODE_ENV = process.env.NODE_ENV || 'development';
 
-module.exports = {
-    entry: '.\\frontend\\src\\main\\js\\app.js',
+module.exports = (env, arg) => ({
+    entry: path.resolve('./frontend/src/main/js/app.js'),
     output: {
-        path: path.resolve('.\\webapp\\src\\main\\web-app\\'),
-        filename: 'bundle.js',
-        sourceMapFilename: "[name].js.map",
+        path: path.resolve('./webapp/src/main/web-app/'),
+        filename: 'bundle.js'
     },
-    watch: true,
+    performance: {
+        hints: false
+    },
+    watch: arg.mode === 'development',
     module: {
         rules: [
             {
@@ -32,7 +33,7 @@ module.exports = {
                 use: {
                     loader: "url-loader",
                     options: {
-                        limit: 50000,
+                        limit: 25000,
                     },
                 },
             },
@@ -40,5 +41,5 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin("styles.css")],
-    devtool: NODE_ENV === 'development' ? 'source-map' : false
-};
+    devtool: arg.mode === 'development' ? 'source-map' : false
+});

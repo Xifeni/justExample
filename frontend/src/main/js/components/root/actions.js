@@ -39,7 +39,7 @@ export function getPermission() {
                 isAdmin = ADMIN;
             }
             dispatch(setCurrentUser({
-                [USERNAME]: name,
+                [USERNAME]: window._CURRENT_USER_,
                 [ADMIN]: isAdmin
             }));
         });

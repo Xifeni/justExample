@@ -19,10 +19,10 @@ public class MainServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("username", controller.getUsername(request.getSession().getId()));
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/main.jsp").forward(request, response);
         } catch (SQLException e) {
-            response.sendError(500, e.getMessage());
             e.printStackTrace();
+            throw new ServletException(e);
         }
     }
 
